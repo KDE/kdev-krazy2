@@ -164,7 +164,7 @@ void AnalysisJobTest::testRun() {
     resultSpy.waitForSignal();
 
     QCOMPARE(analysisJob.error(), (int)KJob::NoError);
-    QCOMPARE(analysisResults.issues().count(), 10);
+    QCOMPARE(analysisResults.issues().count(), 11);
 
     //To prevent test failures due to the order of the issues, each issue is
     //searched in the results instead of using a specific index
@@ -243,6 +243,12 @@ void AnalysisJobTest::testRun() {
     QVERIFY(issue10->checker()->explanation().startsWith(
                 "Please make sure your .desktop files conform to the freedesktop.org"));
     QCOMPARE(issue10->checker()->fileType(), QString("desktop"));
+
+    const Issue* issue11 = findIssue(&analysisResults, "doublequote_chars",
+                                     QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"), 8);
+    QVERIFY(issue11);
+    QCOMPARE(issue11->message(), QString(""));
+    QCOMPARE(issue11->checker(), issue->checker());
 
     //At least six signals should have been emitted: one for the start, one for
     //the finish, and one for each checker with issues.

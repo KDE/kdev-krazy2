@@ -51,6 +51,7 @@ mem_tests(
 # binary directory for the errors to be shown in the tests.
 set(examples
     examples/singleIssue.cpp
+    examples/singleIssueNonAsciiFileNameḶḷambión.cpp
     examples/severalIssuesSingleChecker.cpp
     examples/severalIssuesSeveralCheckers.cpp
     examples/severalIssuesSeveralCheckersUnknownFileType.dqq

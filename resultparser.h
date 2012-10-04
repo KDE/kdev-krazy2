@@ -60,7 +60,7 @@ public:
      *
      * @param data The next results data to parse.
      */
-    void parse(const QString& data);
+    void parse(const QByteArray& data);
 
 private:
 

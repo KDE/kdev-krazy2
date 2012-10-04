@@ -36,6 +36,7 @@ private slots:
     void testParseSingleCheckerSingleFileSingleIssue();
     void testParseSingleCheckerSingleFileSingleIssueNoMessage();
     void testParseSingleCheckerSingleFileSingleIssueWithDetails();
+    void testParseSingleCheckerSingleFileSingleIssueNonAsciiFilename();
     void testParseSingleCheckerSingleFileSeveralIssues();
     void testParseSingleCheckerSingleFileSeveralIssuesNoMessage();
     void testParseSingleCheckerSingleFileSeveralIssuesWithDetails();
@@ -107,6 +108,14 @@ private:
         "</issues>\n"\
     "</file>\n"
 
+#define KRAZY2_FILE_SINGLE_ISSUE_NON_ASCII_FILE_NAME_XML \
+    "<file name=\"singleIssueFileNonAsciiFileNameḶḷambión.cpp\">\n"\
+        "<message>single issue message</message>\n"\
+        "<issues>\n"\
+            "<line>-1</line>\n"\
+        "</issues>\n"\
+    "</file>\n"
+
 #define KRAZY2_FILE_SEVERAL_ISSUES_XML \
     "<file name=\"severalIssuesFile.cpp\">\n"\
         "<message>several issues message</message>\n"\
@@ -147,7 +156,7 @@ void ResultParserTest::cleanup() {
 }
 
 void ResultParserTest::testParseNoChecker() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
         KRAZY2_FOOTER_XML;
 
@@ -157,7 +166,7 @@ void ResultParserTest::testParseNoChecker() {
 }
 
 void ResultParserTest::testParseSingleCheckerNoIssues() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
         "<file-type value=\"fileType\">\n"
             "<check desc=\"Checker description [checkerName]...\">\n"
@@ -171,7 +180,7 @@ void ResultParserTest::testParseSingleCheckerNoIssues() {
 }
 
 void ResultParserTest::testParseSingleCheckerSingleFileSingleIssue() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
             KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
                 KRAZY2_FILE_SINGLE_ISSUE_XML
@@ -186,7 +195,7 @@ void ResultParserTest::testParseSingleCheckerSingleFileSingleIssue() {
 }
 
 void ResultParserTest::testParseSingleCheckerSingleFileSingleIssueNoMessage() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
             KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
                 KRAZY2_FILE_SINGLE_ISSUE_NO_MESSAGE_XML
@@ -201,7 +210,7 @@ void ResultParserTest::testParseSingleCheckerSingleFileSingleIssueNoMessage() {
 }
 
 void ResultParserTest::testParseSingleCheckerSingleFileSingleIssueWithDetails() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
             KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
                 KRAZY2_FILE_SINGLE_ISSUE_WITH_DETAILS_XML
@@ -215,8 +224,24 @@ void ResultParserTest::testParseSingleCheckerSingleFileSingleIssueWithDetails() 
     assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType");
 }
 
+void ResultParserTest::testParseSingleCheckerSingleFileSingleIssueNonAsciiFilename() {
+    //This source file is UTF-8 encoded, just like krazy2 XML output
+    QByteArray data =
+        KRAZY2_HEADER_XML
+            KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
+                KRAZY2_FILE_SINGLE_ISSUE_NON_ASCII_FILE_NAME_XML
+            KRAZY2_FILETYPE_SINGLE_CHECKER_END_XML
+        KRAZY2_FOOTER_XML;
+
+    m_resultParser->parse(data);
+
+    QCOMPARE(m_analysisResults->issues().size(), 1);
+    assertIssue(0, "single issue message", QString::fromUtf8("singleIssueFileNonAsciiFileNameḶḷambión.cpp"), -1);
+    assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType");
+}
+
 void ResultParserTest::testParseSingleCheckerSingleFileSeveralIssues() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
             KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
                 KRAZY2_FILE_SEVERAL_ISSUES_XML
@@ -235,7 +260,7 @@ void ResultParserTest::testParseSingleCheckerSingleFileSeveralIssues() {
 }
 
 void ResultParserTest::testParseSingleCheckerSingleFileSeveralIssuesNoMessage() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
             KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
                 KRAZY2_FILE_SEVERAL_ISSUES_NO_MESSAGE_XML
@@ -254,7 +279,7 @@ void ResultParserTest::testParseSingleCheckerSingleFileSeveralIssuesNoMessage() 
 }
 
 void ResultParserTest::testParseSingleCheckerSingleFileSeveralIssuesWithDetails() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
             KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
                 KRAZY2_FILE_SEVERAL_ISSUES_WITH_DETAILS_XML
@@ -273,7 +298,7 @@ void ResultParserTest::testParseSingleCheckerSingleFileSeveralIssuesWithDetails(
 }
 
 void ResultParserTest::testParseSingleCheckerSeveralFiles() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
             KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
                 KRAZY2_FILE_SINGLE_ISSUE_XML
@@ -295,7 +320,7 @@ void ResultParserTest::testParseSingleCheckerSeveralFiles() {
 }
 
 void ResultParserTest::testParseSeveralCheckers() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
         "<file-type value=\"fileType\">\n"
             "<check desc=\"Checker1 description [checker1Name]...\">\n"
@@ -326,7 +351,7 @@ void ResultParserTest::testParseSeveralCheckers() {
 }
 
 void ResultParserTest::testParseSeveralFileTypes() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
         "<file-type value=\"fileType1\">\n"
             "<check desc=\"Checker1 description [checker1Name]...\">\n"
@@ -369,7 +394,7 @@ void ResultParserTest::testParseSeveralFileTypes() {
 }
 
 void ResultParserTest::testParseWithWorkingDirectory() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
         "<file-type value=\"fileType1\">\n"
             "<check desc=\"Checker1 description [checker1Name]...\">\n"
@@ -413,7 +438,7 @@ void ResultParserTest::testParseWithWorkingDirectory() {
 }
 
 void ResultParserTest::testParseWithWorkingDirectoryAndRelativeFileNames() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
             KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
             "<file name=\"../singleIssueFile1.cpp\">\n"
@@ -447,7 +472,7 @@ void ResultParserTest::testParseWithWorkingDirectoryAndRelativeFileNames() {
 }
 
 void ResultParserTest::testParseWithWorkingDirectoryAndAbsoluteFileNames() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
             KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
             "<file name=\"/absolute/directory/singleIssueFile1.cpp\">\n"
@@ -467,7 +492,7 @@ void ResultParserTest::testParseWithWorkingDirectoryAndAbsoluteFileNames() {
 }
 
 void ResultParserTest::testParseWithDataInSeveralChunks() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
         "<file-type value=\"fileType1\">\n"
             "<check desc=\"Checker1 description [checker1Name]...\">\n"
@@ -498,7 +523,7 @@ void ResultParserTest::testParseWithDataInSeveralChunks() {
         m_analysisResults = new AnalysisResults();
         m_resultParser->setAnalysisResults(m_analysisResults);
 
-        QString remainingData = data;
+        QByteArray remainingData = data;
         while (remainingData.size() > 0) {
             const float randomValue = rand()/float(RAND_MAX);
             int numberOfCharacters = randomValue * remainingData.size();
@@ -535,7 +560,7 @@ void ResultParserTest::testParseWithDataInSeveralChunks() {
 }
 
 void ResultParserTest::testParseWhenAnalysisResultsHasPreviousContents() {
-    QString data =
+    QByteArray data =
         KRAZY2_HEADER_XML
         "<file-type value=\"fileType\">\n"
             "<check desc=\"Checker1 description [checker1Name]...\">\n"

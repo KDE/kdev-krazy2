@@ -104,7 +104,7 @@ public Q_SLOTS:
      *
      * @param data The next progress data to parse.
      */
-    void parse(const QString& data);
+    void parse(const QByteArray& data);
 
     /**
      * Reports that krazy2 has finished, no matter why.

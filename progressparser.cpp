@@ -43,10 +43,11 @@ void ProgressParser::start() {
     emit showProgress(this, 0, 100, 0);
 }
 
-void ProgressParser::parse(const QString& data) {
+void ProgressParser::parse(const QByteArray& data) {
     Q_ASSERT(m_numberOfCheckers > 0);
 
-    m_buffer += data;
+    //fromAscii() conversion is good enough for progress output
+    m_buffer += QString::fromAscii(data);
 
     discardFilteredOutFileMessages();
 

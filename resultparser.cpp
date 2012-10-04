@@ -47,7 +47,7 @@ void ResultParser::setWorkingDirectory(const QString& workingDirectory) {
     }
 }
 
-void ResultParser::parse(const QString& data) {
+void ResultParser::parse(const QByteArray& data) {
     m_xmlStreamReader.addData(data);
 
     while (!m_xmlStreamReader.atEnd()) {
