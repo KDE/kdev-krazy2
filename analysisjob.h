@@ -32,16 +32,16 @@ class CheckerListJob;
 class ProgressParser;
 
 /**
- * Job to analyze a directory with krazy2all.
- * The job executes a krazy2all process asking it to analyze the directory
- * specified with setDirectoryToAnalyze(QString) and then parses the output to
- * populate an AnalysisTesults object.
+ * Job to analyze a directory with krazy2.
+ * The job executes a krazy2 process asking it to analyze all the files in the
+ * directory (and, recursively, in all its subdirectories) specified with
+ * setDirectoryToAnalyze(QString) and then parses the output to populate an
+ * AnalysisTesults object.
  *
  * Before performing the actual analysis the list of available checkers is got.
  * This is needed to properly update the analysis progress notifications.
  *
- * The path to the krazy2all executable is got from "Krazy2" configuration
- * group.
+ * The path to the krazy2 executable is got from "Krazy2" configuration group.
  *
  * The job is killable.
  */
@@ -64,7 +64,8 @@ public:
     //<KJob>
 
     /**
-     * Starts krazy2all asking it to analyze the directory specified with
+     * Starts krazy2 asking it to analyze all the files in the directory (and,
+     * recursively, in all its subdirectories) specified with
      * setDirectoryToAnalyze(QString).
      */
     virtual void start();
@@ -135,7 +136,7 @@ private:
     CheckerListJob* m_checkerListJob;
 
     /**
-     * The krazy2all process to parse its output.
+     * The krazy2 process to parse its output.
      */
     KProcess* m_process;
 
@@ -144,10 +145,11 @@ private:
      * The returned number is just a hint. It will probably be the right number,
      * but it also may not.
      *
+     * @param namesOfFilesToBeAnalyzed A list with file names.
      * @return The number of checkers that will be executed.
      * @see isCheckerCompatibleWith(Checker*,QString)
      */
-    int calculateNumberOfCheckersToBeExecuted() const;
+    int calculateNumberOfCheckersToBeExecuted(const QStringList& namesOfFilesToBeAnalyzed) const;
 
     /**
      * Returns whether the given checker can analyze any of the files with the
@@ -187,7 +189,7 @@ private:
     QStringList findFiles(const QString& directory) const;
 
     /**
-     * Starts the krazy2all process and the actual analysis.
+     * Starts the krazy2 process and the actual analysis.
      */
     void startAnalysis();
 

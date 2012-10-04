@@ -35,28 +35,12 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QLabel" name="krazy2allLabel">
-          <property name="text">
-           <string>krazy2all Executable:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-          <property name="buddy">
-           <cstring>kcfg_krazy2allPath</cstring>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
       <item>
        <layout class="QVBoxLayout" name="pathsUrlsLayout">
         <item>
          <widget class="KUrlRequester" name="kcfg_krazy2Path"/>
-        </item>
-        <item>
-         <widget class="KUrlRequester" name="kcfg_krazy2allPath"/>
         </item>
        </layout>
       </item>

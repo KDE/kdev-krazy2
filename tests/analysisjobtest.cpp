@@ -140,7 +140,7 @@ void AnalysisJobTest::testRun() {
     }
 
     if (!krazy2InPath()) {
-        QSKIP("krazy2 or krazy2all are not in the execution path", SkipAll);
+        QSKIP("krazy2 is not in the execution path", SkipAll);
     }
 
     AnalysisJob analysisJob;
@@ -152,7 +152,6 @@ void AnalysisJobTest::testRun() {
 
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-    krazy2Configuration.writeEntry("krazy2all Path", "krazy2all");
 
     QSignalSpy showProgressSpy(analysisJob.findChild<ProgressParser*>(),
                                SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
@@ -287,7 +286,6 @@ void AnalysisJobTest::testRunWithEmptyPaths() {
 
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "");
-    krazy2Configuration.writeEntry("krazy2all Path", "");
 
     SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
 
@@ -312,7 +310,6 @@ void AnalysisJobTest::testRunWithInvalidPaths() {
 
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "invalid/krazy2/path");
-    krazy2Configuration.writeEntry("krazy2all Path", "invalid/krazy2all/path");
 
     SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
 
@@ -336,7 +333,7 @@ void AnalysisJobTest::testKill() {
     }
 
     if (!krazy2InPath()) {
-        QSKIP("krazy2 or krazy2all are not in the execution path", SkipAll);
+        QSKIP("krazy2 is not in the execution path", SkipAll);
     }
 
     AnalysisJob analysisJob;
@@ -348,7 +345,6 @@ void AnalysisJobTest::testKill() {
 
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-    krazy2Configuration.writeEntry("krazy2all Path", "krazy2all");
 
     SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
 
@@ -380,13 +376,6 @@ bool AnalysisJobTest::krazy2InPath() const {
     //QProcess::exec is not used, as the static method uses ForwardedChannels
     QProcess process;
     process.start("krazy2 --version");
-    process.waitForFinished();
-
-    if (process.error() == QProcess::FailedToStart) {
-        return false;
-    }
-
-    process.start("krazy2all --version");
     process.waitForFinished();
 
     if (process.error() == QProcess::FailedToStart) {

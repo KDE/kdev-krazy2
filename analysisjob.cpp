@@ -106,15 +106,13 @@ bool AnalysisJob::doKill() {
 
 //private:
 
-int AnalysisJob::calculateNumberOfCheckersToBeExecuted() const {
+int AnalysisJob::calculateNumberOfCheckersToBeExecuted(const QStringList& namesOfFilesToBeAnalyzed) const {
     //The executed checkers will depend on the types of the files
     //analyzed and the file types supported by each checker.
-    QStringList fileNames = findFiles(m_directoryToAnalyze);
-
     int numberOfCheckersToBeExecuted = 0;
     foreach (const Checker* checker, *m_checkerList) {
         //By default, Krazy2 does not execute extra checkers.
-        if (!checker->isExtra() && isCheckerCompatibleWithAnyFile(checker, fileNames)) {
+        if (!checker->isExtra() && isCheckerCompatibleWithAnyFile(checker, namesOfFilesToBeAnalyzed)) {
             numberOfCheckersToBeExecuted++;
         }
     }
@@ -193,15 +191,20 @@ void AnalysisJob::startAnalysis() {
 
     m_isAnalyzing = true;
 
-    m_progressParser->setNumberOfCheckers(calculateNumberOfCheckersToBeExecuted());
+    QStringList namesOfFilesToBeAnalyzed = findFiles(m_directoryToAnalyze);
+
+    m_progressParser->setNumberOfCheckers(
+        calculateNumberOfCheckersToBeExecuted(namesOfFilesToBeAnalyzed));
 
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    KUrl krazy2allPath = krazy2Configuration.readEntry("krazy2all Path");
+    KUrl krazy2Path = krazy2Configuration.readEntry("krazy2 Path");
 
     QStringList arguments;
     arguments << "--export" << "xml";
+    arguments << "--explain";
+    arguments << "-";
 
-    m_process->setProgram(krazy2allPath.toLocalFile(), arguments);
+    m_process->setProgram(krazy2Path.toLocalFile(), arguments);
     m_process->setOutputChannelMode(KProcess::SeparateChannels);
     m_process->setWorkingDirectory(m_directoryToAnalyze);
 
@@ -209,6 +212,17 @@ void AnalysisJob::startAnalysis() {
             this, SLOT(handleProcessReadyStandardError()));
 
     m_process->start();
+
+    QString krazy2Input;
+    foreach (const QString& fileName, namesOfFilesToBeAnalyzed) {
+        krazy2Input += fileName + '\n';
+    }
+
+    int totalWritten = 0;
+    while (totalWritten < krazy2Input.length()) {
+        totalWritten += m_process->write(krazy2Input.toUtf8());
+    }
+    m_process->closeWriteChannel();
 }
 
 //private slots:
@@ -253,16 +267,16 @@ void AnalysisJob::handleProcessError(QProcess::ProcessError processError) {
 
     if (processError == QProcess::FailedToStart && m_process->program().first().isEmpty()) {
         setErrorText(i18nc("@info", "<para>There is no path set in the Krazy2 configuration "
-                                    "for the <command>krazy2all</command> executable</para>"));
+                                    "for the <command>krazy2</command> executable</para>"));
     } else if (processError == QProcess::FailedToStart) {
-        setErrorText(i18nc("@info", "<para><command>krazy2all</command> failed to start "
+        setErrorText(i18nc("@info", "<para><command>krazy2</command> failed to start "
                                     "using the path set in the Krazy2 configuration "
                                     "(<filename>%1</filename>)</para>", m_process->program().first()));
     } else if (processError == QProcess::Crashed) {
-        setErrorText(i18nc("@info", "<para><command>krazy2all</command> crashed</para>"));
+        setErrorText(i18nc("@info", "<para><command>krazy2</command> crashed</para>"));
     } else {
         setErrorText(i18nc("@info", "<para>An error occured while executing "
-                                    "<command>krazy2all</command></para>"));
+                                    "<command>krazy2</command></para>"));
     }
 
     emitResult();
