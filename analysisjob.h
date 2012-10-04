@@ -150,19 +150,20 @@ private:
     int calculateNumberOfCheckersToBeExecuted() const;
 
     /**
-     * Returns whether the given checker can analyze any of the given file names
-     * or not.
+     * Returns whether the given checker can analyze any of the files with the
+     * given names or not.
      * 
      * @param checker The checker.
      * @param fileNames The names of the files.
      * @return True if the checker can analyze any file, false otherwise.
      * @see isCheckerCompatibleWith(Checker*,QString)
      */
-    bool isCheckerCompatibleWithAnyFileName(const Checker* checker,
-                                            const QStringList& fileNames) const;
+    bool isCheckerCompatibleWithAnyFile(const Checker* checker,
+                                        const QStringList& fileNames) const;
 
     /**
-     * Returns whether the given checker can analyze the given file name or not.
+     * Returns whether the given checker can analyze the file with the given
+     * name or not.
      * Being able to analyze the file or not depends on the file type of the
      * checker and the extension of the file. The file types and extensions
      * known by this method are based on Krazy2 lib/Krazy/Utils.pm fileType
@@ -174,7 +175,7 @@ private:
      * @param fileName The name of the file.
      * @return True if the checker can analyze the file, false otherwise.
      */
-    bool isCheckerCompatibleWith(const Checker* checker, const QString& fileName) const;
+    bool isCheckerCompatibleWithFile(const Checker* checker, const QString& fileName) const;
 
     /**
      * Returns a list with the canonical file paths of all the files in the

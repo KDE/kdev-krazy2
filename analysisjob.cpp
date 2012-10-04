@@ -114,7 +114,7 @@ int AnalysisJob::calculateNumberOfCheckersToBeExecuted() const {
     int numberOfCheckersToBeExecuted = 0;
     foreach (const Checker* checker, *m_checkerList) {
         //By default, Krazy2 does not execute extra checkers.
-        if (!checker->isExtra() && isCheckerCompatibleWithAnyFileName(checker, fileNames)) {
+        if (!checker->isExtra() && isCheckerCompatibleWithAnyFile(checker, fileNames)) {
             numberOfCheckersToBeExecuted++;
         }
     }
@@ -122,10 +122,10 @@ int AnalysisJob::calculateNumberOfCheckersToBeExecuted() const {
     return numberOfCheckersToBeExecuted;
 }
 
-bool AnalysisJob::isCheckerCompatibleWithAnyFileName(const Checker* checker,
-                                                     const QStringList& fileNames) const {
+bool AnalysisJob::isCheckerCompatibleWithAnyFile(const Checker* checker,
+                                                 const QStringList& fileNames) const {
     foreach (const QString& fileName, fileNames) {
-        if (isCheckerCompatibleWith(checker, fileName)) {
+        if (isCheckerCompatibleWithFile(checker, fileName)) {
             return true;
         }
     }
@@ -133,8 +133,8 @@ bool AnalysisJob::isCheckerCompatibleWithAnyFileName(const Checker* checker,
     return false;
 }
 
-bool AnalysisJob::isCheckerCompatibleWith(const Checker* checker,
-                                          const QString& fileName) const {
+bool AnalysisJob::isCheckerCompatibleWithFile(const Checker* checker,
+                                              const QString& fileName) const {
     //Based on Krazy2 lib/Krazy/Utils.pm fileType function (commit d2301b9,
     //2012-05-26), licensed as GPLv2+.
     if (checker->fileType() == "c++" &&
