@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Service
+Icon=kdevelop
+Exec=blubb
+Comment=This plugin shows issues reported by Krazy2
+Name=Krazy2 Code Checking
+ServiceTypes=KDevelop/Plugin
+X-KDE-Library=kdevkrazy2
+X-KDE-PluginInfo-Name=krazy2plugin
+X-KDE-PluginInfo-Author=Daniel Calviño Sánchez
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-License=GPL
+X-KDevelop-Version=14
+X-KDevelop-Category=Global
+X-KDevelop-Mode=GUI

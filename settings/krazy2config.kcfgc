@@ -1,0 +1,6 @@
+File=krazy2config.kcfg
+ClassName=Krazy2Settings
+Singleton=true
+UseEnumTypes=true
+SetUserTexts=true
+ItemAccessors=true

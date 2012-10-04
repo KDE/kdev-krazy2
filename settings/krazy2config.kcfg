@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <kcfgfile name="kdeveloprc"/>
+  <group name="Krazy2">
+    <entry name="krazy2Path" key="krazy2 Path" type="Url">
+        <default>file:///usr/bin/krazy2</default>
+        <label>krazy2 Executable</label>
+        <tooltip>The full path to the krazy2 executable</tooltip>
+        <whatsthis>The full path to the krazy2 executable that will be used to run Krazy2 tests.</whatsthis>
+    </entry>
+    <entry name="krazy2allPath" key="krazy2all Path" type="Url">
+        <default>file:///usr/bin/krazy2all</default>
+        <label>krazy2all Executable</label>
+        <tooltip>The full path to the krazy2all executable</tooltip>
+        <whatsthis>The full path to the krazy2all executable that will be used to run Krazy2 tests.</whatsthis>
+    </entry>
+  </group>
+</kcfg>
