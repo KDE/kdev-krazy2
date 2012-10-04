@@ -48,6 +48,8 @@ void ProgressParser::parse(const QString& data) {
 
     m_buffer += data;
 
+    discardFilteredOutFileMessages();
+
     bool changed;
     do {
         changed = parseFileType();
@@ -64,6 +66,36 @@ void ProgressParser::finish() {
 }
 
 //private:
+
+void ProgressParser::discardFilteredOutFileMessages() {
+    bool changed;
+    do {
+        changed = discardCannotAccessFileMessage();
+        changed = discardUnsupportedFileTypeMessage() || changed;
+    } while (changed);
+}
+
+bool ProgressParser::discardCannotAccessFileMessage() {
+    if (!(m_buffer.startsWith("Cannot access file ") && m_buffer.contains('\n'))) {
+        return false;
+    }
+
+    int messageEnd = m_buffer.indexOf('\n') + 1;
+    m_buffer.remove(0, messageEnd);
+
+    return true;
+}
+
+bool ProgressParser::discardUnsupportedFileTypeMessage() {
+    if (!(m_buffer.startsWith("Unsupported file type ") && m_buffer.contains("skipping\n"))) {
+        return false;
+    }
+
+    int messageEnd = m_buffer.indexOf('\n') + 1;
+    m_buffer.remove(0, messageEnd);
+
+    return true;
+}
 
 bool ProgressParser::parseFileType() {
     if (!(m_buffer.startsWith("=>") && m_buffer.contains('/'))) {

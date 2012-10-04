@@ -42,6 +42,12 @@
  * also taking into account each checker program individual progress.
  *
  * Also, the status message will specify which checker is being run.
+ *
+ * Note that, before starting the analysis itself, krazy2 performs a run over
+ * all the files to be analyzed to filter out those that will not be checked
+ * (because the file can not be accessed, or because the file type is not
+ * supported). When a file is filtered out, krazy2 prints a message explaining
+ * why. Those messages are parsed and discarded by the ProgressParser.
  */
 class ProgressParser: public QObject, public KDevelop::IStatus {
 Q_OBJECT
@@ -137,6 +143,21 @@ private:
      * The number of dots already outputted by the checker being run.
      */
     int m_currentNumberOfDots;
+
+    /**
+     * Discards the "Cannot access file" and "Unsupported file type" messages.
+     */
+    void discardFilteredOutFileMessages();
+
+    /**
+     * Discards a single "Cannot acces file" message.
+     */
+    bool discardCannotAccessFileMessage();
+
+    /**
+     * Discards a single "Unsupported file type" message.
+     */
+    bool discardUnsupportedFileTypeMessage();
 
     /**
      * Parses the "=>fileType" chunk.

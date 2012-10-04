@@ -46,6 +46,12 @@ private slots:
     void parseSeveralDotsAtOnce();
     void parseSeveralLinesAtOnce();
 
+    void parseSingleCannotAccessFileBeforeCheckers();
+    void parseSingleUnsupportedFileTypeBeforeCheckers();
+    void parseSeveralFilteredOutFileMessagesBeforeCheckers();
+
+    void parseFilteredOutFileMessagesSplit();
+
     void testFinish();
 
 private:
@@ -411,6 +417,77 @@ void ProgressParserTest::parseSeveralLinesAtOnce() {
     assertShowProgress(5, 0, 100, 60);
     assertShowProgress(6, 0, 100, 70);
     assertShowProgress(7, 0, 100, 80);
+}
+
+void ProgressParserTest::parseSingleCannotAccessFileBeforeCheckers() {
+    m_progressParser->setNumberOfCheckers(5);
+    m_progressParser->parse("Cannot access file /some/file\n");
+    m_progressParser->parse("=>fileType1/checkerName1 test in-progress.done\n");
+    m_progressParser->parse("=>fileType1/checkerName2 test in-progress.done\n");
+
+    QCOMPARE(m_showMessageSpy->count(), 2);
+    assertShowMessage(0, i18nc("@info:progress", "Running %1", "checkerName1"));
+    assertShowMessage(1, i18nc("@info:progress", "Running %1", "checkerName2"));
+
+    QCOMPARE(m_showProgressSpy->count(), 2);
+    assertShowProgress(0, 0, 100, 20);
+    assertShowProgress(1, 0, 100, 40);
+}
+
+void ProgressParserTest::parseSingleUnsupportedFileTypeBeforeCheckers() {
+    m_progressParser->setNumberOfCheckers(5);
+    m_progressParser->parse("Unsupported file type for /some/file... skipping\n");
+    m_progressParser->parse("=>fileType1/checkerName1 test in-progress.done\n");
+    m_progressParser->parse("=>fileType1/checkerName2 test in-progress.done\n");
+
+    QCOMPARE(m_showMessageSpy->count(), 2);
+    assertShowMessage(0, i18nc("@info:progress", "Running %1", "checkerName1"));
+    assertShowMessage(1, i18nc("@info:progress", "Running %1", "checkerName2"));
+
+    QCOMPARE(m_showProgressSpy->count(), 2);
+    assertShowProgress(0, 0, 100, 20);
+    assertShowProgress(1, 0, 100, 40);
+}
+
+void ProgressParserTest::parseSeveralFilteredOutFileMessagesBeforeCheckers() {
+    m_progressParser->setNumberOfCheckers(5);
+    m_progressParser->parse("Cannot access file /some/file\n");
+    m_progressParser->parse("Unsupported file type for /other/file... skipping\n");
+    m_progressParser->parse("Unsupported file type for /another/file... skipping\n");
+    m_progressParser->parse("Cannot access file /yet/another/file\n");
+    m_progressParser->parse("Unsupported file type for /and/even/another/file... skipping\n");
+    m_progressParser->parse("=>fileType1/checkerName1 test in-progress.done\n");
+    m_progressParser->parse("=>fileType1/checkerName2 test in-progress.done\n");
+
+    QCOMPARE(m_showMessageSpy->count(), 2);
+    assertShowMessage(0, i18nc("@info:progress", "Running %1", "checkerName1"));
+    assertShowMessage(1, i18nc("@info:progress", "Running %1", "checkerName2"));
+
+    QCOMPARE(m_showProgressSpy->count(), 2);
+    assertShowProgress(0, 0, 100, 20);
+    assertShowProgress(1, 0, 100, 40);
+}
+
+void ProgressParserTest::parseFilteredOutFileMessagesSplit() {
+    m_progressParser->setNumberOfCheckers(5);
+    m_progressParser->parse("Cannot access file /some/strange");
+    m_progressParser->parse("=> file/name\n");
+    m_progressParser->parse("Unsupported file type for /other");
+    m_progressParser->parse("/strange file name: test in-progress... skipping\n");
+    m_progressParser->parse("Cannot access file /another/file");
+    m_progressParser->parse(".extension\n");
+    m_progressParser->parse("Cannot access file /yet/another/strange file name: ");
+    m_progressParser->parse("done\n");
+    m_progressParser->parse("=>fileType1/checkerName1 test in-progress.done\n");
+    m_progressParser->parse("=>fileType1/checkerName2 test in-progress.done\n");
+
+    QCOMPARE(m_showMessageSpy->count(), 2);
+    assertShowMessage(0, i18nc("@info:progress", "Running %1", "checkerName1"));
+    assertShowMessage(1, i18nc("@info:progress", "Running %1", "checkerName2"));
+
+    QCOMPARE(m_showProgressSpy->count(), 2);
+    assertShowProgress(0, 0, 100, 20);
+    assertShowProgress(1, 0, 100, 40);
 }
 
 void ProgressParserTest::testFinish() {
