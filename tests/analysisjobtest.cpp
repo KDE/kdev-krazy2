@@ -372,8 +372,12 @@ void AnalysisJobTest::testKill() {
 
 bool AnalysisJobTest::examplesInSubdirectory() const {
     if (QFile(m_workingDirectory + "examples/singleIssue.cpp").exists() &&
+        QFile(m_workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp")).exists() &&
+        QFile(m_workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp").exists() &&
         QFile(m_workingDirectory + "examples/severalIssuesSingleChecker.cpp").exists() &&
-        QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp").exists()) {
+        QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp").exists() &&
+        QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
+        QFile(m_workingDirectory + "examples/subdirectory/singleIssue.desktop").exists()) {
         return true;
     }
 
