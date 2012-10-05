@@ -32,6 +32,7 @@
 
 //Needed for qRegisterMetaType
 Q_DECLARE_METATYPE(KJob*)
+Q_DECLARE_METATYPE(KDevelop::IStatus*)
 
 /**
  * Modified version of private KSignalSpy found in
@@ -113,6 +114,7 @@ void AnalysisJobTest::initTestCase() {
 
     //Needed for SignalSpy
     qRegisterMetaType<KJob*>();
+    qRegisterMetaType<KDevelop::IStatus*>();
 
     KDevelop::AutoTestShell::init();
     KDevelop::TestCore::initialize();
