@@ -165,7 +165,7 @@ void AnalysisJobTest::testRun() {
     resultSpy.waitForSignal();
 
     QCOMPARE(analysisJob.error(), (int)KJob::NoError);
-    QCOMPARE(analysisResults.issues().count(), 11);
+    QCOMPARE(analysisResults.issues().count(), 12);
 
     //To prevent test failures due to the order of the issues, each issue is
     //searched in the results instead of using a specific index
@@ -250,6 +250,12 @@ void AnalysisJobTest::testRun() {
     QVERIFY(issue11);
     QCOMPARE(issue11->message(), QString(""));
     QCOMPARE(issue11->checker(), issue->checker());
+
+    const Issue* issue12 = findIssue(&analysisResults, "doublequote_chars",
+                                     ".singleIssueHiddenUnixFileName.cpp", 8);
+    QVERIFY(issue12);
+    QCOMPARE(issue12->message(), QString(""));
+    QCOMPARE(issue12->checker(), issue->checker());
 
     //At least six signals should have been emitted: one for the start, one for
     //the finish, and one for each checker with issues.

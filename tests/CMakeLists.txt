@@ -52,6 +52,7 @@ mem_tests(
 set(examples
     examples/singleIssue.cpp
     examples/singleIssueNonAsciiFileNameḶḷambión.cpp
+    examples/.singleIssueHiddenUnixFileName.cpp
     examples/severalIssuesSingleChecker.cpp
     examples/severalIssuesSeveralCheckers.cpp
     examples/severalIssuesSeveralCheckersUnknownFileType.dqq

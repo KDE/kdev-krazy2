@@ -175,7 +175,7 @@ bool AnalysisJob::isCheckerCompatibleWithFile(const Checker* checker,
 
 QStringList AnalysisJob::findFiles(const QString& directory) const {
     QStringList fileNames;
-    foreach (const QFileInfo& fileInfo, QDir(directory).entryInfoList()) {
+    foreach (const QFileInfo& fileInfo, QDir(directory).entryInfoList(QDir::AllEntries | QDir::Hidden)) {
         if (fileInfo.isDir() && fileInfo.fileName() != "." && fileInfo.fileName() != "..") {
             fileNames.append(findFiles(fileInfo.canonicalFilePath()));
         } else if (fileInfo.isFile()) {
