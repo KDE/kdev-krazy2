@@ -39,14 +39,6 @@ void ResultParser::setAnalysisResults(AnalysisResults* analysisResults) {
     m_analysisResults = analysisResults;
 }
 
-void ResultParser::setWorkingDirectory(const QString& workingDirectory) {
-    m_workingDirectory = workingDirectory;
-
-    if (!m_workingDirectory.endsWith('/')) {
-        m_workingDirectory.append('/');
-    }
-}
-
 void ResultParser::parse(const QByteArray& data) {
     m_xmlStreamReader.addData(data);
 
@@ -124,12 +116,7 @@ void ResultParser::processExplanationEnd() {
 }
 
 void ResultParser::processFileStart() {
-    QString fileName = m_xmlStreamReader.attributes().value("name").toString();
-
-    //The working directory must end with a '/'
-    //If fileName is absolute, or the working directory is empty, only fileName
-    //is returned
-    m_issueFileName = QUrl(m_workingDirectory).resolved(fileName).toString();
+    m_issueFileName = m_xmlStreamReader.attributes().value("name").toString();
 }
 
 void ResultParser::processMessageEnd() {

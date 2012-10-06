@@ -44,10 +44,6 @@ private slots:
     void testParseSeveralCheckers();
     void testParseSeveralFileTypes();
 
-    void testParseWithWorkingDirectory();
-    void testParseWithWorkingDirectoryAndRelativeFileNames();
-    void testParseWithWorkingDirectoryAndAbsoluteFileNames();
-
     void testParseWithDataInSeveralChunks();
 
     void testParseWhenAnalysisResultsHasPreviousContents();
@@ -391,104 +387,6 @@ void ResultParserTest::testParseSeveralFileTypes() {
     assertChecker(5, "checker1Name", "Checker1 description", "Checker1 explanation", "fileType2");
     QCOMPARE(m_analysisResults->issues()[6]->checker(), m_analysisResults->issues()[5]->checker());
     QCOMPARE(m_analysisResults->issues()[7]->checker(), m_analysisResults->issues()[5]->checker());
-}
-
-void ResultParserTest::testParseWithWorkingDirectory() {
-    QByteArray data =
-        KRAZY2_HEADER_XML
-        "<file-type value=\"fileType1\">\n"
-            "<check desc=\"Checker1 description [checker1Name]...\">\n"
-                KRAZY2_FILE_SINGLE_ISSUE_XML
-                KRAZY2_FILE_SEVERAL_ISSUES_XML
-                "<explanation>Checker1 explanation</explanation>\n"
-            "</check>\n"
-            "<check desc=\"Checker2 description [checker2Name]...\">\n"
-                KRAZY2_FILE_SINGLE_ISSUE_WITH_DETAILS_XML
-                "<explanation>Checker2 explanation</explanation>\n"
-            "</check>\n"
-        "</file-type>\n"
-        "<file-type value=\"fileType2\">\n"
-            "<check desc=\"Checker1 description [checker1Name]...\">\n"
-                KRAZY2_FILE_SEVERAL_ISSUES_WITH_DETAILS_XML
-                "<explanation>Checker1 explanation</explanation>\n"
-            "</check>\n"
-        "</file-type>\n"
-        KRAZY2_FOOTER_XML;
-
-    m_resultParser->setWorkingDirectory("/working/directory");
-    m_resultParser->parse(data);
-
-    QCOMPARE(m_analysisResults->issues().size(), 8);
-    assertIssue(0, "single issue message", "/working/directory/singleIssueFile.cpp", -1);
-    assertIssue(1, "several issues message", "/working/directory/severalIssuesFile.cpp", 8);
-    assertIssue(2, "several issues message", "/working/directory/severalIssuesFile.cpp", 15);
-    assertIssue(3, "several issues message", "/working/directory/severalIssuesFile.cpp", 16);
-    assertIssue(4, "details", "/working/directory/singleIssueWithDetailsFile.cpp", 4);
-    assertIssue(5, "details1", "/working/directory/severalIssuesWithDetailsFile.cpp", 23);
-    assertIssue(6, "details2", "/working/directory/severalIssuesWithDetailsFile.cpp", 42);
-    assertIssue(7, "details3", "/working/directory/severalIssuesWithDetailsFile.cpp", 108);
-    assertChecker(0, "checker1Name", "Checker1 description", "Checker1 explanation", "fileType1");
-    QCOMPARE(m_analysisResults->issues()[1]->checker(), m_analysisResults->issues()[0]->checker());
-    QCOMPARE(m_analysisResults->issues()[2]->checker(), m_analysisResults->issues()[0]->checker());
-    QCOMPARE(m_analysisResults->issues()[3]->checker(), m_analysisResults->issues()[0]->checker());
-    assertChecker(4, "checker2Name", "Checker2 description", "Checker2 explanation", "fileType1");
-    assertChecker(5, "checker1Name", "Checker1 description", "Checker1 explanation", "fileType2");
-    QCOMPARE(m_analysisResults->issues()[6]->checker(), m_analysisResults->issues()[5]->checker());
-    QCOMPARE(m_analysisResults->issues()[7]->checker(), m_analysisResults->issues()[5]->checker());
-}
-
-void ResultParserTest::testParseWithWorkingDirectoryAndRelativeFileNames() {
-    QByteArray data =
-        KRAZY2_HEADER_XML
-            KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
-            "<file name=\"../singleIssueFile1.cpp\">\n"
-                "<issues>\n"
-                    "<line>8</line>\n"
-                "</issues>\n"
-            "</file>\n"
-            "<file name=\"../directory2/singleIssueFile2.cpp\">\n"
-                "<issues>\n"
-                    "<line>15</line>\n"
-                "</issues>\n"
-            "</file>\n"
-            "<file name=\"../../directory3/../singleIssueFile3.cpp\">\n"
-                "<issues>\n"
-                    "<line>16</line>\n"
-                "</issues>\n"
-            "</file>\n"
-            KRAZY2_FILETYPE_SINGLE_CHECKER_END_XML
-        KRAZY2_FOOTER_XML;
-
-    m_resultParser->setWorkingDirectory("/working/directory");
-    m_resultParser->parse(data);
-
-    QCOMPARE(m_analysisResults->issues().size(), 3);
-    assertIssue(0, "", "/working/singleIssueFile1.cpp", 8);
-    assertIssue(1, "", "/working/directory2/singleIssueFile2.cpp", 15);
-    assertIssue(2, "", "/singleIssueFile3.cpp", 16);
-    assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType");
-    QCOMPARE(m_analysisResults->issues()[1]->checker(), m_analysisResults->issues()[0]->checker());
-    QCOMPARE(m_analysisResults->issues()[2]->checker(), m_analysisResults->issues()[0]->checker());
-}
-
-void ResultParserTest::testParseWithWorkingDirectoryAndAbsoluteFileNames() {
-    QByteArray data =
-        KRAZY2_HEADER_XML
-            KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
-            "<file name=\"/absolute/directory/singleIssueFile1.cpp\">\n"
-                "<issues>\n"
-                    "<line>23</line>\n"
-                "</issues>\n"
-            "</file>\n"
-            KRAZY2_FILETYPE_SINGLE_CHECKER_END_XML
-        KRAZY2_FOOTER_XML;
-
-    m_resultParser->setWorkingDirectory("/working/directory");
-    m_resultParser->parse(data);
-
-    QCOMPARE(m_analysisResults->issues().size(), 1);
-    assertIssue(0, "", "/absolute/directory/singleIssueFile1.cpp", 23);
-    assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType");
 }
 
 void ResultParserTest::testParseWithDataInSeveralChunks() {

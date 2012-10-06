@@ -206,7 +206,6 @@ void AnalysisJob::startAnalysis() {
 
     m_process->setProgram(krazy2Path.toLocalFile(), arguments);
     m_process->setOutputChannelMode(KProcess::SeparateChannels);
-    m_process->setWorkingDirectory(m_directoryToAnalyze);
 
     connect(m_process, SIGNAL(readyReadStandardError()),
             this, SLOT(handleProcessReadyStandardError()));
@@ -254,7 +253,6 @@ void AnalysisJob::handleProcessFinished(int exitCode) {
 
     ResultParser resultParser;
     resultParser.setAnalysisResults(m_analysisResults);
-    resultParser.setWorkingDirectory(m_directoryToAnalyze);
     resultParser.parse(m_process->readAllStandardOutput());
 
     emitResult();

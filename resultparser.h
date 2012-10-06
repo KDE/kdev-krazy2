@@ -47,15 +47,6 @@ public:
     void setAnalysisResults(AnalysisResults* analysisResults);
 
     /**
-     * Sets the working directory used by Krazy2.
-     * The absolute file names set in the issues will be resolved based on the
-     * working directory.
-     *
-     * @param workingDirectory The working directory.
-     */
-    void setWorkingDirectory(const QString& workingDirectory);
-
-    /**
      * Parses the next results data outputted by krazy2 command.
      *
      * @param data The next results data to parse.
@@ -68,11 +59,6 @@ private:
      * The AnalysisResults to populate when parsing the data.
      */
     AnalysisResults* m_analysisResults;
-
-    /**
-     * The working directory used by Krazy2.
-     */
-    QString m_workingDirectory;
 
     /**
      * The QXmlStreamReader to use in the parsing.
