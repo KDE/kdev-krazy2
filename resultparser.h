@@ -93,10 +93,17 @@ private:
 
     /**
      * The message for the issue being parsed.
-     * The message may appear in a message element before the issues or as an
-     * attribute in the issue element itself.
+     * The message appears in its own element before the issues.
      */
     QString m_issueMessage;
+
+    /**
+     * The details for the issue being parsed.
+     * The details appear as an attribute in the issue element itself. It
+     * overrides the issue message for the issue where it appears (although, if
+     * details are present, there is probably no message).
+     */
+    QString m_issueDetails;
 
     /**
      * Checks whether the current token is a start element with the given name
@@ -140,18 +147,23 @@ private:
     void processFileStart();
 
     /**
-     * Sets the issue message (when it appears in its own element).
+     * Clears the issue message.
+     */
+    void processFileEnd();
+
+    /**
+     * Sets the issue message.
      */
     void processMessageEnd();
 
     /**
-     * Sets the issue message (when it appears as an attribute of the issue
-     * element).
+     * Sets the issue details.
      */
     void processLineStart();
 
     /**
      * Creates and initializes the issue.
+     * The details message is also cleared (if needed).
      */
     void processLineEnd();
 

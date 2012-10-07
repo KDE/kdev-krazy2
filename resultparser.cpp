@@ -57,6 +57,9 @@ void ResultParser::parse(const QByteArray& data) {
         if (isStartElement("file")) {
             processFileStart();
         }
+        if (isEndElement("file")) {
+            processFileEnd();
+        }
         if (isEndElement("message")) {
             processMessageEnd();
         }
@@ -119,6 +122,10 @@ void ResultParser::processFileStart() {
     m_issueFileName = m_xmlStreamReader.attributes().value("name").toString();
 }
 
+void ResultParser::processFileEnd() {
+    m_issueMessage.clear();
+}
+
 void ResultParser::processMessageEnd() {
     m_issueMessage = m_text;
 }
@@ -128,21 +135,27 @@ void ResultParser::processLineStart() {
         return;
     }
 
-    QString message = m_xmlStreamReader.attributes().value("issue").toString();
+    QString details = m_xmlStreamReader.attributes().value("issue").toString();
 
     QRegExp bracketsRegExp("\\[(.*)\\]");
-    if (bracketsRegExp.indexIn(message) != -1) {
-        message = bracketsRegExp.cap(1);
+    if (bracketsRegExp.indexIn(details) != -1) {
+        details = bracketsRegExp.cap(1);
     }
 
-    m_issueMessage = message;
+    m_issueDetails = details;
 }
 
 void ResultParser::processLineEnd() {
+    QString message = m_issueMessage;
+    if (!m_issueDetails.isEmpty()) {
+        message = m_issueDetails;
+        m_issueDetails.clear();
+    }
+
     Issue* issue = new Issue();
     issue->setChecker(m_checker);
     issue->setFileName(m_issueFileName);
-    issue->setMessage(m_issueMessage);
+    issue->setMessage(message);
     issue->setLine(m_text.toInt());
 
     m_analysisResults->addIssue(issue);

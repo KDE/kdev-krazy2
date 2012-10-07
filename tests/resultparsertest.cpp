@@ -36,6 +36,7 @@ private slots:
     void testParseSingleCheckerSingleFileSingleIssue();
     void testParseSingleCheckerSingleFileSingleIssueNoMessage();
     void testParseSingleCheckerSingleFileSingleIssueWithDetails();
+    void testParseSingleCheckerSingleFileSingleIssueWithMessageAndDetails();
     void testParseSingleCheckerSingleFileSingleIssueNonAsciiFilename();
     void testParseSingleCheckerSingleFileSeveralIssues();
     void testParseSingleCheckerSingleFileSeveralIssuesNoMessage();
@@ -43,6 +44,9 @@ private slots:
     void testParseSingleCheckerSeveralFiles();
     void testParseSeveralCheckers();
     void testParseSeveralFileTypes();
+
+    void testParseSingleCheckerSingleFileSeveralIssuesIssueWithoutMessageAfterIssueWithDetails();
+    void testParseSingleCheckerSeveralFilesSingleIssueWithoutMessageAfterSingleIssueWithMessage();
 
     void testParseWithDataInSeveralChunks();
 
@@ -99,6 +103,14 @@ private:
 
 #define KRAZY2_FILE_SINGLE_ISSUE_WITH_DETAILS_XML \
     "<file name=\"singleIssueWithDetailsFile.cpp\">\n"\
+        "<issues>\n"\
+            "<line issue=\"[details]\">4</line>\n"\
+        "</issues>\n"\
+    "</file>\n"
+
+#define KRAZY2_FILE_SINGLE_ISSUE_WITH_MESSAGE_AND_DETAILS_XML \
+    "<file name=\"singleIssueWithMessageAndDetailsFile.cpp\">\n"\
+        "<message>single issue message</message>\n"\
         "<issues>\n"\
             "<line issue=\"[details]\">4</line>\n"\
         "</issues>\n"\
@@ -217,6 +229,21 @@ void ResultParserTest::testParseSingleCheckerSingleFileSingleIssueWithDetails() 
 
     QCOMPARE(m_analysisResults->issues().size(), 1);
     assertIssue(0, "details", "singleIssueWithDetailsFile.cpp", 4);
+    assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType");
+}
+
+void ResultParserTest::testParseSingleCheckerSingleFileSingleIssueWithMessageAndDetails() {
+    QByteArray data =
+        KRAZY2_HEADER_XML
+            KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
+                KRAZY2_FILE_SINGLE_ISSUE_WITH_MESSAGE_AND_DETAILS_XML
+            KRAZY2_FILETYPE_SINGLE_CHECKER_END_XML
+        KRAZY2_FOOTER_XML;
+
+    m_resultParser->parse(data);
+
+    QCOMPARE(m_analysisResults->issues().size(), 1);
+    assertIssue(0, "details", "singleIssueWithMessageAndDetailsFile.cpp", 4);
     assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType");
 }
 
@@ -387,6 +414,44 @@ void ResultParserTest::testParseSeveralFileTypes() {
     assertChecker(5, "checker1Name", "Checker1 description", "Checker1 explanation", "fileType2");
     QCOMPARE(m_analysisResults->issues()[6]->checker(), m_analysisResults->issues()[5]->checker());
     QCOMPARE(m_analysisResults->issues()[7]->checker(), m_analysisResults->issues()[5]->checker());
+}
+
+void ResultParserTest::testParseSingleCheckerSingleFileSeveralIssuesIssueWithoutMessageAfterIssueWithDetails() {
+    QByteArray data =
+        KRAZY2_HEADER_XML
+            KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
+                "<file name=\"severalIssuesWithAndWithoutDetailsFile.cpp\">\n"
+                    "<issues>\n"
+                        "<line issue=\"details\">42</line>\n"
+                        "<line>108</line>\n"
+                    "</issues>\n"
+                "</file>\n"
+            KRAZY2_FILETYPE_SINGLE_CHECKER_END_XML
+        KRAZY2_FOOTER_XML;
+
+    m_resultParser->parse(data);
+
+    QCOMPARE(m_analysisResults->issues().size(), 2);
+    assertIssue(0, "details", "severalIssuesWithAndWithoutDetailsFile.cpp", 42);
+    assertIssue(1, "", "severalIssuesWithAndWithoutDetailsFile.cpp", 108);
+    assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType");
+}
+
+void ResultParserTest::testParseSingleCheckerSeveralFilesSingleIssueWithoutMessageAfterSingleIssueWithMessage() {
+    QByteArray data =
+        KRAZY2_HEADER_XML
+            KRAZY2_FILETYPE_SINGLE_CHECKER_START_XML
+                KRAZY2_FILE_SINGLE_ISSUE_XML
+                KRAZY2_FILE_SINGLE_ISSUE_NO_MESSAGE_XML
+            KRAZY2_FILETYPE_SINGLE_CHECKER_END_XML
+        KRAZY2_FOOTER_XML;
+
+    m_resultParser->parse(data);
+
+    QCOMPARE(m_analysisResults->issues().size(), 2);
+    assertIssue(0, "single issue message", "singleIssueFile.cpp", -1);
+    assertIssue(1, "", "singleIssueNoMessageFile.cpp", 423);
+    assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType");
 }
 
 void ResultParserTest::testParseWithDataInSeveralChunks() {
