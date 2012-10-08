@@ -15,6 +15,7 @@ endmacro(UNIT_TESTS)
 
 unit_tests(
     analysisjob
+    analysisparameters
     analysisresults
     checker
     checkerlistjob
@@ -34,6 +35,7 @@ endmacro(MEM_TESTS)
 
 mem_tests(
     # analysisjob # Disabled by default, as it uses KDevelop::TestCore and thus needs a lot of memory to perform the test
+    analysisparameters
     analysisresults
     checker
     checkerlistjob
@@ -51,6 +53,7 @@ mem_tests(
 # binary directory for the errors to be shown in the tests.
 set(examples
     examples/singleIssue.cpp
+    examples/singleExtraIssue.cpp
     examples/singleIssueNonAsciiFileNameḶḷambión.cpp
     examples/.singleIssueHiddenUnixFileName.cpp
     examples/severalIssuesSingleChecker.cpp

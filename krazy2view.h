@@ -24,6 +24,7 @@
 
 class KJob;
 
+class AnalysisParameters;
 class AnalysisResults;
 class IssueModel;
 
@@ -60,6 +61,11 @@ private:
     Ui::Krazy2View* m_ui;
 
     /**
+     * The Krazy2 analysis parameters.
+     */
+    AnalysisParameters* m_analysisParameters;
+
+    /**
      * The Krazy2 analysis results.
      */
     AnalysisResults* m_analysisResults;
@@ -72,6 +78,7 @@ private:
 private Q_SLOTS:
 
     /**
+     * Handles the change of the directory to analyze.
      * Enables or disables the Analyze button depending on whether the directory
      * exists, is readable and is executable or not.
      *

@@ -30,6 +30,7 @@
 #include <kdevplatform/interfaces/icore.h>
 #include <kdevplatform/interfaces/iuicontroller.h>
 
+#include "analysisparameters.h"
 #include "checker.h"
 #include "checkerlistjob.h"
 #include "progressparser.h"
@@ -38,6 +39,7 @@
 //public:
 
 AnalysisJob::AnalysisJob(QObject* parent /*= 0*/): KJob(parent),
+    m_analysisParameters(0),
     m_analysisResults(0),
     m_progressParser(new ProgressParser(this)),
     m_isAnalyzing(false),
@@ -60,13 +62,12 @@ AnalysisJob::AnalysisJob(QObject* parent /*= 0*/): KJob(parent),
 }
 
 AnalysisJob::~AnalysisJob() {
-    qDeleteAll(*m_checkerList);
     delete m_checkerList;
 }
 
 void AnalysisJob::start() {
+    Q_ASSERT(m_analysisParameters);
     Q_ASSERT(m_analysisResults);
-    Q_ASSERT(!m_directoryToAnalyze.isEmpty());
     Q_ASSERT(!m_isAnalyzing);
 
     KDevelop::ICore::self()->uiController()->registerStatus(m_progressParser);
@@ -74,20 +75,23 @@ void AnalysisJob::start() {
 
     m_progressParser->start();
 
-    m_checkerListJob->setCheckerList(m_checkerList);
-    m_checkerListJob->start();
+    if (!m_analysisParameters->wereCheckersInitialized()) {
+        m_checkerListJob->setCheckerList(m_checkerList);
+        m_checkerListJob->start();
+        return;
+    }
+
+    startAnalysis();
 }
 
 void AnalysisJob::setAnalysisResults(AnalysisResults* analysisResults) {
     m_analysisResults = analysisResults;
 }
 
-void AnalysisJob::setDirectoryToAnalyze(const QString& directoryToAnalyze) {
-    Q_ASSERT(QFileInfo(directoryToAnalyze).isAbsolute());
-    Q_ASSERT(QFileInfo(directoryToAnalyze).isDir());
-    Q_ASSERT(QFileInfo(directoryToAnalyze).exists());
+void AnalysisJob::setAnalysisParameters(AnalysisParameters* analysisParameters) {
+    Q_ASSERT(analysisParameters);
 
-    m_directoryToAnalyze = directoryToAnalyze;
+    m_analysisParameters = analysisParameters;
 }
 
 //protected:
@@ -110,9 +114,8 @@ int AnalysisJob::calculateNumberOfCheckersToBeExecuted(const QStringList& namesO
     //The executed checkers will depend on the types of the files
     //analyzed and the file types supported by each checker.
     int numberOfCheckersToBeExecuted = 0;
-    foreach (const Checker* checker, *m_checkerList) {
-        //By default, Krazy2 does not execute extra checkers.
-        if (!checker->isExtra() && isCheckerCompatibleWithAnyFile(checker, namesOfFilesToBeAnalyzed)) {
+    foreach (const Checker* checker, m_analysisParameters->checkersToRun()) {
+        if (isCheckerCompatibleWithAnyFile(checker, namesOfFilesToBeAnalyzed)) {
             numberOfCheckersToBeExecuted++;
         }
     }
@@ -173,17 +176,34 @@ bool AnalysisJob::isCheckerCompatibleWithFile(const Checker* checker,
     return false;
 }
 
-QStringList AnalysisJob::findFiles(const QString& directory) const {
-    QStringList fileNames;
-    foreach (const QFileInfo& fileInfo, QDir(directory).entryInfoList(QDir::AllEntries | QDir::Hidden)) {
-        if (fileInfo.isDir() && fileInfo.fileName() != "." && fileInfo.fileName() != "..") {
-            fileNames.append(findFiles(fileInfo.canonicalFilePath()));
-        } else if (fileInfo.isFile()) {
-            fileNames.append(fileInfo.canonicalFilePath());
+QStringList AnalysisJob::checkersToRunAsKrazy2Arguments() const {
+    QStringList namesOfCheckersToRun;
+    QStringList namesOfExtraCheckersToRun;
+    foreach (const Checker* checker, m_analysisParameters->checkersToRun()) {
+        if (!checker->isExtra()) {
+            namesOfCheckersToRun.append(checker->name());
+        } else {
+            namesOfExtraCheckersToRun.append(checker->name());
         }
     }
 
-    return fileNames;
+    if (namesOfExtraCheckersToRun.isEmpty()) {
+        if (namesOfCheckersToRun.isEmpty()) {
+            return QStringList();
+        }
+
+        return QStringList() << "--check" << namesOfCheckersToRun.join(",");
+    }
+
+    QStringList namesOfCheckersNotToRun;
+    foreach (const Checker* checker, m_analysisParameters->availableCheckers()) {
+        if (!checker->isExtra() && !namesOfCheckersToRun.contains(checker->name())) {
+            namesOfCheckersNotToRun.append(checker->name());
+        }
+    }
+
+    return QStringList() << "--exclude" << namesOfCheckersNotToRun.join(",")
+                         << "--extra" << namesOfExtraCheckersToRun.join(",");
 }
 
 void AnalysisJob::startAnalysis() {
@@ -191,7 +211,7 @@ void AnalysisJob::startAnalysis() {
 
     m_isAnalyzing = true;
 
-    QStringList namesOfFilesToBeAnalyzed = findFiles(m_directoryToAnalyze);
+    QStringList namesOfFilesToBeAnalyzed = m_analysisParameters->filesToBeAnalyzed();
 
     m_progressParser->setNumberOfCheckers(
         calculateNumberOfCheckersToBeExecuted(namesOfFilesToBeAnalyzed));
@@ -202,6 +222,7 @@ void AnalysisJob::startAnalysis() {
     QStringList arguments;
     arguments << "--export" << "xml";
     arguments << "--explain";
+    arguments << checkersToRunAsKrazy2Arguments();
     arguments << "-";
 
     m_process->setProgram(krazy2Path.toLocalFile(), arguments);
@@ -237,6 +258,8 @@ void AnalysisJob::handleCheckerListJobResult(KJob* job) {
 
         return;
     }
+
+    m_analysisParameters->initializeCheckers(*m_checkerList);
 
     startAnalysis();
 }

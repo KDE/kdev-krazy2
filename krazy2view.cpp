@@ -22,6 +22,7 @@
 #include <kdevplatform/interfaces/icore.h>
 #include <kdevplatform/interfaces/iruncontroller.h>
 
+#include "analysisparameters.h"
 #include "analysisresults.h"
 #include "issuemodel.h"
 #include "analysisjob.h"
@@ -32,6 +33,7 @@
 
 Krazy2View::Krazy2View(QWidget* parent /*= 0*/):
         QWidget(parent),
+    m_analysisParameters(new AnalysisParameters()),
     m_analysisResults(0) {
     m_ui = new Ui::Krazy2View();
     m_ui->setupUi(this);
@@ -50,6 +52,7 @@ Krazy2View::Krazy2View(QWidget* parent /*= 0*/):
 }
 
 Krazy2View::~Krazy2View() {
+    delete m_analysisParameters;
     delete m_analysisResults;
     delete m_ui;
 }
@@ -65,6 +68,10 @@ void Krazy2View::handleDirectoryChanged(const QString& directory) {
         return;
     }
 
+    QStringList paths;
+    paths.append(m_ui->directoryRequester->url().toLocalFile());
+    m_analysisParameters->setFilesAndDirectoriesToBeAnalyzed(paths);
+
     m_ui->analyzeButton->setEnabled(true);
 }
 
@@ -76,8 +83,8 @@ void Krazy2View::analyze() {
     m_analysisResults = new AnalysisResults();
 
     AnalysisJob* analysisJob = new AnalysisJob();
+    analysisJob->setAnalysisParameters(m_analysisParameters);
     analysisJob->setAnalysisResults(m_analysisResults);
-    analysisJob->setDirectoryToAnalyze(m_ui->directoryRequester->url().toLocalFile());
 
     connect(analysisJob, SIGNAL(finished(KJob*)),
             this, SLOT(handleAnalysisResult(KJob*)));

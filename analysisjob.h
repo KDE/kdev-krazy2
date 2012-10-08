@@ -26,6 +26,7 @@
 
 class KProcess;
 
+class AnalysisParameters;
 class AnalysisResults;
 class Checker;
 class CheckerListJob;
@@ -33,13 +34,15 @@ class ProgressParser;
 
 /**
  * Job to analyze a directory with krazy2.
- * The job executes a krazy2 process asking it to analyze all the files in the
- * directory (and, recursively, in all its subdirectories) specified with
- * setDirectoryToAnalyze(QString) and then parses the output to populate an
+ * The job executes a krazy2 process asking it to analyze all the files
+ * specified in the AnalysisParameters and then parses the output to populate an
  * AnalysisTesults object.
  *
- * Before performing the actual analysis the list of available checkers is got.
- * This is needed to properly update the analysis progress notifications.
+ * The checkers to run on the files are specified too in the AnalysisParameters.
+ * However, if the checkers in the AnalysisParameters were not initialized,
+ * before performing the actual analysis the list of available checkers is got
+ * to initialize the checkers in the AnalysisParameters. All the normal (not
+ * extra) checkers would be run in this case.
  *
  * The path to the krazy2 executable is got from "Krazy2" configuration group.
  *
@@ -64,9 +67,10 @@ public:
     //<KJob>
 
     /**
-     * Starts krazy2 asking it to analyze all the files in the directory (and,
-     * recursively, in all its subdirectories) specified with
-     * setDirectoryToAnalyze(QString).
+     * Starts krazy2 asking it to analyze all the files specified in the
+     * AnalysisParameters.
+     * If the checkers were not initialized, the list of available checkers is
+     * got before starting the actual analysis.
      */
     virtual void start();
 
@@ -80,11 +84,11 @@ public:
     void setAnalysisResults(AnalysisResults* analysisResults);
 
     /**
-     * Sets the directory to analyze.
+     * Sets the analysis parameters.
      *
-     * @param directoryToAnalyze The directory to analyze.
+     * @param analysisParameters The analysis parameters.
      */
-    void setDirectoryToAnalyze(const QString& directoryToAnalyze);
+    void setAnalysisParameters(AnalysisParameters* analysisParameters);
 
 protected:
 
@@ -103,6 +107,11 @@ protected:
 private:
 
     /**
+     * The analysis parameters to use.
+     */
+    AnalysisParameters* m_analysisParameters;
+
+    /**
      * The analysis results to populate.
      */
     AnalysisResults* m_analysisResults;
@@ -113,11 +122,6 @@ private:
     ProgressParser* m_progressParser;
 
     /**
-     * The directory to analyze.
-     */
-    QString m_directoryToAnalyze;
-
-    /**
      * True if the actual analysis started, false if it is still getting the
      * checker list.
      */
@@ -125,13 +129,15 @@ private:
 
     /**
      * The list of available Krazy2 checkers.
-     * The list is just used to calculate the number of checkers to be executed
-     * to be able to properly update the progress.
+     * The list is used only if the CheckerListJob is run. It is used as a
+     * temporal storage before initializing the checkers in the
+     * AnalysisParameters.
      */
     QList<const Checker*>* m_checkerList;
 
     /**
-     * The job to get the checker list.
+     * The job to get the available checkers (if they were not initialized yet
+     * in the AnalysisParameters).
      */
     CheckerListJob* m_checkerListJob;
 
@@ -180,13 +186,23 @@ private:
     bool isCheckerCompatibleWithFile(const Checker* checker, const QString& fileName) const;
 
     /**
-     * Returns a list with the canonical file paths of all the files in the
-     * given directory.
+     * Returns the list of checkers to run as a list of strings to be passed to
+     * krazy2 as arguments.
+     * The checkers to run are got from the AnalysisParameter. The list returned
+     * by AnalysisParameter contains both normal and extra checkers. However,
+     * when telling krazy2 which checkers to run, normal checkers and extra
+     * checkers must be passed in different arguments.
      *
-     * @param directory The directory to get its files.
-     * @return The canonical file paths.
+     * Moreover, normal checkers and extra checkers can not be specified at the
+     * same time; if "--check" argument is used, "--extra" argument takes no
+     * effect. Thus, to execute extra checkers along with a subset of the normal
+     * checkers, the "--exclude" argument has to be used to specify which normal
+     * checkers should not be run (from all the available checkers), along with
+     * an "--extra" argument to specify which extra checkers should be run.
+     *
+     * @return The krazy2 arguments as a list of strings.
      */
-    QStringList findFiles(const QString& directory) const;
+    QStringList checkersToRunAsKrazy2Arguments() const;
 
     /**
      * Starts the krazy2 process and the actual analysis.

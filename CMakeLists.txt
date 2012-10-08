@@ -17,6 +17,7 @@ add_subdirectory(tests)
 
 set(kdevkrazy2_library_SRCS
     analysisjob.cpp
+    analysisparameters.cpp
     analysisresults.cpp
     checker.cpp
     checkerlistjob.cpp
