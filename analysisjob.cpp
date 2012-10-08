@@ -84,14 +84,14 @@ void AnalysisJob::start() {
     startAnalysis();
 }
 
-void AnalysisJob::setAnalysisResults(AnalysisResults* analysisResults) {
-    m_analysisResults = analysisResults;
-}
-
 void AnalysisJob::setAnalysisParameters(AnalysisParameters* analysisParameters) {
     Q_ASSERT(analysisParameters);
 
     m_analysisParameters = analysisParameters;
+}
+
+void AnalysisJob::setAnalysisResults(AnalysisResults* analysisResults) {
+    m_analysisResults = analysisResults;
 }
 
 //protected:

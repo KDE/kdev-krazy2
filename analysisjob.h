@@ -77,18 +77,18 @@ public:
     //</KJob>
 
     /**
-     * Sets the AnalysisResults to populate.
-     *
-     * @param analysisResults The AnalysisResults to populate.
-     */
-    void setAnalysisResults(AnalysisResults* analysisResults);
-
-    /**
      * Sets the analysis parameters.
      *
      * @param analysisParameters The analysis parameters.
      */
     void setAnalysisParameters(AnalysisParameters* analysisParameters);
+
+    /**
+     * Sets the AnalysisResults to populate.
+     *
+     * @param analysisResults The AnalysisResults to populate.
+     */
+    void setAnalysisResults(AnalysisResults* analysisResults);
 
 protected:
 
