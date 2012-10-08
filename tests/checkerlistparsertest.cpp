@@ -268,7 +268,6 @@ void CheckerListParserTest::testParseWithDataInSeveralChunks() {
                 numberOfCharacters = 1;
             }
 
-            qDebug() << "Parse: " << remainingData.left(numberOfCharacters);
             m_checkerListParser->parse(remainingData.left(numberOfCharacters));
             remainingData.remove(0, numberOfCharacters);
         }

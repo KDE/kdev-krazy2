@@ -497,7 +497,6 @@ void ResultParserTest::testParseWithDataInSeveralChunks() {
                 numberOfCharacters = 1;
             }
 
-            qDebug() << "Parse: " << remainingData.left(numberOfCharacters);
             m_resultParser->parse(remainingData.left(numberOfCharacters));
             remainingData.remove(0, numberOfCharacters);
         }
