@@ -97,6 +97,10 @@ void ResultParser::processCheckStart() {
     QString checkerDescription = regExp.cap(1);
     QString checkerName = regExp.cap(2);
 
+    if (checkerDescription == "no description available") {
+        checkerDescription = "";
+    }
+
     m_checker = m_analysisResults->findChecker(m_checkerFileType, checkerName);
     m_checkerBeingInitialized = 0;
 
@@ -113,7 +117,7 @@ void ResultParser::processCheckStart() {
 }
 
 void ResultParser::processExplanationEnd() {
-    if (m_checkerBeingInitialized) {
+    if (m_checkerBeingInitialized && m_text != "(no explanation available)") {
         m_checkerBeingInitialized->setExplanation(m_text);
     }
 }

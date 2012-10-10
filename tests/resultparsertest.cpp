@@ -50,6 +50,9 @@ private slots:
 
     void testParseSingleCheckerExplanationEndingWithNewLine();
 
+    void testParseSingleCheckerNoDescription();
+    void testParseSingleCheckerNoExplanation();
+
     void testParseWithDataInSeveralChunks();
 
     void testParseWhenAnalysisResultsHasPreviousContents();
@@ -471,6 +474,40 @@ void ResultParserTest::testParseSingleCheckerExplanationEndingWithNewLine() {
 
     QCOMPARE(m_analysisResults->issues().size(), 1);
     assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType");
+}
+
+void ResultParserTest::testParseSingleCheckerNoDescription() {
+    QByteArray data =
+        KRAZY2_HEADER_XML
+        "<file-type value=\"fileType\">\n"
+            "<check desc=\"no description available [checkerName]...\">\n"
+                KRAZY2_FILE_SINGLE_ISSUE_XML
+                "<explanation>Checker explanation</explanation>\n"
+            "</check>\n"
+        "</file-type>\n"
+        KRAZY2_FOOTER_XML;
+
+    m_resultParser->parse(data);
+
+    QCOMPARE(m_analysisResults->issues().size(), 1);
+    assertChecker(0, "checkerName", "", "Checker explanation", "fileType");
+}
+
+void ResultParserTest::testParseSingleCheckerNoExplanation() {
+    QByteArray data =
+        KRAZY2_HEADER_XML
+        "<file-type value=\"fileType\">\n"
+            "<check desc=\"Checker description [checkerName]...\">\n"
+                KRAZY2_FILE_SINGLE_ISSUE_XML
+                "<explanation>(no explanation available)\n</explanation>\n"
+            "</check>\n"
+        "</file-type>\n"
+        KRAZY2_FOOTER_XML;
+
+    m_resultParser->parse(data);
+
+    QCOMPARE(m_analysisResults->issues().size(), 1);
+    assertChecker(0, "checkerName", "Checker description", "", "fileType");
 }
 
 void ResultParserTest::testParseWithDataInSeveralChunks() {

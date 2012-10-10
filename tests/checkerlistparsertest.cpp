@@ -38,6 +38,8 @@ private slots:
     void testParseSingleFileTypeSeveralNormalAndExtraCheckers();
     void testParseSeveralFileTypes();
 
+    void testParseSingleCheckerNoDescription();
+
     void testParseWithDataInSeveralChunks();
 
 private:
@@ -225,6 +227,20 @@ void CheckerListParserTest::testParseSeveralFileTypes() {
     assertChecker(11, "checker2Name", "Checker2 description", "fileType3", false);
     assertChecker(12, "checker3Name", "Checker3 description", "fileType3", false);
     assertChecker(13, "extraCheckerName", "Extra checker description", "fileType3", true);
+}
+
+void CheckerListParserTest::testParseSingleCheckerNoDescription() {
+    QString data =
+        KRAZY2_HEADER_XML
+        "<file-type value=\"fileType\">\n"
+            "<plugin name=\"checkerName\" short-desc=\"(no description available)\" version=\"0.4\"/>\n"
+        "</file-type>\n"
+        KRAZY2_FOOTER_XML;
+
+    m_checkerListParser->parse(data);
+
+    QCOMPARE(m_checkerList->size(), 1);
+    assertChecker(0, "checkerName", "", "fileType", false);
 }
 
 void CheckerListParserTest::testParseWithDataInSeveralChunks() {

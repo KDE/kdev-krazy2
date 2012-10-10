@@ -77,9 +77,14 @@ void CheckerListParser::processFileTypeStart() {
 }
 
 void CheckerListParser::processPluginStart() {
+    QString checkerDescription = m_xmlStreamReader.attributes().value("short-desc").toString();
+    if (checkerDescription == "(no description available)") {
+        checkerDescription = "";
+    }
+
     Checker* checker = new Checker();
     checker->setName(m_xmlStreamReader.attributes().value("name").toString());
-    checker->setDescription(m_xmlStreamReader.attributes().value("short-desc").toString());
+    checker->setDescription(checkerDescription);
     checker->setFileType(m_fileType);
     checker->setExtra(m_extra);
 
