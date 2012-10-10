@@ -26,7 +26,7 @@
      <item>
       <widget class="KPushButton" name="analyzeButton">
        <property name="text">
-        <string extracomment="@caption:button">Analyze</string>
+        <string comment="@caption:button">Analyze</string>
        </property>
       </widget>
      </item>
