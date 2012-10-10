@@ -66,7 +66,7 @@ private:
     QXmlStreamReader m_xmlStreamReader;
 
     /**
-     * The text of the current token, if its type is Characters.
+     * The trimmed text of the current token, if its type is Characters.
      */
     QString m_text;
 

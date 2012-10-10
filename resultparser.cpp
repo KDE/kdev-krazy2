@@ -70,7 +70,7 @@ void ResultParser::parse(const QByteArray& data) {
             processLineEnd();
         }
         if (m_xmlStreamReader.isCharacters()) {
-            m_text = m_xmlStreamReader.text().toString();
+            m_text = m_xmlStreamReader.text().toString().trimmed();
         }
     }
 }

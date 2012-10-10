@@ -48,6 +48,8 @@ private slots:
     void testParseSingleCheckerSingleFileSeveralIssuesIssueWithoutMessageAfterIssueWithDetails();
     void testParseSingleCheckerSeveralFilesSingleIssueWithoutMessageAfterSingleIssueWithMessage();
 
+    void testParseSingleCheckerExplanationEndingWithNewLine();
+
     void testParseWithDataInSeveralChunks();
 
     void testParseWhenAnalysisResultsHasPreviousContents();
@@ -451,6 +453,23 @@ void ResultParserTest::testParseSingleCheckerSeveralFilesSingleIssueWithoutMessa
     QCOMPARE(m_analysisResults->issues().size(), 2);
     assertIssue(0, "single issue message", "singleIssueFile.cpp", -1);
     assertIssue(1, "", "singleIssueNoMessageFile.cpp", 423);
+    assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType");
+}
+
+void ResultParserTest::testParseSingleCheckerExplanationEndingWithNewLine() {
+    QByteArray data =
+        KRAZY2_HEADER_XML
+        "<file-type value=\"fileType\">\n"
+            "<check desc=\"Checker description [checkerName]...\">\n"
+                KRAZY2_FILE_SINGLE_ISSUE_XML
+                "<explanation>Checker explanation\n</explanation>\n"
+            "</check>\n"
+        "</file-type>\n"
+        KRAZY2_FOOTER_XML;
+
+    m_resultParser->parse(data);
+
+    QCOMPARE(m_analysisResults->issues().size(), 1);
     assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType");
 }
 
