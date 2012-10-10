@@ -17,11 +17,29 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="KUrlRequester" name="directoryRequester">
-       <property name="mode">
-        <set>KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly</set>
+      <widget class="KPushButton" name="selectPathsButton">
+       <property name="whatsThis">
+        <string comment="@info:whatsthis">&lt;para&gt;Sets the files and directories to analyze.&lt;/para&gt;
+
+&lt;para&gt;The files to be analyzed are all the selected files and all the files in the selected directories (and, recursively, all the files in all its subdirectories).&lt;/para&gt;</string>
+       </property>
+       <property name="text">
+        <string comment="@action:button">Select paths...</string>
        </property>
       </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <widget class="KPushButton" name="analyzeButton">
@@ -42,11 +60,6 @@
    <class>KPushButton</class>
    <extends>QPushButton</extends>
    <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KUrlRequester</class>
-   <extends>QFrame</extends>
-   <header>kurlrequester.h</header>
   </customwidget>
   <customwidget>
    <class>IssueWidget</class>

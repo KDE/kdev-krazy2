@@ -156,7 +156,7 @@ void AnalysisJobTest::testRun() {
     analysisJob.setAutoDelete(false);
 
     AnalysisParameters analysisParameters;
-    analysisParameters.setFilesAndDirectoriesToBeAnalyzed(QStringList() << m_workingDirectory + "examples");
+    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
     analysisJob.setAnalysisParameters(&analysisParameters);
 
     AnalysisResults analysisResults;
@@ -339,7 +339,7 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
     AnalysisParameters analysisParameters;
     analysisParameters.initializeCheckers(availableCheckers);
     analysisParameters.setCheckersToRun(checkersToRun);
-    analysisParameters.setFilesAndDirectoriesToBeAnalyzed(QStringList() << m_workingDirectory + "examples");
+    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
     analysisJob.setAnalysisParameters(&analysisParameters);
 
     AnalysisResults analysisResults;
@@ -471,7 +471,7 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
     }
 
     analysisParameters.setCheckersToRun(checkersToRun);
-    analysisParameters.setFilesAndDirectoriesToBeAnalyzed(QStringList() << m_workingDirectory + "examples");
+    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
     analysisJob.setAnalysisParameters(&analysisParameters);
 
     AnalysisResults analysisResults;
@@ -646,7 +646,7 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
     AnalysisParameters analysisParameters;
     analysisParameters.initializeCheckers(availableCheckers);
     analysisParameters.setCheckersToRun(checkersToRun);
-    analysisParameters.setFilesAndDirectoriesToBeAnalyzed(QStringList() << m_workingDirectory + "examples");
+    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
     analysisJob.setAnalysisParameters(&analysisParameters);
 
     AnalysisResults analysisResults;
@@ -709,7 +709,7 @@ void AnalysisJobTest::testRunWithEmptyKrazy2ExecutablePath() {
     analysisJob.setAutoDelete(false);
 
     AnalysisParameters analysisParameters;
-    analysisParameters.setFilesAndDirectoriesToBeAnalyzed(QStringList() << m_workingDirectory + "examples");
+    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
     analysisJob.setAnalysisParameters(&analysisParameters);
 
     AnalysisResults analysisResults;
@@ -736,7 +736,7 @@ void AnalysisJobTest::testRunWithInvalidKrazy2ExecutablePath() {
     analysisJob.setAutoDelete(false);
 
     AnalysisParameters analysisParameters;
-    analysisParameters.setFilesAndDirectoriesToBeAnalyzed(QStringList() << m_workingDirectory + "examples");
+    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
     analysisJob.setAnalysisParameters(&analysisParameters);
 
     AnalysisResults analysisResults;
@@ -774,7 +774,7 @@ void AnalysisJobTest::testKill() {
     analysisJob.setAutoDelete(false);
 
     AnalysisParameters analysisParameters;
-    analysisParameters.setFilesAndDirectoriesToBeAnalyzed(QStringList() << m_workingDirectory + "examples");
+    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
     analysisJob.setAnalysisParameters(&analysisParameters);
 
     AnalysisResults analysisResults;

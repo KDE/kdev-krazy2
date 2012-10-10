@@ -25,6 +25,7 @@ unit_tests(
     krazy2view
     progressparser
     resultparser
+    selectpathswidget
 )
 
 macro(MEM_TESTS)
@@ -45,6 +46,7 @@ mem_tests(
     krazy2view
     progressparser
     resultparser
+    selectpathswidget
 )
 
 # Copy example files for real Krazy2 tests to binary directory. The source files

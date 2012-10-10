@@ -34,9 +34,9 @@ private slots:
     void testSetCheckersToRun();
     void testSetCheckersToRunWithNotAvailableCheckers();
 
-    void testSetFilesAndDirectoriesToBeAnalyzed();
-    void testSetFilesAndDirectoriesToBeAnalyzedWithRepeatedEntries();
-    void testSetFilesAndDirectoriesToBeAnalyzedWithInvalidEntries();
+    void testSetFilesAndDirectories();
+    void testSetFilesAndDirectoriesWithRepeatedEntries();
+    void testSetFilesAndDirectoriesWithInvalidEntries();
 
 private:
 
@@ -144,7 +144,7 @@ void AnalysisParametersTest::testSetCheckersToRunWithNotAvailableCheckers() {
              analysisparameters.availableCheckers().at(4));
 }
 
-void AnalysisParametersTest::testSetFilesAndDirectoriesToBeAnalyzed() {
+void AnalysisParametersTest::testSetFilesAndDirectories() {
     if (!examplesInSubdirectory()) {
         QString message = "The examples were not found in the subdirectory 'examples' "
                           "of the working directory (" + QDir::currentPath() + ")";
@@ -159,7 +159,9 @@ void AnalysisParametersTest::testSetFilesAndDirectoriesToBeAnalyzed() {
     paths.append(workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp");
     paths.append(workingDirectory + "examples/subdirectory");
     paths.append(workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
-    analysisparameters.setFilesAndDirectoriesToBeAnalyzed(paths);
+    analysisparameters.setFilesAndDirectories(paths);
+
+    QCOMPARE(analysisparameters.filesAndDirectories(), paths);
 
     QStringList filesToBeAnalyzed = analysisparameters.filesToBeAnalyzed();
     QCOMPARE(filesToBeAnalyzed.count(), 4);
@@ -173,7 +175,7 @@ void AnalysisParametersTest::testSetFilesAndDirectoriesToBeAnalyzed() {
             workingDirectory + "examples/severalIssuesSeveralCheckers.cpp"));
 }
 
-void AnalysisParametersTest::testSetFilesAndDirectoriesToBeAnalyzedWithRepeatedEntries() {
+void AnalysisParametersTest::testSetFilesAndDirectoriesWithRepeatedEntries() {
     if (!examplesInSubdirectory()) {
         QString message = "The examples were not found in the subdirectory 'examples' "
                           "of the working directory (" + QDir::currentPath() + ")";
@@ -188,7 +190,9 @@ void AnalysisParametersTest::testSetFilesAndDirectoriesToBeAnalyzedWithRepeatedE
     paths.append(workingDirectory + "examples");
     paths.append(workingDirectory + "examples/singleIssue.cpp");
     paths.append(workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
-    analysisparameters.setFilesAndDirectoriesToBeAnalyzed(paths);
+    analysisparameters.setFilesAndDirectories(paths);
+
+    QCOMPARE(analysisparameters.filesAndDirectories(), paths);
 
     QStringList filesToBeAnalyzed = analysisparameters.filesToBeAnalyzed();
     QCOMPARE(filesToBeAnalyzed.count(), 8);
@@ -210,7 +214,7 @@ void AnalysisParametersTest::testSetFilesAndDirectoriesToBeAnalyzedWithRepeatedE
             workingDirectory + "examples/subdirectory/singleIssue.desktop"));
 }
 
-void AnalysisParametersTest::testSetFilesAndDirectoriesToBeAnalyzedWithInvalidEntries() {
+void AnalysisParametersTest::testSetFilesAndDirectoriesWithInvalidEntries() {
     if (!examplesInSubdirectory()) {
         QString message = "The examples were not found in the subdirectory 'examples' "
                           "of the working directory (" + QDir::currentPath() + ")";
@@ -227,7 +231,9 @@ void AnalysisParametersTest::testSetFilesAndDirectoriesToBeAnalyzedWithInvalidEn
     paths.append(workingDirectory + "examples/subdirectory");
     paths.append(workingDirectory + "aFileThatDoesNotExist.cpp");
     paths.append(workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
-    analysisparameters.setFilesAndDirectoriesToBeAnalyzed(paths);
+    analysisparameters.setFilesAndDirectories(paths);
+
+    QCOMPARE(analysisparameters.filesAndDirectories(), paths);
 
     QStringList filesToBeAnalyzed = analysisparameters.filesToBeAnalyzed();
     QCOMPARE(filesToBeAnalyzed.count(), 4);

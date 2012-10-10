@@ -22,10 +22,11 @@
 #include <kdevplatform/interfaces/icore.h>
 #include <kdevplatform/interfaces/iruncontroller.h>
 
+#include "analysisjob.h"
 #include "analysisparameters.h"
 #include "analysisresults.h"
 #include "issuemodel.h"
-#include "analysisjob.h"
+#include "selectpathswidget.h"
 
 #include "ui_krazy2view.h"
 
@@ -44,8 +45,8 @@ Krazy2View::Krazy2View(QWidget* parent /*= 0*/):
     m_issueModel = new IssueModel(this);
     m_ui->resultsTableView->setModel(m_issueModel);
 
-    connect(m_ui->directoryRequester, SIGNAL(textChanged(QString)),
-            this, SLOT(handleDirectoryChanged(QString)));
+    connect(m_ui->selectPathsButton, SIGNAL(clicked()),
+            this, SLOT(selectPaths()));
 
     connect(m_ui->analyzeButton, SIGNAL(clicked()),
             this, SLOT(analyze()));
@@ -59,24 +60,31 @@ Krazy2View::~Krazy2View() {
 
 //private slots:
 
-void Krazy2View::handleDirectoryChanged(const QString& directory) {
-    QFileInfo directoryCheck(directory);
-    if (!directoryCheck.exists() ||
-        !directoryCheck.isReadable() ||
-        !directoryCheck.isExecutable()) {
-        m_ui->analyzeButton->setEnabled(false);
+void Krazy2View::selectPaths() {
+    KDialog* dialog = new KDialog(this);
+    SelectPathsWidget* selectPathsWidget =
+            new SelectPathsWidget(m_analysisParameters->filesAndDirectories(), dialog);
+    dialog->setMainWidget(selectPathsWidget);
+    dialog->setWindowTitle(selectPathsWidget->windowTitle());
+
+    if (dialog->exec() == QDialog::Rejected) {
+        dialog->deleteLater();
         return;
     }
 
-    QStringList paths;
-    paths.append(m_ui->directoryRequester->url().toLocalFile());
-    m_analysisParameters->setFilesAndDirectoriesToBeAnalyzed(paths);
+    m_analysisParameters->setFilesAndDirectories(selectPathsWidget->selectedFilesAndDirectories());
 
-    m_ui->analyzeButton->setEnabled(true);
+    dialog->deleteLater();
+
+    if (m_analysisParameters->filesToBeAnalyzed().isEmpty()) {
+        m_ui->analyzeButton->setEnabled(false);
+    } else {
+        m_ui->analyzeButton->setEnabled(true);
+    }
 }
 
 void Krazy2View::analyze() {
-    m_ui->directoryRequester->setEnabled(false);
+    m_ui->selectPathsButton->setEnabled(false);
     m_ui->analyzeButton->setEnabled(false);
     m_ui->resultsTableView->setEnabled(false);
 
@@ -93,7 +101,7 @@ void Krazy2View::analyze() {
 }
 
 void Krazy2View::handleAnalysisResult(KJob* job) {
-    m_ui->directoryRequester->setEnabled(true);
+    m_ui->selectPathsButton->setEnabled(true);
     m_ui->analyzeButton->setEnabled(true);
 
     if (job->error() != KJob::NoError) {

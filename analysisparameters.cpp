@@ -72,7 +72,7 @@ void AnalysisParameters::setCheckersToRun(const QList<const Checker*>& checkersT
 
 QStringList AnalysisParameters::filesToBeAnalyzed() const {
     QStringList fileNames;
-    foreach (const QString& path, m_filesAndDirectoriesToBeAnalyzed) {
+    foreach (const QString& path, m_filesAndDirectories) {
         QFileInfo pathInfo(path);
         if (pathInfo.isDir()) {
             fileNames.append(findFiles(path));
@@ -85,8 +85,12 @@ QStringList AnalysisParameters::filesToBeAnalyzed() const {
     return fileNames;
 }
 
-void AnalysisParameters::setFilesAndDirectoriesToBeAnalyzed(const QStringList& paths) {
-    m_filesAndDirectoriesToBeAnalyzed = paths;
+const QStringList& AnalysisParameters::filesAndDirectories() const {
+    return m_filesAndDirectories;
+}
+
+void AnalysisParameters::setFilesAndDirectories(const QStringList& paths) {
+    m_filesAndDirectories = paths;
 }
 
 //private:

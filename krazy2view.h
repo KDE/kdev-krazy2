@@ -78,13 +78,11 @@ private:
 private Q_SLOTS:
 
     /**
-     * Handles the change of the directory to analyze.
-     * Enables or disables the Analyze button depending on whether the directory
-     * exists, is readable and is executable or not.
-     *
-     * @param directory The directory set.
+     * Sets the paths to analyze showing a dialog for the SelectPathsWidget.
+     * The Analyze button is enabled or disabled depending on whether there is
+     * any file to be analyzed or not.
      */
-    void handleDirectoryChanged(const QString& directory);
+    void selectPaths();
 
     /**
      * Starts the analysis.

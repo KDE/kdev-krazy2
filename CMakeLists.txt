@@ -28,6 +28,7 @@ set(kdevkrazy2_library_SRCS
     krazy2view.cpp
     progressparser.cpp
     resultparser.cpp
+    selectpathswidget.cpp
 )
 
 # Instead of compiling the plugin directly from the sources, the sources are
@@ -35,7 +36,9 @@ set(kdevkrazy2_library_SRCS
 # in the plugin.
 # As everything but a tiny initialization code is in a static library, the build
 # system for the tests can be easily set up.
-kde4_add_ui_files(kdevkrazy2_library_SRCS krazy2view.ui)
+kde4_add_ui_files(kdevkrazy2_library_SRCS
+                  krazy2view.ui
+                  selectpathswidget.ui)
 kde4_add_library(kdevkrazy2_library ${kdevkrazy2_library_SRCS})
 target_link_libraries(kdevkrazy2_library
     ${KDEVPLATFORM_INTERFACES_LIBRARIES}

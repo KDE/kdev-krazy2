@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SelectPathsWidget</class>
+ <widget class="QWidget" name="SelectPathsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>599</width>
+    <height>211</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string comment="@title:window">Select paths</string>
+  </property>
+  <layout class="QHBoxLayout" name="mainHorizontalLayout">
+   <item>
+    <widget class="QListView" name="pathsView"/>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="buttonVerticalLayout">
+     <item>
+      <widget class="KPushButton" name="addButton">
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string comment="@info:whatsthis">&lt;para&gt;Adds files and directories to the list.&lt;/para&gt;
+
+&lt;para&gt;Only local files and directories can be selected.&lt;/para&gt;</string>
+       </property>
+       <property name="text">
+        <string comment="@action:button">Add...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KPushButton" name="removeButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="whatsThis">
+        <string comment="@info:whatsthis">&lt;para&gt;Removes files or directories from the list.&lt;/para&gt;</string>
+       </property>
+       <property name="text">
+        <string comment="@action:button">Remove</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="buttonVerticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

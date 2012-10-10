@@ -84,21 +84,27 @@ public:
 
     /**
      * Returns the canonical file paths of the files to be analyzed.
+     * The paths to directories are replaced by all the files in that directory
+     * (and, recursively, in all its subdirectories).
+     * Only local paths are taken into account.
      *
      * @return The canonical file paths of the files to be analyzed.
      */
     QStringList filesToBeAnalyzed() const;
 
     /**
-     * Sets the paths to the files and directories to be analyzed.
-     * The paths to directories are replaced by all the files in that directory
-     * (and, recursively, in all its subdirectories) when getting the files to
-     * be analyzed.
-     * Only local paths are taken into account.
+     * Returns the files and directories.
+     *
+     * @return The files and directories.
+     */
+    const QStringList& filesAndDirectories() const;
+
+    /**
+     * Sets the paths to the files and directories.
      *
      * @param paths The paths.
      */
-    void setFilesAndDirectoriesToBeAnalyzed(const QStringList& paths);
+    void setFilesAndDirectories(const QStringList& paths);
 
 private:
 
@@ -118,9 +124,9 @@ private:
     QList<const Checker*> m_checkersToRun;
 
     /**
-     * The paths to the files and directories to be analyzed.
+     * The paths to the files and directories.
      */
-    QStringList m_filesAndDirectoriesToBeAnalyzed;
+    QStringList m_filesAndDirectories;
 
     /**
      * Returns a list with the canonical file paths of all the files in the
