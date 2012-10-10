@@ -58,13 +58,16 @@ private:
 };
 
 void Krazy2ViewTest::testConstructor() {
-    Krazy2View view;
+    QWidget parent;
+    Krazy2View* view = new Krazy2View(&parent);
 
-    QVERIFY(selectPathsButton(&view)->isEnabled());
-    QVERIFY(!analyzeButton(&view)->isEnabled());
-    QVERIFY(!resultsTableView(&view)->isEnabled());
+    QCOMPARE(view->parent(), &parent);
 
-    QVERIFY(analysisParameters(&view)->filesToBeAnalyzed().isEmpty());
+    QVERIFY(selectPathsButton(view)->isEnabled());
+    QVERIFY(!analyzeButton(view)->isEnabled());
+    QVERIFY(!resultsTableView(view)->isEnabled());
+
+    QVERIFY(analysisParameters(view)->filesToBeAnalyzed().isEmpty());
 }
 
 void Krazy2ViewTest::testSetPaths() {
