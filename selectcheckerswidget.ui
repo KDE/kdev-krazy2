@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SelectCheckersWidget</class>
+ <widget class="QWidget" name="SelectCheckersWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>606</width>
+    <height>365</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string comment="@title:window">Select checkers</string>
+  </property>
+  <layout class="QHBoxLayout" name="selectCheckersWidgetHorizontalLayout">
+   <item>
+    <layout class="QVBoxLayout" name="otherAvailableCheckersVerticalLayout">
+     <item>
+      <widget class="QLabel" name="otherAvailableCheckersLabel">
+       <property name="text">
+        <string comment="@label">Other available checkers:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTreeView" name="otherAvailableCheckersView">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="buttonVerticalLayout">
+     <item>
+      <spacer name="buttonVerticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="KPushButton" name="addButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string comment="@info:tooltip">Add checkers</string>
+       </property>
+       <property name="whatsThis">
+        <string comment="@info:whatsthis">&lt;para&gt;Adds the checkers selected in the &lt;interface&gt;Other available checkers&lt;/interface&gt; list to the &lt;interface&gt;Checkers to run&lt;/interface&gt; list.&lt;/para&gt;</string>
+       </property>
+       <property name="text">
+        <string comment="@action:button">&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="buttonVerticalSpacer2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="KPushButton" name="removeButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string comment="@info:tooltip">Remove checkers</string>
+       </property>
+       <property name="whatsThis">
+        <string comment="@info:whatsthis">&lt;para&gt;Removes the checkers selected from the &lt;interface&gt;Checkers to run&lt;/interface&gt; list.&lt;/para&gt;
+
+&lt;para&gt;The checkers will be added to the &lt;interface&gt;Other available checkers&lt;/interface&gt; list.&lt;/para&gt;</string>
+       </property>
+       <property name="text">
+        <string comment="@action:button">&lt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="buttonVerticalSpacer3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="checkersToRunVerticalLayout">
+     <item>
+      <widget class="QLabel" name="checkersToRunLabel">
+       <property name="text">
+        <string comment="@label">Checkers to run:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTreeView" name="checkersToRunView">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

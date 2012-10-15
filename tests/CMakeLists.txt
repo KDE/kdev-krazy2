@@ -20,11 +20,13 @@ unit_tests(
     checker
     checkerlistjob
     checkerlistparser
+    checkermodel
     issue
     issuemodel
     krazy2view
     progressparser
     resultparser
+    selectcheckerswidget
     selectpathswidget
 )
 
@@ -41,11 +43,13 @@ mem_tests(
     checker
     checkerlistjob
     checkerlistparser
+    checkermodel
     issue
     issuemodel
-    krazy2view
+    #krazy2view # Disabled by default, as it uses KDevelop::TestCore and thus needs a lot of memory to perform the test
     progressparser
     resultparser
+    selectcheckerswidget
     selectpathswidget
 )
 

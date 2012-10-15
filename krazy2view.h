@@ -26,6 +26,7 @@ class KJob;
 
 class AnalysisParameters;
 class AnalysisResults;
+class Checker;
 class IssueModel;
 
 namespace Ui {
@@ -61,6 +62,19 @@ private:
     Ui::Krazy2View* m_ui;
 
     /**
+     * Whether the checkers are being initialized or not.
+     */
+    bool m_checkersAreBeingInitialized;
+
+    /**
+     * The list of available Krazy2 checkers.
+     * The list is used only if the CheckerListJob is run. It is used as a
+     * temporal storage before initializing the checkers in the
+     * AnalysisParameters.
+     */
+    QList<const Checker*> m_availableCheckers;
+
+    /**
      * The Krazy2 analysis parameters.
      */
     AnalysisParameters* m_analysisParameters;
@@ -75,14 +89,50 @@ private:
      */
     IssueModel* m_issueModel;
 
+    /**
+     * Starts the job to get the list of available checkers.
+     * If the checkers are already being initialized nothing is done.
+     *
+     * The actual initialization will be made by
+     * handleCheckerInitialization(KJob*) once the job finishes.
+     *
+     * @see handleCheckerInitialization(KJob*)
+     */
+    void initializeCheckers();
+
+    /**
+     * Enables or disables the Analyze button depending on the selected paths
+     * and the checkers to run.
+     * If the checkers were not initialized yet only the selected paths are
+     * taken into account.
+     */
+    void updateAnalyzeButtonStatus();
+
 private Q_SLOTS:
 
     /**
      * Sets the paths to analyze showing a dialog for the SelectPathsWidget.
-     * The Analyze button is enabled or disabled depending on whether there is
-     * any file to be analyzed or not.
+     * The Analyze button status is updated after setting the paths.
      */
     void selectPaths();
+
+    /**
+     * Sets the checkers to run showing a dialog for the SelectCheckersWidget.
+     * The checkers will be initialized if they were not initialized yet; the
+     * dialog will show no checkers at first, but it will be updated once the
+     * checkers are initialized.
+     * The Analyze button status is updated after setting the checkers.
+     */
+    void selectCheckers();
+
+    /**
+     * Initializes the checkers with the list got from Krazy2.
+     * If the "Select checkers" dialog is being shown it is updated with the
+     * checkers.
+     *
+     * @param job The finished job.
+     */
+    void handleCheckerInitialization(KJob* job);
 
     /**
      * Starts the analysis.

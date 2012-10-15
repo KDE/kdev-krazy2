@@ -20,10 +20,15 @@
 #include <qtest_kde.h>
 
 #include <QTableView>
+#include <QTreeView>
 
+#include <KConfigGroup>
 #include <KFileDialog>
 #include <KPushButton>
 #include <KUrlRequester>
+
+#include <tests/autotestshell.h>
+#include <tests/testcore.h>
 
 #define protected public
 #define private public
@@ -31,22 +36,38 @@
 #undef private
 #undef protected
 #include "../analysisparameters.h"
+#include "../checker.h"
+#include "../checkerlistjob.h"
 
 class Krazy2ViewTest: public QObject {
 Q_OBJECT
 private slots:
 
+    void initTestCase();
+    void cleanupTestCase();
+
     void testConstructor();
 
     void testSetPaths();
 
+    void testSetCheckers();
+    void testSetCheckersNotInitialized();
+    void testSetCheckersWhileInitializing();
+    void testSetCheckersClosingWidgetBeforeInitializing();
+    void testSetCheckersCancellingInitialization();
+    void testSetCheckersWithoutPaths();
+
 private:
 
+    QString m_workingDirectory;
+
     bool examplesInSubdirectory() const;
+    bool krazy2InPath() const;
 
     AnalysisParameters* analysisParameters(Krazy2View* view) const;
 
     KPushButton* selectPathsButton(const Krazy2View* view) const;
+    KPushButton* selectCheckersButton(const Krazy2View* view) const;
     KPushButton* analyzeButton(const Krazy2View* view) const;
     QTableView* resultsTableView(const Krazy2View* view) const;
 
@@ -55,7 +76,25 @@ private:
                        const QStringList& paths);
     void queueRemovePaths(const Krazy2View* view, int numberOfPaths);
 
+    void queueAddCheckers(const Krazy2View* view, const QStringList& checkerRows);
+    void queueRemoveCheckers(const Krazy2View* view, const QStringList& checkerRows);
+    void queueAcceptCheckersDialog(const Krazy2View* view);
+    void queueRejectCheckersDialog(const Krazy2View* view);
+
 };
+
+void Krazy2ViewTest::initTestCase() {
+    //I do not know why, but it seems that the working directory is modified
+    //when TestCore is initialized.
+    m_workingDirectory = QDir::currentPath() + '/';
+
+    KDevelop::AutoTestShell::init();
+    KDevelop::TestCore::initialize();
+}
+
+void Krazy2ViewTest::cleanupTestCase() {
+    KDevelop::TestCore::shutdown();
+}
 
 void Krazy2ViewTest::testConstructor() {
     QWidget parent;
@@ -73,14 +112,14 @@ void Krazy2ViewTest::testConstructor() {
 void Krazy2ViewTest::testSetPaths() {
     if (!examplesInSubdirectory()) {
         QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + QDir::currentPath() + ")";
+                          "of the working directory (" + m_workingDirectory + ")";
         QSKIP(message.toAscii(), SkipAll);
     }
 
     Krazy2View view;
 
     //Add several paths
-    queueAddPaths(&view, QDir::currentPath() + "/examples/",
+    queueAddPaths(&view, m_workingDirectory + "examples/",
                   QStringList() << "severalIssuesSeveralCheckers.cpp"
                                 << "singleExtraIssue.cpp"
                                 << "subdirectory");
@@ -89,26 +128,26 @@ void Krazy2ViewTest::testSetPaths() {
 
     QStringList filesAndDirectories = analysisParameters(&view)->filesAndDirectories();
     QCOMPARE(filesAndDirectories.count(), 3);
-    QCOMPARE(filesAndDirectories[0], QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp");
-    QCOMPARE(filesAndDirectories[1], QDir::currentPath() + "/examples/singleExtraIssue.cpp");
-    QCOMPARE(filesAndDirectories[2], QDir::currentPath() + "/examples/subdirectory/");
+    QCOMPARE(filesAndDirectories[0], m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+    QCOMPARE(filesAndDirectories[1], m_workingDirectory + "examples/singleExtraIssue.cpp");
+    QCOMPARE(filesAndDirectories[2], m_workingDirectory + "examples/subdirectory/");
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(analyzeButton(&view)->isEnabled());
     QVERIFY(!resultsTableView(&view)->isEnabled());
 
     //Add another path to the previously selected paths
-    queueAddPaths(&view, QDir::currentPath() + "/examples/",
+    queueAddPaths(&view, m_workingDirectory + "/examples/",
                   QStringList() << "severalIssuesSingleChecker.cpp");
 
     selectPathsButton(&view)->click();
 
     filesAndDirectories = analysisParameters(&view)->filesAndDirectories();
     QCOMPARE(filesAndDirectories.count(), 4);
-    QCOMPARE(filesAndDirectories[0], QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp");
-    QCOMPARE(filesAndDirectories[1], QDir::currentPath() + "/examples/severalIssuesSingleChecker.cpp");
-    QCOMPARE(filesAndDirectories[2], QDir::currentPath() + "/examples/singleExtraIssue.cpp");
-    QCOMPARE(filesAndDirectories[3], QDir::currentPath() + "/examples/subdirectory/");
+    QCOMPARE(filesAndDirectories[0], m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+    QCOMPARE(filesAndDirectories[1], m_workingDirectory + "examples/severalIssuesSingleChecker.cpp");
+    QCOMPARE(filesAndDirectories[2], m_workingDirectory + "examples/singleExtraIssue.cpp");
+    QCOMPARE(filesAndDirectories[3], m_workingDirectory + "examples/subdirectory/");
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(analyzeButton(&view)->isEnabled());
@@ -127,22 +166,408 @@ void Krazy2ViewTest::testSetPaths() {
     QVERIFY(!resultsTableView(&view)->isEnabled());
 }
 
+void Krazy2ViewTest::testSetCheckers() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    Krazy2View view;
+
+    //Add a valid directory so, when the analyze button is updated, it being
+    //enabled or disabled depends only on the checkers.
+    queueAddPaths(&view, m_workingDirectory, QStringList() << "examples");
+    selectPathsButton(&view)->click();
+
+    QList<const Checker*> availableCheckers;
+    Checker* checker1_1 = new Checker();
+    checker1_1->setFileType("fileType1");
+    checker1_1->setName("checker1-1Name");
+    availableCheckers.append(checker1_1);
+    Checker* checker1_2 = new Checker();
+    checker1_2->setFileType("fileType1");
+    checker1_2->setName("checker1-2Name");
+    availableCheckers.append(checker1_2);
+    Checker* extraChecker1_1 = new Checker();
+    extraChecker1_1->setFileType("fileType1");
+    extraChecker1_1->setName("extraChecker1-1Name");
+    extraChecker1_1->setExtra(true);
+    availableCheckers.append(extraChecker1_1);
+    Checker* extraChecker1_2 = new Checker();
+    extraChecker1_2->setFileType("fileType1");
+    extraChecker1_2->setName("extraChecker1-2Name");
+    extraChecker1_2->setExtra(true);
+    availableCheckers.append(extraChecker1_2);
+    Checker* checker2_1 = new Checker();
+    checker2_1->setFileType("fileType2");
+    checker2_1->setName("checker2-1Name");
+    availableCheckers.append(checker2_1);
+    Checker* extraChecker2_1 = new Checker();
+    extraChecker2_1->setFileType("fileType2");
+    extraChecker2_1->setName("extraChecker2-1Name");
+    extraChecker2_1->setExtra(true);
+    availableCheckers.append(extraChecker2_1);
+
+    analysisParameters(&view)->initializeCheckers(availableCheckers);
+
+    //Add several checkers
+    queueAddCheckers(&view, QStringList() << "0-0-0" << "0-0-1");
+
+    selectCheckersButton(&view)->click();
+
+    QList<const Checker*> checkersToRun = analysisParameters(&view)->checkersToRun();
+    QCOMPARE(checkersToRun.count(), 5);
+    QVERIFY(checkersToRun.contains(checker1_1));
+    QVERIFY(checkersToRun.contains(checker1_2));
+    QVERIFY(checkersToRun.contains(extraChecker1_1));
+    QVERIFY(checkersToRun.contains(extraChecker1_2));
+    QVERIFY(checkersToRun.contains(checker2_1));
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+
+    //Add another checker to the previously selected checkers
+    queueAddCheckers(&view, QStringList() << "0-0-0");
+
+    selectCheckersButton(&view)->click();
+
+    checkersToRun = analysisParameters(&view)->checkersToRun();
+    QCOMPARE(checkersToRun.count(), 6);
+    QVERIFY(checkersToRun.contains(checker1_1));
+    QVERIFY(checkersToRun.contains(checker1_2));
+    QVERIFY(checkersToRun.contains(extraChecker1_1));
+    QVERIFY(checkersToRun.contains(extraChecker1_2));
+    QVERIFY(checkersToRun.contains(checker2_1));
+    QVERIFY(checkersToRun.contains(extraChecker2_1));
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+
+    //Remove some checkers
+    queueRemoveCheckers(&view, QStringList() << "0-0" << "1-0" << "1-1-0");
+
+    selectCheckersButton(&view)->click();
+
+    checkersToRun = analysisParameters(&view)->checkersToRun();
+    QCOMPARE(checkersToRun.count(), 3);
+    QVERIFY(checkersToRun.contains(checker1_2));
+    QVERIFY(checkersToRun.contains(extraChecker1_1));
+    QVERIFY(checkersToRun.contains(extraChecker1_2));
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+
+    //Remove all the checkers
+    queueRemoveCheckers(&view, QStringList() << "0-0" << "0-1-0" << "0-1-1");
+
+    selectCheckersButton(&view)->click();
+
+    checkersToRun = analysisParameters(&view)->checkersToRun();
+    QCOMPARE(checkersToRun.count(), 0);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(!analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+}
+
+void Krazy2ViewTest::testSetCheckersNotInitialized() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
+    Krazy2View view;
+
+    //Add a valid directory so, when the analyze button is updated, it being
+    //enabled or disabled depends only on the checkers.
+    queueAddPaths(&view, m_workingDirectory, QStringList() << "examples");
+    selectPathsButton(&view)->click();
+
+    //Accept the dialog without adding any checker. The dialog should not be
+    //accepted until the Ok button is enabled, and it should be enabled once the
+    //checkers are initialized.
+    queueAcceptCheckersDialog(&view);
+
+    selectCheckersButton(&view)->click();
+
+    QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+}
+
+void Krazy2ViewTest::testSetCheckersWhileInitializing() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
+    Krazy2View view;
+
+    //Add a valid directory so, when the analyze button is updated, it being
+    //enabled or disabled depends only on the checkers.
+    queueAddPaths(&view, m_workingDirectory, QStringList() << "examples");
+    selectPathsButton(&view)->click();
+
+    //Reject the dialog before the checkers initialization ended.
+    queueRejectCheckersDialog(&view);
+
+    selectCheckersButton(&view)->click();
+
+    QCOMPARE(view.findChildren<CheckerListJob*>().count(), 1);
+
+    QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(!analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+
+    //Reject the dialog again before the checkers initialization ended.
+    queueRejectCheckersDialog(&view);
+
+    selectCheckersButton(&view)->click();
+
+    QCOMPARE(view.findChildren<CheckerListJob*>().count(), 1);
+
+    QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(!analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+
+    //Accept the dialog. It should wait until the checkers have been
+    //initialized.
+    queueAcceptCheckersDialog(&view);
+
+    selectCheckersButton(&view)->click();
+
+    QCOMPARE(view.findChildren<CheckerListJob*>().count(), 0);
+
+    QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+}
+
+void Krazy2ViewTest::testSetCheckersClosingWidgetBeforeInitializing() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
+    Krazy2View view;
+
+    //Add a valid directory so, when the analyze button is updated, it being
+    //enabled or disabled depends only on the checkers.
+    queueAddPaths(&view, m_workingDirectory, QStringList() << "examples");
+    selectPathsButton(&view)->click();
+
+    //Reject the dialog before the checkers initialization ended.
+    queueRejectCheckersDialog(&view);
+
+    selectCheckersButton(&view)->click();
+
+    QCOMPARE(view.findChildren<CheckerListJob*>().count(), 1);
+
+    QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(!analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+
+    //Wait until the checkers are initialized to ensure that the test does not
+    //crash when setting the checkers in a deleted SelectCheckersWidget.
+    QTest::kWaitForSignal(view.findChild<CheckerListJob*>(), SIGNAL(finished(KJob*)));
+
+    QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+}
+
+void Krazy2ViewTest::testSetCheckersCancellingInitialization() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
+    Krazy2View view;
+
+    //Add a valid directory so, when the analyze button is updated, it being
+    //enabled or disabled depends only on the checkers.
+    queueAddPaths(&view, m_workingDirectory, QStringList() << "examples");
+    selectPathsButton(&view)->click();
+
+    //Reject the dialog before the checkers initialization ended.
+    queueRejectCheckersDialog(&view);
+
+    selectCheckersButton(&view)->click();
+
+    //Queue killing the job to ensure that kWaitForSignal is already waiting for
+    //the finished signal when it is emitted.
+    CheckerListJob* checkerListJob = view.findChild<CheckerListJob*>();
+    QTimer::singleShot(100, checkerListJob, SLOT(kill()));
+    QTest::kWaitForSignal(checkerListJob, SIGNAL(finished(KJob*)));
+
+    QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+}
+
+void Krazy2ViewTest::testSetCheckersWithoutPaths() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
+    Krazy2View view;
+
+    //Reject the dialog before the checkers initialization ended.
+    queueRejectCheckersDialog(&view);
+
+    selectCheckersButton(&view)->click();
+
+    //Queue killing the job to ensure that kWaitForSignal is already waiting for
+    //the finished signal when it is emitted.
+    CheckerListJob* checkerListJob = view.findChild<CheckerListJob*>();
+    QTimer::singleShot(100, checkerListJob, SLOT(kill()));
+    QTest::kWaitForSignal(checkerListJob, SIGNAL(finished(KJob*)));
+
+    QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(!analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+
+    //Reject the dialog before the checkers initialization ended.
+    queueRejectCheckersDialog(&view);
+
+    selectCheckersButton(&view)->click();
+
+    QCOMPARE(view.findChildren<CheckerListJob*>().count(), 1);
+
+    //Wait until the checkers are initialized.
+    QTest::kWaitForSignal(view.findChild<CheckerListJob*>(), SIGNAL(finished(KJob*)));
+
+    QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(!analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+
+    //Accept the dialog. The checkers were already initialized.
+    queueAcceptCheckersDialog(&view);
+
+    selectCheckersButton(&view)->click();
+
+    QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(!analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+}
+
 ///////////////////////////////// Helpers //////////////////////////////////////
 
 bool Krazy2ViewTest::examplesInSubdirectory() const {
-    QString workingDirectory = QDir::currentPath() + '/';
-    if (QFile(workingDirectory + "examples/singleIssue.cpp").exists() &&
-        QFile(workingDirectory + "examples/singleExtraIssue.cpp").exists() &&
-        QFile(workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp")).exists() &&
-        QFile(workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp").exists() &&
-        QFile(workingDirectory + "examples/severalIssuesSingleChecker.cpp").exists() &&
-        QFile(workingDirectory + "examples/severalIssuesSeveralCheckers.cpp").exists() &&
-        QFile(workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
-        QFile(workingDirectory + "examples/subdirectory/singleIssue.desktop").exists()) {
+    if (QFile(m_workingDirectory + "examples/singleIssue.cpp").exists() &&
+        QFile(m_workingDirectory + "examples/singleExtraIssue.cpp").exists() &&
+        QFile(m_workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp")).exists() &&
+        QFile(m_workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp").exists() &&
+        QFile(m_workingDirectory + "examples/severalIssuesSingleChecker.cpp").exists() &&
+        QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp").exists() &&
+        QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
+        QFile(m_workingDirectory + "examples/subdirectory/singleIssue.desktop").exists()) {
         return true;
     }
 
     return false;
+}
+
+bool Krazy2ViewTest::krazy2InPath() const {
+    //QProcess::exec is not used, as the static method uses ForwardedChannels
+    QProcess process;
+    process.start("krazy2 --version");
+    process.waitForFinished();
+
+    if (process.error() == QProcess::FailedToStart) {
+        return false;
+    }
+
+    return true;
 }
 
 AnalysisParameters* Krazy2ViewTest::analysisParameters(Krazy2View* view) const {
@@ -151,6 +576,10 @@ AnalysisParameters* Krazy2ViewTest::analysisParameters(Krazy2View* view) const {
 
 KPushButton* Krazy2ViewTest::selectPathsButton(const Krazy2View* view) const {
     return view->findChild<KPushButton*>("selectPathsButton");
+}
+
+KPushButton* Krazy2ViewTest::selectCheckersButton(const Krazy2View* view) const {
+    return view->findChild<KPushButton*>("selectCheckersButton");
 }
 
 KPushButton* Krazy2ViewTest::analyzeButton(const Krazy2View* view) const {
@@ -250,6 +679,113 @@ void Krazy2ViewTest::queueRemovePaths(const Krazy2View* view, int numberOfPaths)
     helper->m_view = view;
     helper->m_numberOfPathsToRemove = numberOfPaths;
     helper->removePaths();
+}
+
+class QueuedSelectCheckersDialogAction: public QObject {
+Q_OBJECT
+public:
+
+    const Krazy2View* m_view;
+    QStringList m_checkerRows;
+
+    QueuedSelectCheckersDialogAction(QObject* parent): QObject(parent) {
+    }
+
+public Q_SLOTS:
+
+    void addCheckers() {
+        KDialog* selectCheckersDialog = m_view->findChild<KDialog*>();
+        if (!selectCheckersDialog || !selectCheckersDialog->isVisible()) {
+            QTimer::singleShot(100, this, SLOT(addCheckers()));
+            return;
+        }
+
+        QTreeView* view = selectCheckersDialog->findChild<QTreeView*>("otherAvailableCheckersView");
+        foreach (const QString& rows, m_checkerRows) {
+            select(view, rows, QItemSelectionModel::Select);
+        }
+
+        selectCheckersDialog->findChild<KPushButton*>("addButton")->click();
+
+        selectCheckersDialog->accept();
+    }
+
+    void removeCheckers() {
+        KDialog* selectCheckersDialog = m_view->findChild<KDialog*>();
+        if (!selectCheckersDialog || !selectCheckersDialog->isVisible()) {
+            QTimer::singleShot(100, this, SLOT(removeCheckers()));
+            return;
+        }
+
+        QTreeView* view = selectCheckersDialog->findChild<QTreeView*>("checkersToRunView");
+        foreach (const QString& rows, m_checkerRows) {
+            select(view, rows, QItemSelectionModel::Select);
+        }
+
+        selectCheckersDialog->findChild<KPushButton*>("removeButton")->click();
+
+        selectCheckersDialog->accept();
+    }
+
+    void acceptDialog() {
+        KDialog* selectCheckersDialog = m_view->findChild<KDialog*>();
+        if (!selectCheckersDialog || !selectCheckersDialog->isVisible() ||
+            !selectCheckersDialog->button(KDialog::Ok)->isEnabled()) {
+            QTimer::singleShot(100, this, SLOT(acceptDialog()));
+            return;
+        }
+
+        selectCheckersDialog->accept();
+    }
+
+    void rejectDialog() {
+        KDialog* selectCheckersDialog = m_view->findChild<KDialog*>();
+        if (!selectCheckersDialog || !selectCheckersDialog->isVisible()) {
+            QTimer::singleShot(100, this, SLOT(rejectDialog()));
+            return;
+        }
+
+        selectCheckersDialog->reject();
+    }
+
+private:
+
+    void select(QTreeView* view, const QString& rows,
+                QItemSelectionModel::SelectionFlags command) {
+        QModelIndex index;
+        foreach (const QString& row, rows.split('-')) {
+            index = view->model()->index(row.toInt(), 0, index);
+        }
+
+        view->selectionModel()->select(index, command);
+    }
+
+};
+
+void Krazy2ViewTest::queueAddCheckers(const Krazy2View* view, const QStringList& checkerRows) {
+    QueuedSelectCheckersDialogAction* helper = new QueuedSelectCheckersDialogAction(this);
+    helper->m_view = view;
+    helper->m_checkerRows = checkerRows;
+    helper->addCheckers();
+}
+
+void Krazy2ViewTest::queueRemoveCheckers(const Krazy2View* view, const QStringList& checkerRows) {
+    QueuedSelectCheckersDialogAction* helper = new QueuedSelectCheckersDialogAction(this);
+    helper->m_view = view;
+    helper->m_checkerRows = checkerRows;
+    helper->removeCheckers();
+}
+
+void Krazy2ViewTest::queueAcceptCheckersDialog(const Krazy2View* view) {
+    QueuedSelectCheckersDialogAction* helper = new QueuedSelectCheckersDialogAction(this);
+    helper->m_view = view;
+    helper->acceptDialog();
+}
+
+void Krazy2ViewTest::queueRejectCheckersDialog(const Krazy2View* view) {
+    QueuedSelectCheckersDialogAction* helper = new QueuedSelectCheckersDialogAction(this);
+    helper->m_view = view;
+    helper->rejectDialog();
 }
 
 QTEST_KDEMAIN(Krazy2ViewTest, GUI)

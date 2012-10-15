@@ -22,12 +22,14 @@ set(kdevkrazy2_library_SRCS
     checker.cpp
     checkerlistjob.cpp
     checkerlistparser.cpp
+    checkermodel.cpp
     issue.cpp
     issuemodel.cpp
     issuewidget.cpp
     krazy2view.cpp
     progressparser.cpp
     resultparser.cpp
+    selectcheckerswidget.cpp
     selectpathswidget.cpp
 )
 
@@ -38,6 +40,7 @@ set(kdevkrazy2_library_SRCS
 # system for the tests can be easily set up.
 kde4_add_ui_files(kdevkrazy2_library_SRCS
                   krazy2view.ui
+                  selectcheckerswidget.ui
                   selectpathswidget.ui)
 kde4_add_library(kdevkrazy2_library ${kdevkrazy2_library_SRCS})
 target_link_libraries(kdevkrazy2_library

@@ -33,6 +33,8 @@ CheckerListJob::CheckerListJob(QObject* parent /*= 0*/): KJob(parent),
     m_checkerList(0),
     m_process(new KProcess(this)) {
 
+    setObjectName(i18nc("@action:inmenu", "Find available checkers for <command>krazy2</command>"));
+
     connect(m_process, SIGNAL(finished(int)),
             this, SLOT(handleProcessFinished(int)));
     connect(m_process, SIGNAL(error(QProcess::ProcessError)),
