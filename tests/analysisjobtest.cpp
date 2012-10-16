@@ -286,7 +286,7 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
 
     QCOMPARE(showProgressSpy.at(1).at(3).toInt(), 33);
     QCOMPARE(showProgressSpy.at(2).at(3).toInt(), 66);
-    QCOMPARE(showProgressSpy.at(3).at(3).toInt(), 100);
+    QCOMPARE(showProgressSpy.at(3).at(3).toInt(), 99);
     QCOMPARE(showProgressSpy.at(4).at(3).toInt(), 100);
 }
 
@@ -456,13 +456,11 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
     //The second signal progress should be bigger than the start progress
     QVERIFY(showProgressSpy.at(1).at(3).toInt() > 0);
 
-    //The second to last signal shows a 100% progress, as it is emitted once all
-    //the checkers have run. Maybe it would be better to show a progress
-    //slightly smaller than 100%, like 99%, and show 100% progress only when the
-    //job has totally finished (that is, once the output has been parsed). But,
-    //for now, it is good enough this way ;)
-    QVERIFY(showProgressSpy.at(showProgressSpy.count()-2).at(3).toInt() == 100);
-    QVERIFY(showProgressSpy.at(showProgressSpy.count()-3).at(3).toInt() < 100);
+    //The second to last signal shows a 99% progress, as it is emitted once all
+    //the checkers have run. It is not a 100% progress, though, because parsing
+    //progress is limited to 99%; 100% is only emitted when krazy2 has finished.
+    QCOMPARE(showProgressSpy.at(showProgressSpy.count()-2).at(3).toInt(), 99);
+    QVERIFY(showProgressSpy.at(showProgressSpy.count()-3).at(3).toInt() <= 99);
 }
 
 void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisParameters() {
@@ -546,7 +544,7 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
     QCOMPARE(showProgressSpy.at(0).at(3).toInt(), 0);
 
     QCOMPARE(showProgressSpy.at(1).at(3).toInt(), 50);
-    QCOMPARE(showProgressSpy.at(2).at(3).toInt(), 100);
+    QCOMPARE(showProgressSpy.at(2).at(3).toInt(), 99);
     QCOMPARE(showProgressSpy.at(3).at(3).toInt(), 100);
 }
 

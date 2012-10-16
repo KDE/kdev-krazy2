@@ -129,7 +129,7 @@ void ProgressParserTest::parseSingleCheckerSingleFile() {
     m_progressParser->parse("done\n");
 
     QCOMPARE(m_showProgressSpy->count(), 1);
-    assertShowProgress(0, 0, 100, 100);
+    assertShowProgress(0, 0, 100, 99);
 
     QCOMPARE(m_showMessageSpy->count(), 1);
     QCOMPARE(m_clearMessageSpy->count(), 0);
@@ -155,7 +155,7 @@ void ProgressParserTest::parseSingleCheckerSeveralFiles() {
     m_progressParser->parse("done\n");
 
     QCOMPARE(m_showProgressSpy->count(), 1);
-    assertShowProgress(0, 0, 100, 100);
+    assertShowProgress(0, 0, 100, 99);
 
     QCOMPARE(m_showMessageSpy->count(), 1);
     QCOMPARE(m_clearMessageSpy->count(), 0);
@@ -359,7 +359,7 @@ void ProgressParserTest::parseDoneSplit() {
     m_progressParser->parse("e\n");
 
     QCOMPARE(m_showProgressSpy->count(), 1);
-    assertShowProgress(0, 0, 100, 100);
+    assertShowProgress(0, 0, 100, 99);
 }
 
 void ProgressParserTest::parseSeveralDotsAtOnce() {

@@ -39,7 +39,10 @@
  * The progress is updated proportionally to how many checker programs are going
  * to be run and how many checker programs have been already run. Also, after
  * the first checker program for a filetype is run, the progress will be updated
- * also taking into account each checker program individual progress.
+ * also taking into account each checker program individual progress. The
+ * progress will never reach the 100% before krazy2 finishes; that is, the
+ * progress shown when the last checker is run is 99%, even if mathematically it
+ * should be 100%.
  *
  * Also, the status message will specify which checker is being run.
  *
@@ -188,7 +191,8 @@ private:
     /**
      * Parses the "done\n" chunk.
      * The progress is updated proportionally to how many checker programs are
-     * going to be run and how many checker programs have been already run.
+     * going to be run and how many checker programs have been already run,
+     * although it is limited to 99% at most, never 100%.
      *
      * @return True if the data in the buffer matched, false otherwise.
      */

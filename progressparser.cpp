@@ -164,6 +164,10 @@ bool ProgressParser::parseDone() {
 
     if (m_numberOfCheckers > 0) {
         int progress = 100 * m_numberOfCheckersRun / (float)m_numberOfCheckers;
+        //Limit parsing progress
+        if (progress == 100) {
+            progress = 99;
+        }
         emit showProgress(this, 0, 100, progress);
     }
 
