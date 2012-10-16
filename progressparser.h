@@ -46,6 +46,13 @@
  *
  * Also, the status message will specify which checker is being run.
  *
+ * If, for any reason, there are more checkers parsed than the number set, each
+ * time a new checker name is parsed the number of checkers is increased by one.
+ * If the number of dots that will be outputted for that checker is known
+ * (because its file type is already known), this will cause the progress to go
+ * back from 99% (from the last checker run) to a smaller value which will
+ * increase with each dot up to 99% when that unexpected checker is done.
+ *
  * Note that, before starting the analysis itself, krazy2 performs a run over
  * all the files to be analyzed to filter out those that will not be checked
  * (because the file can not be accessed, or because the file type is not
@@ -102,8 +109,6 @@ public Q_SLOTS:
 
     /**
      * Parses the next progress data outputted by krazy2 process.
-     * The number of checkers that will be run must have been set before parsing
-     * any data.
      *
      * @param data The next progress data to parse.
      */

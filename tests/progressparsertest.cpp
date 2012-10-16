@@ -46,6 +46,8 @@ private slots:
     void parseSeveralDotsAtOnce();
     void parseSeveralLinesAtOnce();
 
+    void parseMoreCheckersThanTheNumberSet();
+
     void parseSingleCannotAccessFileBeforeCheckers();
     void parseSingleUnsupportedFileTypeBeforeCheckers();
     void parseSeveralFilteredOutFileMessagesBeforeCheckers();
@@ -417,6 +419,40 @@ void ProgressParserTest::parseSeveralLinesAtOnce() {
     assertShowProgress(5, 0, 100, 60);
     assertShowProgress(6, 0, 100, 70);
     assertShowProgress(7, 0, 100, 80);
+}
+
+void ProgressParserTest::parseMoreCheckersThanTheNumberSet() {
+    m_progressParser->setNumberOfCheckers(2);
+    m_progressParser->parse("=>fileType1/checkerName1 test in-progress....done\n");
+    m_progressParser->parse("=>fileType1/checkerName2 test in-progress....done\n");
+
+    QCOMPARE(m_showProgressSpy->count(), 5);
+    assertShowProgress(0, 0, 100, 50);
+    assertShowProgress(1, 0, 100, 62);
+    assertShowProgress(2, 0, 100, 75);
+    assertShowProgress(3, 0, 100, 87);
+    assertShowProgress(4, 0, 100, 99);
+
+    m_progressParser->parse("=>fileType1/checkerName3 test in-progress....done\n");
+
+    QCOMPARE(m_showProgressSpy->count(), 9);
+    assertShowProgress(5, 0, 100, 74);
+    assertShowProgress(6, 0, 100, 82);
+    assertShowProgress(7, 0, 100, 90);
+    assertShowProgress(8, 0, 100, 99);
+
+    m_progressParser->parse("=>fileType2/checkerName4 test in-progress....done\n");
+
+    QCOMPARE(m_showProgressSpy->count(), 10);
+    assertShowProgress(9, 0, 100, 99);
+
+    m_progressParser->parse("=>fileType2/checkerName5 test in-progress....done\n");
+
+    QCOMPARE(m_showProgressSpy->count(), 14);
+    assertShowProgress(10, 0, 100, 85);
+    assertShowProgress(11, 0, 100, 90);
+    assertShowProgress(12, 0, 100, 95);
+    assertShowProgress(13, 0, 100, 99);
 }
 
 void ProgressParserTest::parseSingleCannotAccessFileBeforeCheckers() {

@@ -44,8 +44,6 @@ void ProgressParser::start() {
 }
 
 void ProgressParser::parse(const QByteArray& data) {
-    Q_ASSERT(m_numberOfCheckers > 0);
-
     //fromAscii() conversion is good enough for progress output
     m_buffer += QString::fromAscii(data);
 
@@ -122,6 +120,10 @@ bool ProgressParser::parseCheckerName() {
     m_buffer.remove(0, QString("/" + checkerName + " test in-progress").length());
 
     emit showMessage(this, i18nc("@info:progress", "Running %1", checkerName));
+
+    if (m_numberOfCheckersRun == m_numberOfCheckers) {
+        m_numberOfCheckers++;
+    }
 
     return true;
 }
