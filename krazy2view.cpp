@@ -168,7 +168,7 @@ void Krazy2View::analyze() {
 
     m_analysisResults = new AnalysisResults();
 
-    AnalysisJob* analysisJob = new AnalysisJob();
+    AnalysisJob* analysisJob = new AnalysisJob(this);
     analysisJob->setAnalysisParameters(m_analysisParameters);
     analysisJob->setAnalysisResults(m_analysisResults);
 

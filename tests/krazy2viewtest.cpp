@@ -27,6 +27,7 @@
 #include <KPushButton>
 #include <KUrlRequester>
 
+#include <kdevplatform/interfaces/iruncontroller.h>
 #include <kdevplatform/tests/autotestshell.h>
 #include <kdevplatform/tests/testcore.h>
 
@@ -35,9 +36,13 @@
 #include "../krazy2view.h"
 #undef private
 #undef protected
+#include "../analysisjob.h"
 #include "../analysisparameters.h"
+#include "../analysisresults.h"
 #include "../checker.h"
 #include "../checkerlistjob.h"
+#include "../issue.h"
+#include "../issuemodel.h"
 
 class Krazy2ViewTest: public QObject {
 Q_OBJECT
@@ -57,6 +62,11 @@ private slots:
     void testSetCheckersCancellingInitialization();
     void testSetCheckersWithoutPaths();
 
+    void testAnalyze();
+    void testAnalyzeWithCheckersNotInitialized();
+    void testCancelAnalyze();
+    void testCancelAnalyzeWithCheckersNotInitialized();
+
 private:
 
     QString m_workingDirectory;
@@ -70,6 +80,10 @@ private:
     KPushButton* selectCheckersButton(const Krazy2View* view) const;
     KPushButton* analyzeButton(const Krazy2View* view) const;
     QTableView* resultsTableView(const Krazy2View* view) const;
+
+    const Issue* findIssue(const AnalysisResults* analysisResults,
+                           const QString& checkerName,
+                           const QString& exampleFileName, int line) const;
 
     void queueAddPaths(const Krazy2View* view,
                        const QString& directory,
@@ -540,6 +554,384 @@ void Krazy2ViewTest::testSetCheckersWithoutPaths() {
     QVERIFY(!resultsTableView(&view)->isEnabled());
 }
 
+void Krazy2ViewTest::testAnalyze() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
+    Krazy2View view;
+
+    //Add several paths
+    queueAddPaths(&view, m_workingDirectory + "examples/",
+                  QStringList() << "severalIssuesSeveralCheckers.cpp"
+                                << "singleExtraIssue.cpp"
+                                << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")
+                                << "subdirectory");
+
+    selectPathsButton(&view)->click();
+
+    QList<const Checker*> availableCheckers;
+
+    Checker* doubleQuoteCharsChecker = new Checker();
+    doubleQuoteCharsChecker->setFileType("c++");
+    doubleQuoteCharsChecker->setName("doublequote_chars");
+    availableCheckers.append(doubleQuoteCharsChecker);
+
+    Checker* licenseChecker = new Checker();
+    licenseChecker->setFileType("c++");
+    licenseChecker->setName("license");
+    availableCheckers.append(licenseChecker);
+
+    Checker* spellingChecker = new Checker();
+    spellingChecker->setFileType("c++");
+    spellingChecker->setName("spelling");
+    availableCheckers.append(spellingChecker);
+
+    Checker* styleChecker = new Checker();
+    styleChecker->setFileType("c++");
+    styleChecker->setName("style");
+    styleChecker->setExtra(true);
+    availableCheckers.append(styleChecker);
+
+    Checker* validateChecker = new Checker();
+    validateChecker->setFileType("desktop");
+    validateChecker->setName("validate");
+    availableCheckers.append(validateChecker);
+
+    analysisParameters(&view)->initializeCheckers(availableCheckers);
+
+    //Do not run spelling checker
+    queueRemoveCheckers(&view, QStringList() << "0-2");
+
+    selectCheckersButton(&view)->click();
+
+    //Run style checker
+    queueAddCheckers(&view, QStringList() << "0-1-0");
+
+    selectCheckersButton(&view)->click();
+
+    analyzeButton(&view)->click();
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    IssueModel* issueModel = static_cast<IssueModel*>(resultsTableView(&view)->model());
+    const AnalysisResults* analysisResults = issueModel->analysisResults();
+
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 6);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    const Issue* issue = findIssue(analysisResults, "doublequote_chars",
+                                   "severalIssuesSeveralCheckers.cpp", 8);
+    QVERIFY(issue);
+    QCOMPARE(issue->message(), QString(""));
+    QCOMPARE(issue->checker()->description(),
+             QString("Check single-char QString operations for efficiency"));
+    QVERIFY(issue->checker()->explanation().startsWith(
+                "Adding single characters to a QString is faster"));
+    QCOMPARE(issue->checker()->fileType(), QString("c++"));
+
+    const Issue* issue2 = findIssue(analysisResults, "doublequote_chars",
+                                    "severalIssuesSeveralCheckers.cpp", 12);
+    QVERIFY(issue2);
+    QCOMPARE(issue2->message(), QString(""));
+    QCOMPARE(issue2->checker(), issue->checker());
+
+    const Issue* issue3 = findIssue(analysisResults, "license",
+                                    "severalIssuesSeveralCheckers.cpp", -1);
+    QVERIFY(issue3);
+    QCOMPARE(issue3->message(), QString("missing license"));
+    QCOMPARE(issue3->checker()->description(),
+             QString("Check for an acceptable license"));
+    QVERIFY(issue3->checker()->explanation().startsWith(
+                "Each source file must contain a license"));
+    QCOMPARE(issue3->checker()->fileType(), QString("c++"));
+
+    const Issue* issue4 = findIssue(analysisResults, "validate",
+                                    "subdirectory/singleIssue.desktop", -1);
+    QVERIFY(issue4);
+    QCOMPARE(issue4->message(), QString("required key \"Type\" in group \"Desktop Entry\" is not present"));
+    QCOMPARE(issue4->checker()->description(),
+             QString("Validates desktop files using 'desktop-file-validate'"));
+    QVERIFY(issue4->checker()->explanation().startsWith(
+                "Please make sure your .desktop files conform to the freedesktop.org"));
+    QCOMPARE(issue4->checker()->fileType(), QString("desktop"));
+
+    const Issue* issue5 = findIssue(analysisResults, "doublequote_chars",
+                                    QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"), 8);
+    QVERIFY(issue5);
+    QCOMPARE(issue5->message(), QString(""));
+    QCOMPARE(issue5->checker(), issue->checker());
+
+    const Issue* issue6 = findIssue(analysisResults, "style",
+                                    "singleExtraIssue.cpp", 7);
+    QVERIFY(issue6);
+    QCOMPARE(issue6->message(), QString("Put 1 space before an asterisk or ampersand"));
+    QCOMPARE(issue6->checker()->description(),
+             QString("Check for adherence to a coding style"));
+    QVERIFY(issue6->checker()->explanation().startsWith(
+                "Please follow the coding style guidelines"));
+    QCOMPARE(issue6->checker()->fileType(), QString("c++"));
+}
+
+void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
+    Krazy2View view;
+
+    //Add several paths
+    queueAddPaths(&view, m_workingDirectory + "examples/",
+                  QStringList() << "severalIssuesSeveralCheckers.cpp"
+                                << "singleExtraIssue.cpp"
+                                << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")
+                                << "subdirectory");
+
+    selectPathsButton(&view)->click();
+
+    //Start analysis before initializing the checkers
+    analyzeButton(&view)->click();
+
+    CheckerListJob* checkerListJob = view.findChild<CheckerListJob*>();
+    QVERIFY(checkerListJob);
+    QTest::kWaitForSignal(checkerListJob, SIGNAL(finished(KJob*)));
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    IssueModel* issueModel = static_cast<IssueModel*>(resultsTableView(&view)->model());
+    const AnalysisResults* analysisResults = issueModel->analysisResults();
+
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 8);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    const Issue* issue = findIssue(analysisResults, "doublequote_chars",
+                                   "severalIssuesSeveralCheckers.cpp", 8);
+    QVERIFY(issue);
+    QCOMPARE(issue->message(), QString(""));
+    QCOMPARE(issue->checker()->description(),
+             QString("Check single-char QString operations for efficiency"));
+    QVERIFY(issue->checker()->explanation().startsWith(
+                "Adding single characters to a QString is faster"));
+    QCOMPARE(issue->checker()->fileType(), QString("c++"));
+
+    const Issue* issue2 = findIssue(analysisResults, "doublequote_chars",
+                                    "severalIssuesSeveralCheckers.cpp", 12);
+    QVERIFY(issue2);
+    QCOMPARE(issue2->message(), QString(""));
+    QCOMPARE(issue2->checker(), issue->checker());
+
+    const Issue* issue3 = findIssue(analysisResults, "license",
+                                    "severalIssuesSeveralCheckers.cpp", -1);
+    QVERIFY(issue3);
+    QCOMPARE(issue3->message(), QString("missing license"));
+    QCOMPARE(issue3->checker()->description(),
+             QString("Check for an acceptable license"));
+    QVERIFY(issue3->checker()->explanation().startsWith(
+                "Each source file must contain a license"));
+    QCOMPARE(issue3->checker()->fileType(), QString("c++"));
+
+    const Issue* issue4 = findIssue(analysisResults, "spelling",
+                                    "severalIssuesSeveralCheckers.cpp", 6);
+    QVERIFY(issue4);
+    QCOMPARE(issue4->message(), QString("begining"));
+    QCOMPARE(issue4->checker()->description(),
+             QString("Check for spelling errors"));
+    QVERIFY(issue4->checker()->explanation().startsWith(
+                "Spelling errors in comments and strings should be fixed"));
+    QCOMPARE(issue4->checker()->fileType(), QString("c++"));
+
+    const Issue* issue5 = findIssue(analysisResults, "spelling",
+                                    "severalIssuesSeveralCheckers.cpp", 10);
+    QVERIFY(issue5);
+    QCOMPARE(issue5->message(), QString("commiting"));
+    QCOMPARE(issue5->checker(), issue4->checker());
+
+    const Issue* issue6 = findIssue(analysisResults, "spelling",
+                                    "severalIssuesSeveralCheckers.cpp", 14);
+    QVERIFY(issue6);
+    QCOMPARE(issue6->message(), QString("labelling"));
+    QCOMPARE(issue6->checker(), issue4->checker());
+
+    const Issue* issue7 = findIssue(analysisResults, "validate",
+                                    "subdirectory/singleIssue.desktop", -1);
+    QVERIFY(issue7);
+    QCOMPARE(issue7->message(), QString("required key \"Type\" in group \"Desktop Entry\" is not present"));
+    QCOMPARE(issue7->checker()->description(),
+             QString("Validates desktop files using 'desktop-file-validate'"));
+    QVERIFY(issue7->checker()->explanation().startsWith(
+                "Please make sure your .desktop files conform to the freedesktop.org"));
+    QCOMPARE(issue7->checker()->fileType(), QString("desktop"));
+
+    const Issue* issue8 = findIssue(analysisResults, "doublequote_chars",
+                                    QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"), 8);
+    QVERIFY(issue8);
+    QCOMPARE(issue8->message(), QString(""));
+    QCOMPARE(issue8->checker(), issue->checker());
+}
+
+void Krazy2ViewTest::testCancelAnalyze() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
+    Krazy2View view;
+
+    //Add several paths
+    queueAddPaths(&view, m_workingDirectory + "examples/",
+                  QStringList() << "severalIssuesSeveralCheckers.cpp"
+                                << "singleExtraIssue.cpp"
+                                << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")
+                                << "subdirectory");
+
+    selectPathsButton(&view)->click();
+
+    QList<const Checker*> availableCheckers;
+
+    Checker* doubleQuoteCharsChecker = new Checker();
+    doubleQuoteCharsChecker->setFileType("c++");
+    doubleQuoteCharsChecker->setName("doublequote_chars");
+    availableCheckers.append(doubleQuoteCharsChecker);
+
+    Checker* licenseChecker = new Checker();
+    licenseChecker->setFileType("c++");
+    licenseChecker->setName("license");
+    availableCheckers.append(licenseChecker);
+
+    Checker* spellingChecker = new Checker();
+    spellingChecker->setFileType("c++");
+    spellingChecker->setName("spelling");
+    availableCheckers.append(spellingChecker);
+
+    Checker* styleChecker = new Checker();
+    styleChecker->setFileType("c++");
+    styleChecker->setName("style");
+    styleChecker->setExtra(true);
+    availableCheckers.append(styleChecker);
+
+    Checker* validateChecker = new Checker();
+    validateChecker->setFileType("desktop");
+    validateChecker->setName("validate");
+    availableCheckers.append(validateChecker);
+
+    analysisParameters(&view)->initializeCheckers(availableCheckers);
+
+    //Do not run spelling checker
+    queueRemoveCheckers(&view, QStringList() << "0-2");
+
+    selectCheckersButton(&view)->click();
+
+    //Run style checker
+    queueAddCheckers(&view, QStringList() << "0-1-0");
+
+    selectCheckersButton(&view)->click();
+
+    analyzeButton(&view)->click();
+
+    //Queue stopping the job to ensure that kWaitForSignal is already waiting
+    //for the signal when it is emitted.
+    QTimer::singleShot(100, KDevelop::ICore::self()->runController(), SLOT(stopAllProcesses()));
+    QTest::kWaitForSignal(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+
+    IssueModel* issueModel = static_cast<IssueModel*>(resultsTableView(&view)->model());
+    const AnalysisResults* analysisResults = issueModel->analysisResults();
+
+    QVERIFY(!analysisResults);
+}
+
+void Krazy2ViewTest::testCancelAnalyzeWithCheckersNotInitialized() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
+    Krazy2View view;
+
+    //Add several paths
+    queueAddPaths(&view, m_workingDirectory + "examples/",
+                  QStringList() << "severalIssuesSeveralCheckers.cpp"
+                                << "singleExtraIssue.cpp"
+                                << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")
+                                << "subdirectory");
+
+    selectPathsButton(&view)->click();
+
+    //Start analysis before initializing the checkers
+    analyzeButton(&view)->click();
+
+    //Queue stopping the job to ensure that kWaitForSignal is already waiting
+    //for the signal when it is emitted.
+    QTimer::singleShot(100, KDevelop::ICore::self()->runController(), SLOT(stopAllProcesses()));
+    QTest::kWaitForSignal(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+
+    IssueModel* issueModel = static_cast<IssueModel*>(resultsTableView(&view)->model());
+    const AnalysisResults* analysisResults = issueModel->analysisResults();
+
+    QVERIFY(!analysisResults);
+}
+
 ///////////////////////////////// Helpers //////////////////////////////////////
 
 bool Krazy2ViewTest::examplesInSubdirectory() const {
@@ -588,6 +980,21 @@ KPushButton* Krazy2ViewTest::analyzeButton(const Krazy2View* view) const {
 
 QTableView* Krazy2ViewTest::resultsTableView(const Krazy2View* view) const {
     return view->findChild<QTableView*>("resultsTableView");
+}
+
+const Issue* Krazy2ViewTest::findIssue(const AnalysisResults* analysisResults,
+                                       const QString& checkerName,
+                                       const QString& exampleFileName, int line) const {
+    QString fileName = m_workingDirectory + "examples/" + exampleFileName;
+    foreach (const Issue* issue, analysisResults->issues()) {
+        if (issue->checker()->name() == checkerName &&
+            issue->fileName() == fileName &&
+            issue->line() == line) {
+            return issue;
+        }
+    }
+
+    return 0;
 }
 
 //The dialogs are modal, so they won't return to the test code until they are
