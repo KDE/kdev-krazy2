@@ -119,7 +119,7 @@ bool ProgressParser::parseCheckerName() {
 
     m_buffer.remove(0, QString("/" + checkerName + " test in-progress").length());
 
-    emit showMessage(this, i18nc("@info:progress", "Running %1", checkerName));
+    emit showMessage(this, i18nc("@info:progress", "Running %1/%2", m_currentFileType, checkerName));
 
     if (m_numberOfCheckersRun == m_numberOfCheckers) {
         m_numberOfCheckers++;

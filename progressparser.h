@@ -176,7 +176,7 @@ private:
 
     /**
      * Parses the "/checkerName test in-progress" chunk.
-     * A message is shown with the name of the checker being run.
+     * A message is shown with the file type and name of the checker being run.
      *
      * @return True if the data in the buffer matched, false otherwise.
      */
