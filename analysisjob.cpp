@@ -19,8 +19,6 @@
 
 #include "analysisjob.h"
 
-#include <QDir>
-
 #include <KConfigGroup>
 #include <KGlobal>
 #include <KLocalizedString>
