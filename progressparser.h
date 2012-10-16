@@ -22,7 +22,7 @@
 
 #include <QHash>
 
-#include <interfaces/istatus.h>
+#include <kdevplatform/interfaces/istatus.h>
 
 /**
  * Shows progress information about krazy2 execution.

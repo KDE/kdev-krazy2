@@ -27,8 +27,8 @@
 #include <KPushButton>
 #include <KUrlRequester>
 
-#include <tests/autotestshell.h>
-#include <tests/testcore.h>
+#include <kdevplatform/tests/autotestshell.h>
+#include <kdevplatform/tests/testcore.h>
 
 #define protected public
 #define private public

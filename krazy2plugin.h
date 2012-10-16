@@ -22,7 +22,7 @@
 
 #include <QVariant>
 
-#include <interfaces/iplugin.h>
+#include <kdevplatform/interfaces/iplugin.h>
 
 /**
  * KDevelop plugin to show issues reported by Krazy2.
