@@ -65,7 +65,7 @@ Krazy2View::~Krazy2View() {
 
 //private:
 
-void Krazy2View::initializeCheckers() {
+void Krazy2View::initializeCheckers(const char* handlerName) {
     if (m_checkersAreBeingInitialized) {
         return;
     }
@@ -77,8 +77,7 @@ void Krazy2View::initializeCheckers() {
     CheckerListJob* checkerListJob = new CheckerListJob(this);
     checkerListJob->setCheckerList(&m_availableCheckers);
 
-    connect(checkerListJob, SIGNAL(finished(KJob*)),
-            this, SLOT(handleCheckerInitialization(KJob*)));
+    connect(checkerListJob, SIGNAL(finished(KJob*)), this, handlerName);
 
     KDevelop::ICore::self()->runController()->registerJob(checkerListJob);
 }
@@ -89,6 +88,36 @@ void Krazy2View::updateAnalyzeButtonStatus() {
         m_ui->analyzeButton->setEnabled(false);
     } else {
         m_ui->analyzeButton->setEnabled(true);
+    }
+}
+
+void Krazy2View::startAnalysis() {
+    m_analysisResults = new AnalysisResults();
+
+    AnalysisJob* analysisJob = new AnalysisJob(this);
+    analysisJob->setAnalysisParameters(m_analysisParameters);
+    analysisJob->setAnalysisResults(m_analysisResults);
+
+    connect(analysisJob, SIGNAL(finished(KJob*)),
+            this, SLOT(handleAnalysisResult(KJob*)));
+
+    KDevelop::ICore::self()->runController()->registerJob(analysisJob);
+}
+
+void Krazy2View::disableGuiBeforeAnalysis() {
+    m_ui->selectPathsButton->setEnabled(false);
+    m_ui->selectCheckersButton->setEnabled(false);
+    m_ui->analyzeButton->setEnabled(false);
+    m_ui->resultsTableView->setEnabled(false);
+}
+
+void Krazy2View::restoreGuiAfterAnalysis() {
+    m_ui->selectPathsButton->setEnabled(true);
+    m_ui->selectCheckersButton->setEnabled(true);
+    m_ui->analyzeButton->setEnabled(true);
+
+    if (m_issueModel->analysisResults()) {
+        m_ui->resultsTableView->setEnabled(true);
     }
 }
 
@@ -120,7 +149,7 @@ void Krazy2View::selectCheckers() {
         selectCheckersWidget->setCheckers(m_analysisParameters->availableCheckers(),
                                           m_analysisParameters->checkersToRun());
     } else {
-        initializeCheckers();
+        initializeCheckers(SLOT(handleCheckerInitializationBeforeSelectingCheckers(KJob*)));
         dialog->button(KDialog::Ok)->setEnabled(false);
     }
     dialog->setMainWidget(selectCheckersWidget);
@@ -138,7 +167,7 @@ void Krazy2View::selectCheckers() {
     updateAnalyzeButtonStatus();
 }
 
-void Krazy2View::handleCheckerInitialization(KJob* job) {
+void Krazy2View::handleCheckerInitializationBeforeSelectingCheckers(KJob* job) {
     m_checkersAreBeingInitialized = false;
 
     if (job->error() != KJob::NoError) {
@@ -160,34 +189,33 @@ void Krazy2View::handleCheckerInitialization(KJob* job) {
     dialog->button(KDialog::Ok)->setEnabled(true);
 }
 
+void Krazy2View::handleCheckerInitializationBeforeAnalysis(KJob* job) {
+    m_checkersAreBeingInitialized = false;
+
+    if (job->error() != KJob::NoError) {
+        restoreGuiAfterAnalysis();
+        return;
+    }
+
+    m_analysisParameters->initializeCheckers(m_availableCheckers);
+
+    startAnalysis();
+}
+
 void Krazy2View::analyze() {
-    m_ui->selectPathsButton->setEnabled(false);
-    m_ui->selectCheckersButton->setEnabled(false);
-    m_ui->analyzeButton->setEnabled(false);
-    m_ui->resultsTableView->setEnabled(false);
+    disableGuiBeforeAnalysis();
 
-    m_analysisResults = new AnalysisResults();
+    if (!m_analysisParameters->wereCheckersInitialized()) {
+        initializeCheckers(SLOT(handleCheckerInitializationBeforeAnalysis(KJob*)));
+        return;
+    }
 
-    AnalysisJob* analysisJob = new AnalysisJob(this);
-    analysisJob->setAnalysisParameters(m_analysisParameters);
-    analysisJob->setAnalysisResults(m_analysisResults);
-
-    connect(analysisJob, SIGNAL(finished(KJob*)),
-            this, SLOT(handleAnalysisResult(KJob*)));
-
-    KDevelop::ICore::self()->runController()->registerJob(analysisJob);
+    startAnalysis();
 }
 
 void Krazy2View::handleAnalysisResult(KJob* job) {
-    m_ui->selectPathsButton->setEnabled(true);
-    m_ui->selectCheckersButton->setEnabled(true);
-    m_ui->analyzeButton->setEnabled(true);
-
     if (job->error() != KJob::NoError) {
-        if (m_issueModel->analysisResults()) {
-            m_ui->resultsTableView->setEnabled(true);
-        }
-
+        restoreGuiAfterAnalysis();
         return;
     }
 
@@ -195,5 +223,5 @@ void Krazy2View::handleAnalysisResult(KJob* job) {
     m_issueModel->setAnalysisResults(m_analysisResults);
     delete previousAnalysisResults;
 
-    m_ui->resultsTableView->setEnabled(true);
+    restoreGuiAfterAnalysis();
 }

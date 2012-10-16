@@ -93,12 +93,12 @@ private:
      * Starts the job to get the list of available checkers.
      * If the checkers are already being initialized nothing is done.
      *
-     * The actual initialization will be made by
-     * handleCheckerInitialization(KJob*) once the job finishes.
+     * The actual initialization will be made by the given handler once the job
+     * finishes.
      *
-     * @see handleCheckerInitialization(KJob*)
+     * @param handlerName The name of the slot to initialize the checkers.
      */
-    void initializeCheckers();
+    void initializeCheckers(const char* handlerName);
 
     /**
      * Enables or disables the Analyze button depending on the selected paths
@@ -107,6 +107,23 @@ private:
      * taken into account.
      */
     void updateAnalyzeButtonStatus();
+
+    /**
+     * Starts the actual analysis registering an AnalysisJob.
+     */
+    void startAnalysis();
+
+    /**
+     * Disables the GUI items before an analysis.
+     */
+    void disableGuiBeforeAnalysis();
+
+    /**
+     * Restores the GUI items after an analysis.
+     * The results view will be enabled or not depending on whether there are
+     * any results or not.
+     */
+    void restoreGuiAfterAnalysis();
 
 private Q_SLOTS:
 
@@ -132,10 +149,21 @@ private Q_SLOTS:
      *
      * @param job The finished job.
      */
-    void handleCheckerInitialization(KJob* job);
+    void handleCheckerInitializationBeforeSelectingCheckers(KJob* job);
+
+    /**
+     * Initializes the checkers with the list got from Krazy2.
+     * The actual analysis is started.
+     *
+     * @param job The finished job.
+     */
+    void handleCheckerInitializationBeforeAnalysis(KJob* job);
 
     /**
      * Starts the analysis.
+     * If the checkers in the AnalysisParameters were not initialized, before
+     * performing the actual analysis the checkers are initialized. All the
+     * normal (not extra) checkers would be run in this case.
      */
     void analyze();
 

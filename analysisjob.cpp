@@ -32,7 +32,6 @@
 
 #include "analysisparameters.h"
 #include "checker.h"
-#include "checkerlistjob.h"
 #include "progressparser.h"
 #include "resultparser.h"
 
@@ -42,16 +41,9 @@ AnalysisJob::AnalysisJob(QObject* parent /*= 0*/): KJob(parent),
     m_analysisParameters(0),
     m_analysisResults(0),
     m_progressParser(new ProgressParser(this)),
-    m_isAnalyzing(false),
-    m_checkerList(new QList<const Checker*>()),
-    m_checkerListJob(new CheckerListJob(this)),
     m_process(new KProcess(this)) {
-    m_checkerListJob->setAutoDelete(false);
 
     setObjectName(i18nc("@action:inmenu", "<command>krazy2</command> analysis"));
-
-    connect(m_checkerListJob, SIGNAL(result(KJob*)),
-            this, SLOT(handleCheckerListJobResult(KJob*)));
 
     connect(m_process, SIGNAL(finished(int)),
             this, SLOT(handleProcessFinished(int)));
@@ -61,30 +53,22 @@ AnalysisJob::AnalysisJob(QObject* parent /*= 0*/): KJob(parent),
     setCapabilities(Killable);
 }
 
-AnalysisJob::~AnalysisJob() {
-    delete m_checkerList;
-}
-
 void AnalysisJob::start() {
     Q_ASSERT(m_analysisParameters);
+    Q_ASSERT(m_analysisParameters->wereCheckersInitialized());
+    Q_ASSERT(!m_analysisParameters->filesToBeAnalyzed().isEmpty());
+    Q_ASSERT(!m_analysisParameters->checkersToRun().isEmpty());
     Q_ASSERT(m_analysisResults);
-    Q_ASSERT(!m_isAnalyzing);
 
     KDevelop::ICore::self()->uiController()->registerStatus(m_progressParser);
     connect(this, SIGNAL(finished(KJob*)), m_progressParser, SLOT(finish()));
 
     m_progressParser->start();
 
-    if (!m_analysisParameters->wereCheckersInitialized()) {
-        m_checkerListJob->setCheckerList(m_checkerList);
-        m_checkerListJob->start();
-        return;
-    }
-
     startAnalysis();
 }
 
-void AnalysisJob::setAnalysisParameters(AnalysisParameters* analysisParameters) {
+void AnalysisJob::setAnalysisParameters(const AnalysisParameters* analysisParameters) {
     Q_ASSERT(analysisParameters);
 
     m_analysisParameters = analysisParameters;
@@ -97,13 +81,7 @@ void AnalysisJob::setAnalysisResults(AnalysisResults* analysisResults) {
 //protected:
 
 bool AnalysisJob::doKill() {
-    if (!m_isAnalyzing && m_checkerListJob) {
-        m_checkerListJob->kill();
-    }
-
-    if (m_isAnalyzing && m_process) {
-        m_process->kill();
-    }
+    m_process->kill();
 
     return true;
 }
@@ -207,10 +185,6 @@ QStringList AnalysisJob::checkersToRunAsKrazy2Arguments() const {
 }
 
 void AnalysisJob::startAnalysis() {
-    Q_ASSERT(!m_isAnalyzing);
-
-    m_isAnalyzing = true;
-
     QStringList namesOfFilesToBeAnalyzed = m_analysisParameters->filesToBeAnalyzed();
 
     m_progressParser->setNumberOfCheckers(
@@ -247,32 +221,12 @@ void AnalysisJob::startAnalysis() {
 
 //private slots:
 
-void AnalysisJob::handleCheckerListJobResult(KJob* job) {
-    Q_ASSERT(!m_isAnalyzing);
-
-    if (job->error() != KJob::NoError) {
-        setError(UserDefinedError);
-        setErrorText(job->errorString());
-
-        emitResult();
-
-        return;
-    }
-
-    m_analysisParameters->initializeCheckers(*m_checkerList);
-
-    startAnalysis();
-}
-
 void AnalysisJob::handleProcessReadyStandardError() {
-    Q_ASSERT(m_isAnalyzing);
-
     m_progressParser->parse(m_process->readAllStandardError());
 }
 
 void AnalysisJob::handleProcessFinished(int exitCode) {
     Q_UNUSED(exitCode);
-    Q_ASSERT(m_isAnalyzing);
 
     ResultParser resultParser;
     resultParser.setAnalysisResults(m_analysisResults);
@@ -282,8 +236,6 @@ void AnalysisJob::handleProcessFinished(int exitCode) {
 }
 
 void AnalysisJob::handleProcessError(QProcess::ProcessError processError) {
-    Q_ASSERT(m_isAnalyzing);
-
     setError(UserDefinedError);
 
     if (processError == QProcess::FailedToStart && m_process->program().first().isEmpty()) {

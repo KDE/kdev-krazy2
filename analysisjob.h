@@ -29,20 +29,14 @@ class KProcess;
 class AnalysisParameters;
 class AnalysisResults;
 class Checker;
-class CheckerListJob;
 class ProgressParser;
 
 /**
  * Job to analyze a directory with krazy2.
  * The job executes a krazy2 process asking it to analyze all the files
  * specified in the AnalysisParameters and then parses the output to populate an
- * AnalysisTesults object.
- *
- * The checkers to run on the files are specified too in the AnalysisParameters.
- * However, if the checkers in the AnalysisParameters were not initialized,
- * before performing the actual analysis the list of available checkers is got
- * to initialize the checkers in the AnalysisParameters. All the normal (not
- * extra) checkers would be run in this case.
+ * AnalysisTesults object. The checkers to run on the files are specified in the
+ * AnalysisParameters too.
  *
  * The path to the krazy2 executable is got from "Krazy2" configuration group.
  *
@@ -59,18 +53,12 @@ public:
      */
     explicit AnalysisJob(QObject* parent = 0);
 
-    /**
-     * Deletes the checker list and all its checkers.
-     */
-    virtual ~AnalysisJob();
-
     //<KJob>
 
     /**
      * Starts krazy2 asking it to analyze all the files specified in the
      * AnalysisParameters.
-     * If the checkers were not initialized, the list of available checkers is
-     * got before starting the actual analysis.
+     * The checkers and paths have to have been initialized.
      */
     virtual void start();
 
@@ -81,7 +69,7 @@ public:
      *
      * @param analysisParameters The analysis parameters.
      */
-    void setAnalysisParameters(AnalysisParameters* analysisParameters);
+    void setAnalysisParameters(const AnalysisParameters* analysisParameters);
 
     /**
      * Sets the AnalysisResults to populate.
@@ -95,8 +83,7 @@ protected:
     //<KJob>
 
     /**
-     * Kills the underlying job or process, depending on whether the actual
-     * analysis started or not.
+     * Kills the underlying process.
      *
      * @return Always true.
      */
@@ -109,7 +96,7 @@ private:
     /**
      * The analysis parameters to use.
      */
-    AnalysisParameters* m_analysisParameters;
+    const AnalysisParameters* m_analysisParameters;
 
     /**
      * The analysis results to populate.
@@ -120,26 +107,6 @@ private:
      * The KDevelop::IStatus to show the analysis progress.
      */
     ProgressParser* m_progressParser;
-
-    /**
-     * True if the actual analysis started, false if it is still getting the
-     * checker list.
-     */
-    bool m_isAnalyzing;
-
-    /**
-     * The list of available Krazy2 checkers.
-     * The list is used only if the CheckerListJob is run. It is used as a
-     * temporal storage before initializing the checkers in the
-     * AnalysisParameters.
-     */
-    QList<const Checker*>* m_checkerList;
-
-    /**
-     * The job to get the available checkers (if they were not initialized yet
-     * in the AnalysisParameters).
-     */
-    CheckerListJob* m_checkerListJob;
 
     /**
      * The krazy2 process to parse its output.
@@ -205,22 +172,11 @@ private:
     QStringList checkersToRunAsKrazy2Arguments() const;
 
     /**
-     * Starts the krazy2 process and the actual analysis.
+     * Starts the krazy2 process.
      */
     void startAnalysis();
 
 private Q_SLOTS:
-
-    /**
-     * Starts the analysis or ends this AnalysisJob depending on the status of
-     * the finished CheckerListJob.
-     * If the CheckerListJob finished cleanly, the checker list was populated,
-     * so the analysis is started. If the CheckerListJob ended with an error,
-     * the error text for this AnalysisJob is set to that of the CheckerListJob.
-     *
-     * @param job The finished CheckerListJob.
-     */
-    void handleCheckerListJobResult(KJob* job);
 
     /**
      * Updates the progress.

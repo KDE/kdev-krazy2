@@ -90,7 +90,6 @@ private slots:
 
     void testConstructor();
 
-    void testRun();
     void testRunWithCheckersSetInAnalysisParameters();
     void testRunWithExtraCheckersSetInAnalysisParameters();
     void testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisParameters();
@@ -139,159 +138,6 @@ void AnalysisJobTest::testConstructor() {
     QCOMPARE(analysisJob->capabilities(), KJob::Killable);
     QCOMPARE(analysisJob->objectName(),
              i18nc("@action:inmenu", "<command>krazy2</command> analysis"));
-}
-
-void AnalysisJobTest::testRun() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ')';
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
-    AnalysisJob analysisJob;
-    analysisJob.setAutoDelete(false);
-
-    AnalysisParameters analysisParameters;
-    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
-    analysisJob.setAnalysisParameters(&analysisParameters);
-
-    AnalysisResults analysisResults;
-    analysisJob.setAnalysisResults(&analysisResults);
-
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
-    QSignalSpy showProgressSpy(analysisJob.findChild<ProgressParser*>(),
-                               SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
-
-    SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
-
-    analysisJob.start();
-
-    resultSpy.waitForSignal();
-
-    QCOMPARE(analysisJob.error(), (int)KJob::NoError);
-    QCOMPARE(analysisResults.issues().count(), 12);
-
-    //To prevent test failures due to the order of the issues, each issue is
-    //searched in the results instead of using a specific index
-    const Issue* issue = findIssue(&analysisResults, "doublequote_chars",
-                                   "singleIssue.cpp", 8);
-    QVERIFY(issue);
-    QCOMPARE(issue->message(), QString(""));
-    QCOMPARE(issue->checker()->description(),
-             QString("Check single-char QString operations for efficiency"));
-    QVERIFY(issue->checker()->explanation().startsWith(
-                "Adding single characters to a QString is faster"));
-    QCOMPARE(issue->checker()->fileType(), QString("c++"));
-
-    const Issue* issue2 = findIssue(&analysisResults, "doublequote_chars",
-                                    "severalIssuesSingleChecker.cpp", 8);
-    QVERIFY(issue2);
-    QCOMPARE(issue2->message(), QString(""));
-    QCOMPARE(issue2->checker(), issue->checker());
-
-    const Issue* issue3 = findIssue(&analysisResults, "doublequote_chars",
-                                    "severalIssuesSingleChecker.cpp", 10);
-    QVERIFY(issue3);
-    QCOMPARE(issue3->message(), QString(""));
-    QCOMPARE(issue3->checker(), issue->checker());
-
-    const Issue* issue4 = findIssue(&analysisResults, "doublequote_chars",
-                                    "severalIssuesSeveralCheckers.cpp", 8);
-    QVERIFY(issue4);
-    QCOMPARE(issue4->message(), QString(""));
-    QCOMPARE(issue4->checker(), issue->checker());
-
-    const Issue* issue5 = findIssue(&analysisResults, "doublequote_chars",
-                                    "severalIssuesSeveralCheckers.cpp", 12);
-    QVERIFY(issue5);
-    QCOMPARE(issue5->message(), QString(""));
-    QCOMPARE(issue5->checker(), issue->checker());
-
-    const Issue* issue6 = findIssue(&analysisResults, "license",
-                                    "severalIssuesSeveralCheckers.cpp", -1);
-    QVERIFY(issue6);
-    QCOMPARE(issue6->message(), QString("missing license"));
-    QCOMPARE(issue6->checker()->description(),
-             QString("Check for an acceptable license"));
-    QVERIFY(issue6->checker()->explanation().startsWith(
-                "Each source file must contain a license"));
-    QCOMPARE(issue6->checker()->fileType(), QString("c++"));
-
-    const Issue* issue7 = findIssue(&analysisResults, "spelling",
-                                    "severalIssuesSeveralCheckers.cpp", 6);
-    QVERIFY(issue7);
-    QCOMPARE(issue7->message(), QString("begining"));
-    QCOMPARE(issue7->checker()->description(),
-             QString("Check for spelling errors"));
-    QVERIFY(issue7->checker()->explanation().startsWith(
-                "Spelling errors in comments and strings should be fixed"));
-    QCOMPARE(issue7->checker()->fileType(), QString("c++"));
-
-    const Issue* issue8 = findIssue(&analysisResults, "spelling",
-                                    "severalIssuesSeveralCheckers.cpp", 10);
-    QVERIFY(issue8);
-    QCOMPARE(issue8->message(), QString("commiting"));
-    QCOMPARE(issue8->checker(), issue7->checker());
-
-    const Issue* issue9 = findIssue(&analysisResults, "spelling",
-                                    "severalIssuesSeveralCheckers.cpp", 14);
-    QVERIFY(issue9);
-    QCOMPARE(issue9->message(), QString("labelling"));
-    QCOMPARE(issue9->checker(), issue7->checker());
-
-    const Issue* issue10 = findIssue(&analysisResults, "validate",
-                                     "subdirectory/singleIssue.desktop", -1);
-    QVERIFY(issue10);
-    QCOMPARE(issue10->message(), QString("required key \"Type\" in group \"Desktop Entry\" is not present"));
-    QCOMPARE(issue10->checker()->description(),
-             QString("Validates desktop files using 'desktop-file-validate'"));
-    QVERIFY(issue10->checker()->explanation().startsWith(
-                "Please make sure your .desktop files conform to the freedesktop.org"));
-    QCOMPARE(issue10->checker()->fileType(), QString("desktop"));
-
-    const Issue* issue11 = findIssue(&analysisResults, "doublequote_chars",
-                                     QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"), 8);
-    QVERIFY(issue11);
-    QCOMPARE(issue11->message(), QString(""));
-    QCOMPARE(issue11->checker(), issue->checker());
-
-    const Issue* issue12 = findIssue(&analysisResults, "doublequote_chars",
-                                     ".singleIssueHiddenUnixFileName.cpp", 8);
-    QVERIFY(issue12);
-    QCOMPARE(issue12->message(), QString(""));
-    QCOMPARE(issue12->checker(), issue->checker());
-
-    //At least six signals should have been emitted: one for the start, one for
-    //the finish, and one for each checker with issues.
-    QVERIFY(showProgressSpy.count() >= 6);
-
-    //First signal is the 0%
-    //First parameter is the ProgressParser itself
-    QCOMPARE(showProgressSpy.first().at(1).toInt(), 0);
-    QCOMPARE(showProgressSpy.first().at(2).toInt(), 100);
-    QCOMPARE(showProgressSpy.first().at(3).toInt(), 0);
-
-    //Last signal is the 100%
-    QCOMPARE(showProgressSpy.last().at(1).toInt(), 0);
-    QCOMPARE(showProgressSpy.last().at(2).toInt(), 100);
-    QCOMPARE(showProgressSpy.last().at(3).toInt(), 100);
-
-    //The second signal progress should be bigger than the start progress
-    QVERIFY(showProgressSpy.at(1).at(3).toInt() > 0);
-
-    //The second to last signal shows a 100% progress, as it is emitted once all
-    //the checkers have run. Maybe it would be better to show a progress
-    //slightly smaller than 100%, like 99%, and show 100% progress only when the
-    //job has totally finished (that is, once the output has been parsed). But,
-    //for now, it is good enough this way ;)
-    QVERIFY(showProgressSpy.at(showProgressSpy.count()-2).at(3).toInt() == 100);
-    QVERIFY(showProgressSpy.at(showProgressSpy.count()-3).at(3).toInt() < 100);
 }
 
 void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
@@ -708,7 +554,15 @@ void AnalysisJobTest::testRunWithEmptyKrazy2ExecutablePath() {
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
 
+    QList<const Checker*> availableCheckers;
+
+    Checker* doubleQuoteCharsChecker = new Checker();
+    doubleQuoteCharsChecker->setFileType("c++");
+    doubleQuoteCharsChecker->setName("doublequote_chars");
+    availableCheckers.append(doubleQuoteCharsChecker);
+
     AnalysisParameters analysisParameters;
+    analysisParameters.initializeCheckers(availableCheckers);
     analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
     analysisJob.setAnalysisParameters(&analysisParameters);
 
@@ -735,7 +589,15 @@ void AnalysisJobTest::testRunWithInvalidKrazy2ExecutablePath() {
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
 
+    QList<const Checker*> availableCheckers;
+
+    Checker* doubleQuoteCharsChecker = new Checker();
+    doubleQuoteCharsChecker->setFileType("c++");
+    doubleQuoteCharsChecker->setName("doublequote_chars");
+    availableCheckers.append(doubleQuoteCharsChecker);
+
     AnalysisParameters analysisParameters;
+    analysisParameters.initializeCheckers(availableCheckers);
     analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
     analysisJob.setAnalysisParameters(&analysisParameters);
 
@@ -773,7 +635,10 @@ void AnalysisJobTest::testKill() {
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
 
+    QList<const Checker*> availableCheckers = getAvailableCheckers();
+
     AnalysisParameters analysisParameters;
+    analysisParameters.initializeCheckers(availableCheckers);
     analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
     analysisJob.setAnalysisParameters(&analysisParameters);
 
@@ -828,6 +693,9 @@ bool AnalysisJobTest::krazy2InPath() const {
 }
 
 QList< const Checker* > AnalysisJobTest::getAvailableCheckers() const {
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
     QList<const Checker*> availableCheckers;
 
     CheckerListJob checkerListJob;
