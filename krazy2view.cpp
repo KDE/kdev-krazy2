@@ -19,6 +19,8 @@
 
 #include "krazy2view.h"
 
+#include <QSortFilterProxyModel>
+
 #include <kdevplatform/interfaces/icore.h>
 #include <kdevplatform/interfaces/iruncontroller.h>
 
@@ -46,7 +48,11 @@ Krazy2View::Krazy2View(QWidget* parent /*= 0*/):
     m_ui->resultsTableView->setEnabled(false);
 
     m_issueModel = new IssueModel(this);
-    m_ui->resultsTableView->setModel(m_issueModel);
+
+    QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setSourceModel(m_issueModel);
+    m_ui->resultsTableView->setModel(proxyModel);
+    m_ui->resultsTableView->setSortingEnabled(true);
 
     connect(m_ui->selectPathsButton, SIGNAL(clicked()),
             this, SLOT(selectPaths()));

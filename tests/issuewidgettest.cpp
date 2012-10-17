@@ -19,6 +19,8 @@
 
 #include <qtest_kde.h>
 
+#include <QSortFilterProxyModel>
+
 #include <kdevplatform/interfaces/idocument.h>
 #include <kdevplatform/interfaces/idocumentcontroller.h>
 #include <kdevplatform/tests/autotestshell.h>
@@ -43,6 +45,7 @@ private slots:
     void testConstructor();
 
     void testActivateItem();
+    void testActivateItemWithProxyModel();
 
 private:
 
@@ -132,6 +135,99 @@ void IssueWidgetTest::testActivateItem() {
 
     QCOMPARE(documentOpenedSpy.count(), 2);
     argument = documentOpenedSpy.at(1).at(0);
+    document = qvariant_cast<KDevelop::IDocument*>(argument);
+    QCOMPARE(document->url().toLocalFile(), m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+}
+
+void IssueWidgetTest::testActivateItemWithProxyModel() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ')';
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    AnalysisResults analysisResults;
+
+    Checker* checker1 = new Checker();
+    checker1->setFileType("c++");
+    checker1->setName("doublequote_chars");
+    analysisResults.addChecker(checker1);
+
+    Issue* issue1a = new Issue();
+    issue1a->setChecker(checker1);
+    issue1a->setFileName(m_workingDirectory + "examples/singleIssue.cpp");
+    issue1a->setLine(8);
+    analysisResults.addIssue(issue1a);
+
+    Issue* issue1b = new Issue();
+    issue1b->setChecker(checker1);
+    issue1b->setFileName(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+    issue1b->setLine(12);
+    analysisResults.addIssue(issue1b);
+
+    IssueModel issueModel;
+    issueModel.setAnalysisResults(&analysisResults);
+
+    QSortFilterProxyModel proxyModel;
+    proxyModel.setSourceModel(&issueModel);
+
+    IssueWidget issueWidget;
+    issueWidget.setModel(&proxyModel);
+
+    QSignalSpy documentOpenedSpy(KDevelop::ICore::self()->documentController(),
+                                 SIGNAL(documentActivated(KDevelop::IDocument*)));
+
+    //Use original sorting
+    QModelIndex issue1aIndex = proxyModel.index(0, 0);
+    QPoint issue1aCenter = issueWidget.visualRect(issue1aIndex).center();
+
+    //Select the item and activate it
+    QTest::mouseClick(issueWidget.viewport(), Qt::LeftButton, Qt::NoModifier, issue1aCenter);
+    QTest::keyClick(issueWidget.viewport(), Qt::Key_Enter);
+
+    QCOMPARE(documentOpenedSpy.count(), 1);
+    QVariant argument = documentOpenedSpy.at(0).at(0);
+    KDevelop::IDocument* document = qvariant_cast<KDevelop::IDocument*>(argument);
+    QCOMPARE(document->url().toLocalFile(), m_workingDirectory + "examples/singleIssue.cpp");
+
+    QModelIndex issue1bIndex = proxyModel.index(1, 0);
+    QPoint issue1bCenter = issueWidget.visualRect(issue1bIndex).center();
+
+    //Select the item and activate it
+    QTest::mouseClick(issueWidget.viewport(), Qt::LeftButton, Qt::NoModifier, issue1bCenter);
+    QTest::keyClick(issueWidget.viewport(), Qt::Key_Enter);
+
+    QCOMPARE(documentOpenedSpy.count(), 2);
+    argument = documentOpenedSpy.at(1).at(0);
+    document = qvariant_cast<KDevelop::IDocument*>(argument);
+    QCOMPARE(document->url().toLocalFile(), m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+
+    //Sort by file name
+    issueWidget.sortByColumn(2, Qt::AscendingOrder);
+
+    //Due to sorting by file name, the issue1a is now at the second row
+    issue1aIndex = proxyModel.index(1, 0);
+    issue1aCenter = issueWidget.visualRect(issue1aIndex).center();
+
+    //Select the item and activate it
+    QTest::mouseClick(issueWidget.viewport(), Qt::LeftButton, Qt::NoModifier, issue1aCenter);
+    QTest::keyClick(issueWidget.viewport(), Qt::Key_Enter);
+
+    QCOMPARE(documentOpenedSpy.count(), 3);
+    argument = documentOpenedSpy.at(2).at(0);
+    document = qvariant_cast<KDevelop::IDocument*>(argument);
+    QCOMPARE(document->url().toLocalFile(), m_workingDirectory + "examples/singleIssue.cpp");
+
+    //Due to sorting by file name, the issue1b is now at the first row
+    issue1bIndex = proxyModel.index(0, 0);
+    issue1bCenter = issueWidget.visualRect(issue1bIndex).center();
+
+    //Select the item and activate it
+    QTest::mouseClick(issueWidget.viewport(), Qt::LeftButton, Qt::NoModifier, issue1bCenter);
+    QTest::keyClick(issueWidget.viewport(), Qt::Key_Enter);
+
+    QCOMPARE(documentOpenedSpy.count(), 4);
+    argument = documentOpenedSpy.at(3).at(0);
     document = qvariant_cast<KDevelop::IDocument*>(argument);
     QCOMPARE(document->url().toLocalFile(), m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
 }

@@ -19,6 +19,7 @@
 
 #include <qtest_kde.h>
 
+#include <QSortFilterProxyModel>
 #include <QTableView>
 #include <QTreeView>
 
@@ -630,7 +631,8 @@ void Krazy2ViewTest::testAnalyze() {
     QVERIFY(analyzeButton(&view)->isEnabled());
     QVERIFY(resultsTableView(&view)->isEnabled());
 
-    IssueModel* issueModel = static_cast<IssueModel*>(resultsTableView(&view)->model());
+    QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
+    IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
     const AnalysisResults* analysisResults = issueModel->analysisResults();
 
     QVERIFY(analysisResults);
@@ -732,7 +734,8 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
     QVERIFY(analyzeButton(&view)->isEnabled());
     QVERIFY(resultsTableView(&view)->isEnabled());
 
-    IssueModel* issueModel = static_cast<IssueModel*>(resultsTableView(&view)->model());
+    QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
+    IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
     const AnalysisResults* analysisResults = issueModel->analysisResults();
 
     QVERIFY(analysisResults);
@@ -882,7 +885,8 @@ void Krazy2ViewTest::testCancelAnalyze() {
     QVERIFY(analyzeButton(&view)->isEnabled());
     QVERIFY(!resultsTableView(&view)->isEnabled());
 
-    IssueModel* issueModel = static_cast<IssueModel*>(resultsTableView(&view)->model());
+    QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
+    IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
     const AnalysisResults* analysisResults = issueModel->analysisResults();
 
     QVERIFY(!analysisResults);
@@ -926,7 +930,8 @@ void Krazy2ViewTest::testCancelAnalyzeWithCheckersNotInitialized() {
     QVERIFY(analyzeButton(&view)->isEnabled());
     QVERIFY(!resultsTableView(&view)->isEnabled());
 
-    IssueModel* issueModel = static_cast<IssueModel*>(resultsTableView(&view)->model());
+    QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
+    IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
     const AnalysisResults* analysisResults = issueModel->analysisResults();
 
     QVERIFY(!analysisResults);

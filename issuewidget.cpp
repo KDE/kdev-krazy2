@@ -19,6 +19,8 @@
 
 #include "issuewidget.h"
 
+#include <QAbstractProxyModel>
+
 #include <kdevplatform/interfaces/icore.h>
 #include <kdevplatform/interfaces/idocumentcontroller.h>
 
@@ -34,15 +36,35 @@ IssueWidget::IssueWidget(QWidget* parent /*= 0*/): QTableView(parent) {
             this, SLOT(openDocumentForActivatedIssue(QModelIndex)));
 }
 
+//private:
+
+const Issue* IssueWidget::issueForIndex(QModelIndex index) const {
+    if (!index.isValid()) {
+        return 0;
+    }
+
+    const QAbstractItemModel* model = index.model();
+    if (qobject_cast<const QAbstractProxyModel*>(model)) {
+        const QAbstractProxyModel* proxyModel = static_cast<const QAbstractProxyModel*>(model);
+        model = proxyModel->sourceModel();
+        index = proxyModel->mapToSource(index);
+    }
+
+    const IssueModel* issueModel = qobject_cast<const IssueModel*>(model);
+    if (issueModel) {
+        return issueModel->issueForIndex(index);
+    }
+
+    return 0;
+}
+
 //private slots:
 
 void IssueWidget::openDocumentForActivatedIssue(const QModelIndex& index) const {
-    if (!index.isValid()) {
+    const Issue* issue = issueForIndex(index);
+    if (!issue) {
         return;
     }
-
-    const IssueModel* model = static_cast<IssueModel*>(QTableView::model());
-    const Issue* issue = model->issueForIndex(index);
 
     KUrl url = issue->fileName();
     KTextEditor::Cursor line(issue->line() - 1, 0);

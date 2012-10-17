@@ -22,11 +22,14 @@
 
 #include <QTableView>
 
+class Issue;
+
 /**
  * Table view for IssueModel.
  * A regular table view that opens the file referenced by the activated issue.
  *
- * The model for this view must be an IssueModel.
+ * The model for this view must be an IssueModel, or a proxy model of which
+ * source is an IssueModel.
  */
 class IssueWidget: public QTableView {
 Q_OBJECT
@@ -38,6 +41,21 @@ public:
      *  @param parent The parent object.
      */
     explicit IssueWidget(QWidget* parent = 0);
+
+private:
+
+    /**
+     * Returns the issue associated to the given index.
+     * It handles both a direct IssueModel and an IssueModel through a proxy
+     * model.
+     *
+     * If the index is not valid, or the model of this IssueWidget is not a
+     * direct IssueModel nor an IssueModel through a proxy, a null pointer is
+     * returned.
+     *
+     * @param index The index to get its associated Issue.
+     */
+    const Issue* issueForIndex(QModelIndex index) const;
 
 private Q_SLOTS:
 
