@@ -60,6 +60,7 @@ private slots:
     void testSetCheckersNotInitialized();
     void testSetCheckersWhileInitializing();
     void testSetCheckersClosingWidgetBeforeInitializing();
+    void testSetCheckersRejectWidgetAfterInitializing();
     void testSetCheckersCancellingInitialization();
     void testSetCheckersWithoutPaths();
 
@@ -95,6 +96,7 @@ private:
     void queueRemoveCheckers(const Krazy2View* view, const QStringList& checkerRows);
     void queueAcceptCheckersDialog(const Krazy2View* view);
     void queueRejectCheckersDialog(const Krazy2View* view);
+    void queueRejectCheckersDialogOnceInitialized(const Krazy2View* view);
 
 };
 
@@ -438,6 +440,43 @@ void Krazy2ViewTest::testSetCheckersClosingWidgetBeforeInitializing() {
     //crash when setting the checkers in a deleted SelectCheckersWidget.
     QTest::kWaitForSignal(view.findChild<CheckerListJob*>(), SIGNAL(finished(KJob*)));
 
+    QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(!resultsTableView(&view)->isEnabled());
+}
+
+void Krazy2ViewTest::testSetCheckersRejectWidgetAfterInitializing() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
+    Krazy2View view;
+
+    //Add a valid directory so, when the analyze button is updated, it being
+    //enabled or disabled depends only on the checkers.
+    queueAddPaths(&view, m_workingDirectory, QStringList() << "examples");
+    selectPathsButton(&view)->click();
+
+    //Reject the dialog once the checkers initialization ended.
+    queueRejectCheckersDialogOnceInitialized(&view);
+
+    selectCheckersButton(&view)->click();
+
+    //Even if the dialog was cancelled, the checkers to run were implicitly set
+    //to the default ones when the checkers were initialized.
     QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
     QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
 
@@ -1160,6 +1199,17 @@ public Q_SLOTS:
         selectCheckersDialog->reject();
     }
 
+    void rejectDialogOnceInitialized() {
+        KDialog* selectCheckersDialog = m_view->findChild<KDialog*>();
+        if (!selectCheckersDialog || !selectCheckersDialog->isVisible() ||
+            !selectCheckersDialog->button(KDialog::Ok)->isEnabled()) {
+            QTimer::singleShot(100, this, SLOT(rejectDialogOnceInitialized()));
+            return;
+        }
+
+        selectCheckersDialog->reject();
+    }
+
 private:
 
     void select(QTreeView* view, const QString& rows,
@@ -1198,6 +1248,12 @@ void Krazy2ViewTest::queueRejectCheckersDialog(const Krazy2View* view) {
     QueuedSelectCheckersDialogAction* helper = new QueuedSelectCheckersDialogAction(this);
     helper->m_view = view;
     helper->rejectDialog();
+}
+
+void Krazy2ViewTest::queueRejectCheckersDialogOnceInitialized(const Krazy2View* view) {
+    QueuedSelectCheckersDialogAction* helper = new QueuedSelectCheckersDialogAction(this);
+    helper->m_view = view;
+    helper->rejectDialogOnceInitialized();
 }
 
 QTEST_KDEMAIN(Krazy2ViewTest, GUI)

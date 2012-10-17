@@ -183,10 +183,11 @@ void Krazy2View::handleCheckerInitializationBeforeSelectingCheckers(KJob* job) {
 
     m_analysisParameters->initializeCheckers(m_availableCheckers);
 
+    updateAnalyzeButtonStatus();
+
     KDialog* dialog = findChild<KDialog*>();
     SelectCheckersWidget* selectCheckersWidget = dialog->findChild<SelectCheckersWidget*>();
     if (!dialog || !selectCheckersWidget) {
-        updateAnalyzeButtonStatus();
         return;
     }
 
