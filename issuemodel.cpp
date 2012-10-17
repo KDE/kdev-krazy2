@@ -82,18 +82,18 @@ QVariant IssueModel::data(const QModelIndex& index, int role /*= Qt::DisplayRole
 
     //Every checker I know provides a description, but just in case
     if (description.isEmpty() && message.isEmpty()) {
-        return '[' + name + ']';
+        return i18nc("@item:intable The name of a checker", "[%1]", name);
     }
 
     if (description.isEmpty()) {
-        return '[' + name + ']' + ": " + message;
+        return i18nc("@item:intable The name of a checker and its message", "[%1]: %2", name, message);
     }
 
     if (message.isEmpty()) {
         return description;
     }
 
-    return description + ": " + message;
+    return i18nc("@item:intable The description of a checker and its message", "%1: %2", description, message);
 }
 
 QVariant IssueModel::headerData(int section, Qt::Orientation orientation, int role /*= Qt::DisplayRole*/) const {

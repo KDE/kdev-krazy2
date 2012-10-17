@@ -186,7 +186,7 @@ QVariant CheckerModel::data(const QModelIndex& index, int role /*= Qt::DisplayRo
     }
 
     if (item->type() == Item::ExtraHeaderItem) {
-        return "[EXTRA]";
+        return i18nc("@item Extra Krazy2 checkers", "[EXTRA]");
     }
 
     return item->checker()->name();
