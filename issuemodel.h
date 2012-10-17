@@ -28,11 +28,12 @@ class Issue;
 /**
  * A table model for the issues found by the Krazy2 analysis.
  * The model is a read only model. It provides one row for each issue, and for
- * each issue three columns are shown: the problem, the file name and the line.
- * The problem contains the description of the checker and the message of the
- * issue, if any. If the issue has no line or it is invalid (-1), no line is
- * shown. The explanation of the issue provided by the checker is shown in a
- * tool tip, which is the same in every column.
+ * each issue four columns are shown: the checker, the problem, the file name
+ * and the line. The checker contains the file type and name of the checker, and
+ * a note if it is an extra checker. The problem contains the description of the
+ * checker and the message of the issue, if any. If the issue has no line or it
+ * is invalid (-1), no line is shown. The explanation of the issue provided by
+ * the checker is shown in a tool tip, which is the same in every column.
  */
 class IssueModel: public QAbstractTableModel {
 Q_OBJECT
@@ -56,18 +57,18 @@ public:
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
     /**
-     * Returns the number of columns, which is three.
+     * Returns the number of columns, which is four.
      *
      * @param parent Unused.
-     * @return Three columns.
+     * @return Four columns.
      */
     virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
     /**
      * Returns the data stored under the given role for the item referred to by
      * the index.
-     * Display role shows the problem, file name and line of the issue, and
-     * ToolTip role shows the explanation given by the checker of the issue.
+     * Display role shows the checker, problem, file name and line of the issue,
+     * and ToolTip role shows the explanation given by the checker of the issue.
      *
      * Explanations are wrapped in "&lt;p&gt;" and "&lt;/p&gt;" tags, as plain
      * text strings are not word-wrapped when shown in a tool tip. If the
@@ -134,9 +135,10 @@ private:
      * The index of each column.
      */
     enum Columns {
-        Problem = 0,
-        FileName = 1,
-        Line = 2
+        Checker = 0,
+        Problem = 1,
+        FileName = 2,
+        Line = 3
     };
 
 };

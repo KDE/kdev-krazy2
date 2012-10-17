@@ -44,7 +44,7 @@ int IssueModel::rowCount(const QModelIndex& parent /*= QModelIndex()*/) const {
 int IssueModel::columnCount(const QModelIndex& parent /*= QModelIndex()*/) const {
     Q_UNUSED(parent);
 
-    return 3;
+    return 4;
 }
 
 QVariant IssueModel::data(const QModelIndex& index, int role /*= Qt::DisplayRole*/) const {
@@ -76,17 +76,28 @@ QVariant IssueModel::data(const QModelIndex& index, int role /*= Qt::DisplayRole
         return issue->line();
     }
 
+    if (index.column() == Checker) {
+        const QString& fileType = issue->checker()->fileType();
+        const QString& name = issue->checker()->name();
+        bool isExtra = issue->checker()->isExtra();
+
+        if (!isExtra) {
+            return i18nc("@item:intable File type (c++, desktop...) and checker name", "%1/%2", fileType, name);
+        }
+
+        return i18nc("@item:intable File type (c++, desktop...) and checker name", "%1/%2 [EXTRA]", fileType, name);
+    }
+
     const QString& description = issue->checker()->description();
-    const QString& name = issue->checker()->name();
     const QString& message = issue->message();
 
     //Every checker I know provides a description, but just in case
     if (description.isEmpty() && message.isEmpty()) {
-        return i18nc("@item:intable The name of a checker", "[%1]", name);
+        return i18nc("@item:intable The underlying command did not provide a text output", "(Sorry, no description nor message given)");
     }
 
     if (description.isEmpty()) {
-        return i18nc("@item:intable The name of a checker and its message", "[%1]: %2", name, message);
+        return i18nc("@item:intable The underlying command provided a message but no description", "(Sorry, no description given): %1", message);
     }
 
     if (message.isEmpty()) {
@@ -105,6 +116,10 @@ QVariant IssueModel::headerData(int section, Qt::Orientation orientation, int ro
         return section + 1;
     }
 
+    if (section == Checker) {
+        return i18nc("@title:column", "Checker");
+    }
+    
     if (section == Problem) {
         return i18nc("@title:column", "Problem");
     }

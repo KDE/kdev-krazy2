@@ -99,6 +99,7 @@ void IssueModelTest::init() {
     m_checker2->setExplanation("explanation2");
     m_checker2->setFileType("fileType2");
     m_checker2->setName("name2");
+    m_checker2->setExtra(true);
     m_analysisResults->addChecker(m_checker2);
 
     m_issue2 = new Issue();
@@ -171,13 +172,13 @@ void IssueModelTest::testColumnCount() {
     AnalysisResults analysisresults; 
     issueModel.setAnalysisResults(&analysisresults);
 
-    QCOMPARE(issueModel.columnCount(), 3);
+    QCOMPARE(issueModel.columnCount(), 4);
 }
 
 void IssueModelTest::testColumnCountWhenAnalysisResultsNotSet() {
     IssueModel issueModel;
 
-    QCOMPARE(issueModel.columnCount(), 3);
+    QCOMPARE(issueModel.columnCount(), 4);
 }
 
 void IssueModelTest::testDisplayData() {
@@ -185,27 +186,33 @@ void IssueModelTest::testDisplayData() {
     issueModel.setAnalysisResults(m_analysisResults);
 
     QCOMPARE(issueModel.data(issueModel.index(0, 0), Qt::DisplayRole).toString(),
-             i18nc("@item:intable The description of a checker and its message", "%1: %2", "description1", "message1a"));
+             i18nc("@item:intable File type (c++, desktop...) and checker name", "%1/%2", "fileType1", "name1"));
     QCOMPARE(issueModel.data(issueModel.index(0, 1), Qt::DisplayRole).toString(),
-             QString("fileName1a"));
+             i18nc("@item:intable The description of a checker and its message", "%1: %2", "description1", "message1a"));
     QCOMPARE(issueModel.data(issueModel.index(0, 2), Qt::DisplayRole).toString(),
+             QString("fileName1a"));
+    QCOMPARE(issueModel.data(issueModel.index(0, 3), Qt::DisplayRole).toString(),
              QString("4"));
 
     QCOMPARE(issueModel.data(issueModel.index(1, 0), Qt::DisplayRole).toString(),
-             i18nc("@item:intable The description of a checker and its message", "%1: %2", "description1", "message1b"));
+             i18nc("@item:intable File type (c++, desktop...) and checker name", "%1/%2", "fileType1", "name1"));
     QCOMPARE(issueModel.data(issueModel.index(1, 1), Qt::DisplayRole).toString(),
-             QString("fileName1b"));
+             i18nc("@item:intable The description of a checker and its message", "%1: %2", "description1", "message1b"));
     QCOMPARE(issueModel.data(issueModel.index(1, 2), Qt::DisplayRole).toString(),
+             QString("fileName1b"));
+    QCOMPARE(issueModel.data(issueModel.index(1, 3), Qt::DisplayRole).toString(),
              QString("8"));
 
     QCOMPARE(issueModel.data(issueModel.index(2, 0), Qt::DisplayRole).toString(),
-             i18nc("@item:intable The description of a checker and its message", "%1: %2", "description2", "message2"));
+             i18nc("@item:intable File type (c++, desktop...) and checker name", "%1/%2 [EXTRA]", "fileType2", "name2"));
     QCOMPARE(issueModel.data(issueModel.index(2, 1), Qt::DisplayRole).toString(),
-             QString("fileName2"));
+             i18nc("@item:intable The description of a checker and its message", "%1: %2", "description2", "message2"));
     QCOMPARE(issueModel.data(issueModel.index(2, 2), Qt::DisplayRole).toString(),
+             QString("fileName2"));
+    QCOMPARE(issueModel.data(issueModel.index(2, 3), Qt::DisplayRole).toString(),
              QString("15"));
 
-    QVERIFY(issueModel.data(issueModel.index(0, 3), Qt::DisplayRole).isNull());
+    QVERIFY(issueModel.data(issueModel.index(0, 4), Qt::DisplayRole).isNull());
     QVERIFY(issueModel.data(issueModel.index(3, 0), Qt::DisplayRole).isNull());
 }
 
@@ -228,10 +235,12 @@ void IssueModelTest::testDisplayDataForIssueWithoutMessage() {
     analysisResults.addIssue(issue1);
 
     QCOMPARE(issueModel.data(issueModel.index(0, 0), Qt::DisplayRole).toString(),
-             QString("description1"));
+             i18nc("@item:intable File type (c++, desktop...) and checker name", "%1/%2", "fileType1", "name1"));
     QCOMPARE(issueModel.data(issueModel.index(0, 1), Qt::DisplayRole).toString(),
-             QString("fileName1"));
+             QString("description1"));
     QCOMPARE(issueModel.data(issueModel.index(0, 2), Qt::DisplayRole).toString(),
+             QString("fileName1"));
+    QCOMPARE(issueModel.data(issueModel.index(0, 3), Qt::DisplayRole).toString(),
              QString("4"));
 }
 
@@ -254,10 +263,12 @@ void IssueModelTest::testDisplayDataForCheckerWithoutDescription() {
     analysisResults.addIssue(issue1);
 
     QCOMPARE(issueModel.data(issueModel.index(0, 0), Qt::DisplayRole).toString(),
-             i18nc("@item:intable The name of a checker and its message", "[%1]: %2", "name1", "message1"));
+             i18nc("@item:intable File type (c++, desktop...) and checker name", "%1/%2", "fileType1", "name1"));
     QCOMPARE(issueModel.data(issueModel.index(0, 1), Qt::DisplayRole).toString(),
-             QString("fileName1"));
+             i18nc("@item:intable The underlying command provided a message but no description", "(Sorry, no description given): %1", "message1"));
     QCOMPARE(issueModel.data(issueModel.index(0, 2), Qt::DisplayRole).toString(),
+             QString("fileName1"));
+    QCOMPARE(issueModel.data(issueModel.index(0, 3), Qt::DisplayRole).toString(),
              QString("4"));
 }
 
@@ -279,10 +290,12 @@ void IssueModelTest::testDisplayDataForCheckerWithoutDescriptionAndIssueWithoutM
     analysisResults.addIssue(issue1);
 
     QCOMPARE(issueModel.data(issueModel.index(0, 0), Qt::DisplayRole).toString(),
-             i18nc("@item:intable The name of a checker", "[%1]", "name1"));
+             i18nc("@item:intable File type (c++, desktop...) and checker name", "%1/%2", "fileType1", "name1"));
     QCOMPARE(issueModel.data(issueModel.index(0, 1), Qt::DisplayRole).toString(),
-             QString("fileName1"));
+             i18nc("@item:intable The underlying command did not provide a text output", "(Sorry, no description nor message given)"));
     QCOMPARE(issueModel.data(issueModel.index(0, 2), Qt::DisplayRole).toString(),
+             QString("fileName1"));
+    QCOMPARE(issueModel.data(issueModel.index(0, 3), Qt::DisplayRole).toString(),
              QString("4"));
 }
 
@@ -312,17 +325,21 @@ void IssueModelTest::testDisplayDataForIssueWithoutLine() {
     analysisResults.addIssue(issue1b);
 
     QCOMPARE(issueModel.data(issueModel.index(0, 0), Qt::DisplayRole).toString(),
-             i18nc("@item:intable The description of a checker and its message", "%1: %2", "description1", "message1a"));
+             i18nc("@item:intable File type (c++, desktop...) and checker name", "%1/%2", "fileType1", "name1"));
     QCOMPARE(issueModel.data(issueModel.index(0, 1), Qt::DisplayRole).toString(),
-             QString("fileName1"));
+             i18nc("@item:intable The description of a checker and its message", "%1: %2", "description1", "message1a"));
     QCOMPARE(issueModel.data(issueModel.index(0, 2), Qt::DisplayRole).toString(),
+             QString("fileName1"));
+    QCOMPARE(issueModel.data(issueModel.index(0, 3), Qt::DisplayRole).toString(),
              QString(""));
 
     QCOMPARE(issueModel.data(issueModel.index(1, 0), Qt::DisplayRole).toString(),
-             i18nc("@item:intable The description of a checker and its message", "%1: %2", "description1", "message1b"));
+             i18nc("@item:intable File type (c++, desktop...) and checker name", "%1/%2", "fileType1", "name1"));
     QCOMPARE(issueModel.data(issueModel.index(1, 1), Qt::DisplayRole).toString(),
-             QString("fileName1"));
+             i18nc("@item:intable The description of a checker and its message", "%1: %2", "description1", "message1b"));
     QCOMPARE(issueModel.data(issueModel.index(1, 2), Qt::DisplayRole).toString(),
+             QString("fileName1"));
+    QCOMPARE(issueModel.data(issueModel.index(1, 3), Qt::DisplayRole).toString(),
              QString(""));
 }
 
@@ -342,12 +359,16 @@ void IssueModelTest::testToolTipData() {
              QString("<p>explanation1</p>"));
     QCOMPARE(issueModel.data(issueModel.index(0, 2), Qt::ToolTipRole).toString(),
              QString("<p>explanation1</p>"));
+    QCOMPARE(issueModel.data(issueModel.index(0, 3), Qt::ToolTipRole).toString(),
+             QString("<p>explanation1</p>"));
 
     QCOMPARE(issueModel.data(issueModel.index(1, 0), Qt::ToolTipRole).toString(),
              QString("<p>explanation1</p>"));
     QCOMPARE(issueModel.data(issueModel.index(1, 1), Qt::ToolTipRole).toString(),
              QString("<p>explanation1</p>"));
     QCOMPARE(issueModel.data(issueModel.index(1, 2), Qt::ToolTipRole).toString(),
+             QString("<p>explanation1</p>"));
+    QCOMPARE(issueModel.data(issueModel.index(1, 3), Qt::ToolTipRole).toString(),
              QString("<p>explanation1</p>"));
 
     QCOMPARE(issueModel.data(issueModel.index(2, 0), Qt::ToolTipRole).toString(),
@@ -356,8 +377,10 @@ void IssueModelTest::testToolTipData() {
              QString("<p>explanation2</p>"));
     QCOMPARE(issueModel.data(issueModel.index(2, 2), Qt::ToolTipRole).toString(),
              QString("<p>explanation2</p>"));
+    QCOMPARE(issueModel.data(issueModel.index(2, 3), Qt::ToolTipRole).toString(),
+             QString("<p>explanation2</p>"));
 
-    QVERIFY(issueModel.data(issueModel.index(0, 3), Qt::ToolTipRole).isNull());
+    QVERIFY(issueModel.data(issueModel.index(0, 4), Qt::ToolTipRole).isNull());
     QVERIFY(issueModel.data(issueModel.index(3, 0), Qt::ToolTipRole).isNull());
 }
 
@@ -386,6 +409,8 @@ void IssueModelTest::testToolTipDataWithMultiLineExplanation() {
              QString("<p>explanationFirstLine</p>\n<p>explanationSecondLine</p>\n<p>explanationThirdLine</p>"));
     QCOMPARE(issueModel.data(issueModel.index(0, 2), Qt::ToolTipRole).toString(),
              QString("<p>explanationFirstLine</p>\n<p>explanationSecondLine</p>\n<p>explanationThirdLine</p>"));
+    QCOMPARE(issueModel.data(issueModel.index(0, 3), Qt::ToolTipRole).toString(),
+             QString("<p>explanationFirstLine</p>\n<p>explanationSecondLine</p>\n<p>explanationThirdLine</p>"));
 }
 
 void IssueModelTest::testToolTipDataWithoutExplanation() {
@@ -412,6 +437,8 @@ void IssueModelTest::testToolTipDataWithoutExplanation() {
              i18nc("@info:tooltip The underlying command did not provide a text output", "Sorry, no explanation given"));
     QCOMPARE(issueModel.data(issueModel.index(0, 2), Qt::ToolTipRole).toString(),
              i18nc("@info:tooltip The underlying command did not provide a text output", "Sorry, no explanation given"));
+    QCOMPARE(issueModel.data(issueModel.index(0, 3), Qt::ToolTipRole).toString(),
+             i18nc("@info:tooltip The underlying command did not provide a text output", "Sorry, no explanation given"));
 }
 
 void IssueModelTest::testToolTipDataWhenAnalysisResultsNotSet() {
@@ -426,13 +453,15 @@ void IssueModelTest::testDisplayHorizontalHeaderData() {
     issueModel.setAnalysisResults(&analysisResults);
 
     QCOMPARE(issueModel.headerData(0, Qt::Horizontal, Qt::DisplayRole).toString(),
-             i18nc("@title:column", "Problem"));
+             i18nc("@title:column", "Checker"));
     QCOMPARE(issueModel.headerData(1, Qt::Horizontal, Qt::DisplayRole).toString(),
-             i18nc("@title:column", "File name"));
+             i18nc("@title:column", "Problem"));
     QCOMPARE(issueModel.headerData(2, Qt::Horizontal, Qt::DisplayRole).toString(),
+             i18nc("@title:column", "File name"));
+    QCOMPARE(issueModel.headerData(3, Qt::Horizontal, Qt::DisplayRole).toString(),
              i18nc("@title:column", "Line"));
 
-    QVERIFY(issueModel.headerData(3, Qt::Horizontal, Qt::DisplayRole).isNull());    
+    QVERIFY(issueModel.headerData(4, Qt::Horizontal, Qt::DisplayRole).isNull());    
 }
 
 void IssueModelTest::testDisplayVerticalHeaderData() {
@@ -454,16 +483,19 @@ void IssueModelTest::testIssueForIndex() {
     QCOMPARE(issueModel.issueForIndex(issueModel.index(0, 0)), m_issue1a);
     QCOMPARE(issueModel.issueForIndex(issueModel.index(0, 1)), m_issue1a);
     QCOMPARE(issueModel.issueForIndex(issueModel.index(0, 2)), m_issue1a);
+    QCOMPARE(issueModel.issueForIndex(issueModel.index(0, 3)), m_issue1a);
 
     QCOMPARE(issueModel.issueForIndex(issueModel.index(1, 0)), m_issue1b);
     QCOMPARE(issueModel.issueForIndex(issueModel.index(1, 1)), m_issue1b);
     QCOMPARE(issueModel.issueForIndex(issueModel.index(1, 2)), m_issue1b);
+    QCOMPARE(issueModel.issueForIndex(issueModel.index(1, 3)), m_issue1b);
 
     QCOMPARE(issueModel.issueForIndex(issueModel.index(2, 0)), m_issue2);
     QCOMPARE(issueModel.issueForIndex(issueModel.index(2, 1)), m_issue2);
     QCOMPARE(issueModel.issueForIndex(issueModel.index(2, 2)), m_issue2);
+    QCOMPARE(issueModel.issueForIndex(issueModel.index(2, 3)), m_issue2);
 
-    QCOMPARE(issueModel.issueForIndex(issueModel.index(0, 3)), (Issue*)0);
+    QCOMPARE(issueModel.issueForIndex(issueModel.index(0, 4)), (Issue*)0);
     QCOMPARE(issueModel.issueForIndex(issueModel.index(3, 0)), (Issue*)0);
 }
 
