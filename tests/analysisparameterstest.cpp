@@ -164,13 +164,15 @@ void AnalysisParametersTest::testSetFilesAndDirectories() {
     QCOMPARE(analysisparameters.filesAndDirectories(), paths);
 
     QStringList filesToBeAnalyzed = analysisparameters.filesToBeAnalyzed();
-    QCOMPARE(filesToBeAnalyzed.count(), 4);
+    QCOMPARE(filesToBeAnalyzed.count(), 5);
     QVERIFY(filesToBeAnalyzed.contains(
             workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp")));
     QVERIFY(filesToBeAnalyzed.contains
             (workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp"));
     QVERIFY(filesToBeAnalyzed.contains(
             workingDirectory + "examples/subdirectory/singleIssue.desktop"));
+    QVERIFY(filesToBeAnalyzed.contains(
+            workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml"));
     QVERIFY(filesToBeAnalyzed.contains(
             workingDirectory + "examples/severalIssuesSeveralCheckers.cpp"));
 }
@@ -195,7 +197,7 @@ void AnalysisParametersTest::testSetFilesAndDirectoriesWithRepeatedEntries() {
     QCOMPARE(analysisparameters.filesAndDirectories(), paths);
 
     QStringList filesToBeAnalyzed = analysisparameters.filesToBeAnalyzed();
-    QCOMPARE(filesToBeAnalyzed.count(), 8);
+    QCOMPARE(filesToBeAnalyzed.count(), 9);
     QVERIFY(filesToBeAnalyzed.contains(
             workingDirectory + "examples/singleIssue.cpp"));
     QVERIFY(filesToBeAnalyzed.contains(
@@ -212,6 +214,8 @@ void AnalysisParametersTest::testSetFilesAndDirectoriesWithRepeatedEntries() {
             workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq"));
     QVERIFY(filesToBeAnalyzed.contains(
             workingDirectory + "examples/subdirectory/singleIssue.desktop"));
+    QVERIFY(filesToBeAnalyzed.contains(
+            workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml"));
 }
 
 void AnalysisParametersTest::testSetFilesAndDirectoriesWithInvalidEntries() {
@@ -236,13 +240,15 @@ void AnalysisParametersTest::testSetFilesAndDirectoriesWithInvalidEntries() {
     QCOMPARE(analysisparameters.filesAndDirectories(), paths);
 
     QStringList filesToBeAnalyzed = analysisparameters.filesToBeAnalyzed();
-    QCOMPARE(filesToBeAnalyzed.count(), 4);
+    QCOMPARE(filesToBeAnalyzed.count(), 5);
     QVERIFY(filesToBeAnalyzed.contains(
             workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp")));
     QVERIFY(filesToBeAnalyzed.contains
             (workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp"));
     QVERIFY(filesToBeAnalyzed.contains(
             workingDirectory + "examples/subdirectory/singleIssue.desktop"));
+    QVERIFY(filesToBeAnalyzed.contains(
+            workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml"));
     QVERIFY(filesToBeAnalyzed.contains(
             workingDirectory + "examples/severalIssuesSeveralCheckers.cpp"));
 }
@@ -291,7 +297,8 @@ bool AnalysisParametersTest::examplesInSubdirectory() const {
         QFile(workingDirectory + "examples/severalIssuesSingleChecker.cpp").exists() &&
         QFile(workingDirectory + "examples/severalIssuesSeveralCheckers.cpp").exists() &&
         QFile(workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
-        QFile(workingDirectory + "examples/subdirectory/singleIssue.desktop").exists()) {
+        QFile(workingDirectory + "examples/subdirectory/singleIssue.desktop").exists() &&
+        QFile(workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml").exists()) {
         return true;
     }
 

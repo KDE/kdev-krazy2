@@ -176,11 +176,17 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
     validateChecker->setName("validate");
     availableCheckers.append(validateChecker);
 
+    Checker* qmlLicenseChecker = new Checker();
+    qmlLicenseChecker->setFileType("qml");
+    qmlLicenseChecker->setName("license");
+    availableCheckers.append(qmlLicenseChecker);
+
     //Do not set spelling checker
     QList<const Checker*> checkersToRun;
     checkersToRun.append(doubleQuoteCharsChecker);
     checkersToRun.append(licenseChecker);
     checkersToRun.append(validateChecker);
+    checkersToRun.append(qmlLicenseChecker);
     
     AnalysisParameters analysisParameters;
     analysisParameters.initializeCheckers(availableCheckers);
@@ -204,7 +210,7 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
     resultSpy.waitForSignal();
     
     QCOMPARE(analysisJob.error(), (int)KJob::NoError);
-    QCOMPARE(analysisResults.issues().count(), 9);
+    QCOMPARE(analysisResults.issues().count(), 10);
 
     //To prevent test failures due to the order of the issues, each issue is
     //searched in the results instead of using a specific index
@@ -274,9 +280,19 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
     QCOMPARE(issue9->message(), QString(""));
     QCOMPARE(issue9->checker(), issue->checker());
 
-    //Five signals should have been emitted: one for the start, one for the
+    const Issue* issue10 = findIssue(&analysisResults, "license",
+                                    "subdirectory/severalIssuesSeveralCheckers.qml", -1);
+    QVERIFY(issue10);
+    QCOMPARE(issue10->message(), QString("missing license"));
+    QCOMPARE(issue10->checker()->description(),
+             QString("Check for an acceptable license"));
+    QVERIFY(issue10->checker()->explanation().startsWith(
+                "Each source file must contain a license"));
+    QCOMPARE(issue10->checker()->fileType(), QString("qml"));
+
+    //Six signals should have been emitted: one for the start, one for the
     //finish, and one for each checker run.
-    QCOMPARE(showProgressSpy.count(), 5);
+    QCOMPARE(showProgressSpy.count(), 6);
 
     //First signal is the 0%
     //First parameter is the ProgressParser itself
@@ -284,10 +300,11 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
     QCOMPARE(showProgressSpy.at(0).at(2).toInt(), 100);
     QCOMPARE(showProgressSpy.at(0).at(3).toInt(), 0);
 
-    QCOMPARE(showProgressSpy.at(1).at(3).toInt(), 33);
-    QCOMPARE(showProgressSpy.at(2).at(3).toInt(), 66);
-    QCOMPARE(showProgressSpy.at(3).at(3).toInt(), 99);
-    QCOMPARE(showProgressSpy.at(4).at(3).toInt(), 100);
+    QCOMPARE(showProgressSpy.at(1).at(3).toInt(), 25);
+    QCOMPARE(showProgressSpy.at(2).at(3).toInt(), 50);
+    QCOMPARE(showProgressSpy.at(3).at(3).toInt(), 75);
+    QCOMPARE(showProgressSpy.at(4).at(3).toInt(), 99);
+    QCOMPARE(showProgressSpy.at(5).at(3).toInt(), 100);
 }
 
 void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
@@ -336,7 +353,7 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
     resultSpy.waitForSignal();
 
     QCOMPARE(analysisJob.error(), (int)KJob::NoError);
-    QCOMPARE(analysisResults.issues().count(), 13);
+    QCOMPARE(analysisResults.issues().count(), 15);
 
     //To prevent test failures due to the order of the issues, each issue is
     //searched in the results instead of using a specific index
@@ -438,9 +455,29 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
                 "Please follow the coding style guidelines"));
     QCOMPARE(issue13->checker()->fileType(), QString("c++"));
 
-    //At least seven signals should have been emitted: one for the start, one for
+    const Issue* issue14 = findIssue(&analysisResults, "license",
+                                    "subdirectory/severalIssuesSeveralCheckers.qml", -1);
+    QVERIFY(issue14);
+    QCOMPARE(issue14->message(), QString("missing license"));
+    QCOMPARE(issue14->checker()->description(),
+             QString("Check for an acceptable license"));
+    QVERIFY(issue14->checker()->explanation().startsWith(
+                "Each source file must contain a license"));
+    QCOMPARE(issue14->checker()->fileType(), QString("qml"));
+
+    const Issue* issue15 = findIssue(&analysisResults, "spelling",
+                                    "subdirectory/severalIssuesSeveralCheckers.qml", 3);
+    QVERIFY(issue15);
+    QCOMPARE(issue15->message(), QString("occured"));
+    QCOMPARE(issue15->checker()->description(),
+             QString("Check for spelling errors"));
+    QVERIFY(issue15->checker()->explanation().startsWith(
+                "Spelling errors in comments and strings should be fixed"));
+    QCOMPARE(issue15->checker()->fileType(), QString("qml"));
+
+    //At least nine signals should have been emitted: one for the start, one for
     //the finish, and one for each checker with issues.
-    QVERIFY(showProgressSpy.count() >= 7);
+    QVERIFY(showProgressSpy.count() >= 9);
 
     //First signal is the 0%
     //First parameter is the ProgressParser itself
@@ -482,6 +519,7 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
     QList<const Checker*> checkersToRun;
     foreach (const Checker* checker, availableCheckers) {
         if ((checker->fileType() == "c++" && checker->name() == "license" && !checker->isExtra()) ||
+            (checker->fileType() == "qml" && checker->name() == "license" && !checker->isExtra()) ||
             (checker->fileType() == "c++" && checker->name() == "style" && checker->isExtra())) {
             checkersToRun.append(checker);
         }
@@ -509,7 +547,7 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
     resultSpy.waitForSignal();
 
     QCOMPARE(analysisJob.error(), (int)KJob::NoError);
-    QCOMPARE(analysisResults.issues().count(), 2);
+    QCOMPARE(analysisResults.issues().count(), 3);
 
     //To prevent test failures due to the order of the issues, each issue is
     //searched in the results instead of using a specific index
@@ -533,9 +571,19 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
                 "Please follow the coding style guidelines"));
     QCOMPARE(issue2->checker()->fileType(), QString("c++"));
 
-    //Four signals should have been emitted: one for the start, one for the
+    const Issue* issue3 = findIssue(&analysisResults, "license",
+                                    "subdirectory/severalIssuesSeveralCheckers.qml", -1);
+    QVERIFY(issue3);
+    QCOMPARE(issue3->message(), QString("missing license"));
+    QCOMPARE(issue3->checker()->description(),
+             QString("Check for an acceptable license"));
+    QVERIFY(issue3->checker()->explanation().startsWith(
+                "Each source file must contain a license"));
+    QCOMPARE(issue3->checker()->fileType(), QString("qml"));
+
+    //Five signals should have been emitted: one for the start, one for the
     //finish, and one for each checker run.
-    QCOMPARE(showProgressSpy.count(), 4);
+    QCOMPARE(showProgressSpy.count(), 5);
 
     //First signal is the 0%
     //First parameter is the ProgressParser itself
@@ -543,9 +591,10 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
     QCOMPARE(showProgressSpy.at(0).at(2).toInt(), 100);
     QCOMPARE(showProgressSpy.at(0).at(3).toInt(), 0);
 
-    QCOMPARE(showProgressSpy.at(1).at(3).toInt(), 50);
-    QCOMPARE(showProgressSpy.at(2).at(3).toInt(), 99);
-    QCOMPARE(showProgressSpy.at(3).at(3).toInt(), 100);
+    QCOMPARE(showProgressSpy.at(1).at(3).toInt(), 33);
+    QCOMPARE(showProgressSpy.at(2).at(3).toInt(), 66);
+    QCOMPARE(showProgressSpy.at(3).at(3).toInt(), 99);
+    QCOMPARE(showProgressSpy.at(4).at(3).toInt(), 100);
 }
 
 void AnalysisJobTest::testRunWithEmptyKrazy2ExecutablePath() {
@@ -670,7 +719,8 @@ bool AnalysisJobTest::examplesInSubdirectory() const {
         QFile(m_workingDirectory + "examples/severalIssuesSingleChecker.cpp").exists() &&
         QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp").exists() &&
         QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
-        QFile(m_workingDirectory + "examples/subdirectory/singleIssue.desktop").exists()) {
+        QFile(m_workingDirectory + "examples/subdirectory/singleIssue.desktop").exists() &&
+        QFile(m_workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml").exists()) {
         return true;
     }
 

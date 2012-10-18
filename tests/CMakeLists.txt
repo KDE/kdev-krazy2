@@ -73,6 +73,7 @@ set(examples
     examples/severalIssuesSeveralCheckers.cpp
     examples/severalIssuesSeveralCheckersUnknownFileType.dqq
     examples/subdirectory/singleIssue.desktop
+    examples/subdirectory/severalIssuesSeveralCheckers.qml
 )
 
 foreach(example ${examples})

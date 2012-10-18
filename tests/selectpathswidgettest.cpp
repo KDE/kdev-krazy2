@@ -283,7 +283,8 @@ bool SelectPathsWidgetTest::examplesInSubdirectory() const {
         QFile(workingDirectory + "examples/severalIssuesSingleChecker.cpp").exists() &&
         QFile(workingDirectory + "examples/severalIssuesSeveralCheckers.cpp").exists() &&
         QFile(workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
-        QFile(workingDirectory + "examples/subdirectory/singleIssue.desktop").exists()) {
+        QFile(workingDirectory + "examples/subdirectory/singleIssue.desktop").exists() &&
+        QFile(workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml").exists()) {
         return true;
     }
 

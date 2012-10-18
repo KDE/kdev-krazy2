@@ -647,6 +647,11 @@ void Krazy2ViewTest::testAnalyze() {
     validateChecker->setName("validate");
     availableCheckers.append(validateChecker);
 
+    Checker* qmlLicenseChecker = new Checker();
+    qmlLicenseChecker->setFileType("qml");
+    qmlLicenseChecker->setName("license");
+    availableCheckers.append(qmlLicenseChecker);
+
     analysisParameters(&view)->initializeCheckers(availableCheckers);
 
     //Do not run spelling checker
@@ -675,7 +680,7 @@ void Krazy2ViewTest::testAnalyze() {
     const AnalysisResults* analysisResults = issueModel->analysisResults();
 
     QVERIFY(analysisResults);
-    QCOMPARE(analysisResults->issues().count(), 6);
+    QCOMPARE(analysisResults->issues().count(), 7);
 
     //To prevent test failures due to the order of the issues, each issue is
     //searched in the results instead of using a specific index
@@ -730,6 +735,16 @@ void Krazy2ViewTest::testAnalyze() {
     QVERIFY(issue6->checker()->explanation().startsWith(
                 "Please follow the coding style guidelines"));
     QCOMPARE(issue6->checker()->fileType(), QString("c++"));
+
+    const Issue* issue7 = findIssue(analysisResults, "license",
+                                    "subdirectory/severalIssuesSeveralCheckers.qml", -1);
+    QVERIFY(issue7);
+    QCOMPARE(issue7->message(), QString("missing license"));
+    QCOMPARE(issue7->checker()->description(),
+             QString("Check for an acceptable license"));
+    QVERIFY(issue7->checker()->explanation().startsWith(
+                "Each source file must contain a license"));
+    QCOMPARE(issue7->checker()->fileType(), QString("qml"));
 }
 
 void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
@@ -778,7 +793,7 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
     const AnalysisResults* analysisResults = issueModel->analysisResults();
 
     QVERIFY(analysisResults);
-    QCOMPARE(analysisResults->issues().count(), 8);
+    QCOMPARE(analysisResults->issues().count(), 10);
 
     //To prevent test failures due to the order of the issues, each issue is
     //searched in the results instead of using a specific index
@@ -845,6 +860,26 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
     QVERIFY(issue8);
     QCOMPARE(issue8->message(), QString(""));
     QCOMPARE(issue8->checker(), issue->checker());
+
+    const Issue* issue9 = findIssue(analysisResults, "license",
+                                    "subdirectory/severalIssuesSeveralCheckers.qml", -1);
+    QVERIFY(issue9);
+    QCOMPARE(issue9->message(), QString("missing license"));
+    QCOMPARE(issue9->checker()->description(),
+             QString("Check for an acceptable license"));
+    QVERIFY(issue9->checker()->explanation().startsWith(
+                "Each source file must contain a license"));
+    QCOMPARE(issue9->checker()->fileType(), QString("qml"));
+
+    const Issue* issue10 = findIssue(analysisResults, "spelling",
+                                    "subdirectory/severalIssuesSeveralCheckers.qml", 3);
+    QVERIFY(issue10);
+    QCOMPARE(issue10->message(), QString("occured"));
+    QCOMPARE(issue10->checker()->description(),
+             QString("Check for spelling errors"));
+    QVERIFY(issue10->checker()->explanation().startsWith(
+                "Spelling errors in comments and strings should be fixed"));
+    QCOMPARE(issue10->checker()->fileType(), QString("qml"));
 }
 
 void Krazy2ViewTest::testCancelAnalyze() {
@@ -986,7 +1021,8 @@ bool Krazy2ViewTest::examplesInSubdirectory() const {
         QFile(m_workingDirectory + "examples/severalIssuesSingleChecker.cpp").exists() &&
         QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp").exists() &&
         QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
-        QFile(m_workingDirectory + "examples/subdirectory/singleIssue.desktop").exists()) {
+        QFile(m_workingDirectory + "examples/subdirectory/singleIssue.desktop").exists() &&
+        QFile(m_workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml").exists()) {
         return true;
     }
 

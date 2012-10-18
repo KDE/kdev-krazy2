@@ -242,7 +242,8 @@ bool IssueWidgetTest::examplesInSubdirectory() const {
         QFile(m_workingDirectory + "examples/severalIssuesSingleChecker.cpp").exists() &&
         QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp").exists() &&
         QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
-        QFile(m_workingDirectory + "examples/subdirectory/singleIssue.desktop").exists()) {
+        QFile(m_workingDirectory + "examples/subdirectory/singleIssue.desktop").exists() &&
+        QFile(m_workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml").exists()) {
         return true;
     }
 
