@@ -52,7 +52,7 @@ void AnalysisResults::addChecker(const Checker* checker) {
 }
 
 const Checker* AnalysisResults::findChecker(const QString& fileType,
-                                       const QString& name) const {
+                                            const QString& name) const {
     return m_checkers.value(fileType + '/' + name);
 }
 
