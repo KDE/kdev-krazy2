@@ -99,6 +99,23 @@ private:
     const AnalysisParameters* m_analysisParameters;
 
     /**
+     * A list with the names of the files to be analyzed.
+     * It is just the names returned by AnalysisParameters, stored to avoid
+     * resolving the file names each time a new process is executed.
+     */
+    QStringList m_namesOfFilesToBeAnalyzed;
+
+    /**
+     * The file types of the checkers to run that have not been run yet.
+     * Only the checkers with a given file type are run each time. Thus, several
+     * krazy2 executions may be needed to run all the checkers, and this list
+     * keeps track of the pending file types.
+     *
+     * @see checkersToRunAsKrazy2Arguments(QString)
+     */
+    QStringList m_pendingFileTypes;
+
+    /**
      * The analysis results to populate.
      */
     AnalysisResults* m_analysisResults;
@@ -167,14 +184,28 @@ private:
      * checkers should not be run (from all the available checkers), along with
      * an "--extra" argument to specify which extra checkers should be run.
      *
+     * When the name of the checker is provided using "--check", "--extra" or
+     * "--exclude" every checker with the given name is taken into account. For
+     * example, as the spelling checker supports several file types,
+     * "--checker spelling" would execute the spelling checker for c++, cmake,
+     * desktop... To limit the file types of the checkers to run, "--types"
+     * should be used. However, there is no way (that I am aware of) to run a
+     * checker X for file type A and a checker Y for file type B but not a
+     * checker X for file type B at the same time. Thus, only the checkers to
+     * run for the given file type are executed at the same time.
+     *
+     * @param fileType The file type of the subgroup of checkers to run.
      * @return The krazy2 arguments as a list of strings.
      */
-    QStringList checkersToRunAsKrazy2Arguments() const;
+    QStringList checkersToRunAsKrazy2Arguments(const QString& fileType) const;
 
     /**
      * Starts the krazy2 process.
+     * Only the checkers to run for the given file type are executed.
+     *
+     * @param fileType The file type of the subgroup of checkers to run.
      */
-    void startAnalysis();
+    void startAnalysis(const QString& fileType);
 
 private Q_SLOTS:
 
@@ -184,8 +215,9 @@ private Q_SLOTS:
     void handleProcessReadyStandardError();
 
     /**
-     * Populates the analysis results and ends this AnalysisJob emitting the
-     * result.
+     * Adds the results for the current file type to the general results.
+     * If there are other file types pending, starts a new analysis for the next
+     * file type. Else, ends this AnalysisJob emitting the result.
      *
      * @param exitCode Unused.
      */

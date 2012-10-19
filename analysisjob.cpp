@@ -29,6 +29,7 @@
 #include <kdevplatform/interfaces/iuicontroller.h>
 
 #include "analysisparameters.h"
+#include "analysisresults.h"
 #include "checker.h"
 #include "progressparser.h"
 #include "resultparser.h"
@@ -61,9 +62,19 @@ void AnalysisJob::start() {
     KDevelop::ICore::self()->uiController()->registerStatus(m_progressParser);
     connect(this, SIGNAL(finished(KJob*)), m_progressParser, SLOT(finish()));
 
+    m_namesOfFilesToBeAnalyzed = m_analysisParameters->filesToBeAnalyzed();
+
+    m_progressParser->setNumberOfCheckers(
+        calculateNumberOfCheckersToBeExecuted(m_namesOfFilesToBeAnalyzed));
     m_progressParser->start();
 
-    startAnalysis();
+    foreach (const Checker* checker, m_analysisParameters->checkersToRun()) {
+        if (!m_pendingFileTypes.contains(checker->fileType())) {
+            m_pendingFileTypes.append(checker->fileType());
+        }
+    }
+
+    startAnalysis(m_pendingFileTypes.takeFirst());
 }
 
 void AnalysisJob::setAnalysisParameters(const AnalysisParameters* analysisParameters) {
@@ -79,6 +90,8 @@ void AnalysisJob::setAnalysisResults(AnalysisResults* analysisResults) {
 //protected:
 
 bool AnalysisJob::doKill() {
+    m_pendingFileTypes.clear();
+
     m_process->kill();
 
     return true;
@@ -152,13 +165,13 @@ bool AnalysisJob::isCheckerCompatibleWithFile(const Checker* checker,
     return false;
 }
 
-QStringList AnalysisJob::checkersToRunAsKrazy2Arguments() const {
+QStringList AnalysisJob::checkersToRunAsKrazy2Arguments(const QString& fileType) const {
     QStringList namesOfCheckersToRun;
     QStringList namesOfExtraCheckersToRun;
     foreach (const Checker* checker, m_analysisParameters->checkersToRun()) {
-        if (!checker->isExtra()) {
+        if (checker->fileType() == fileType && !checker->isExtra()) {
             namesOfCheckersToRun.append(checker->name());
-        } else {
+        } else if (checker->fileType() == fileType && checker->isExtra()) {
             namesOfExtraCheckersToRun.append(checker->name());
         }
     }
@@ -168,33 +181,31 @@ QStringList AnalysisJob::checkersToRunAsKrazy2Arguments() const {
             return QStringList();
         }
 
-        return QStringList() << "--check" << namesOfCheckersToRun.join(",");
+        return QStringList() << "--types" << fileType
+                             << "--check" << namesOfCheckersToRun.join(",");
     }
 
     QStringList namesOfCheckersNotToRun;
     foreach (const Checker* checker, m_analysisParameters->availableCheckers()) {
-        if (!checker->isExtra() && !namesOfCheckersToRun.contains(checker->name())) {
+        if (!checker->isExtra() && checker->fileType() == fileType &&
+                !namesOfCheckersToRun.contains(checker->name())) {
             namesOfCheckersNotToRun.append(checker->name());
         }
     }
 
-    return QStringList() << "--exclude" << namesOfCheckersNotToRun.join(",")
+    return QStringList() << "--types" << fileType
+                         << "--exclude" << namesOfCheckersNotToRun.join(",")
                          << "--extra" << namesOfExtraCheckersToRun.join(",");
 }
 
-void AnalysisJob::startAnalysis() {
-    QStringList namesOfFilesToBeAnalyzed = m_analysisParameters->filesToBeAnalyzed();
-
-    m_progressParser->setNumberOfCheckers(
-        calculateNumberOfCheckersToBeExecuted(namesOfFilesToBeAnalyzed));
-
+void AnalysisJob::startAnalysis(const QString& fileType) {
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     KUrl krazy2Path = krazy2Configuration.readEntry("krazy2 Path");
 
     QStringList arguments;
     arguments << "--export" << "xml";
     arguments << "--explain";
-    arguments << checkersToRunAsKrazy2Arguments();
+    arguments << checkersToRunAsKrazy2Arguments(fileType);
     arguments << "-";
 
     m_process->setProgram(krazy2Path.toLocalFile(), arguments);
@@ -206,7 +217,7 @@ void AnalysisJob::startAnalysis() {
     m_process->start();
 
     QString krazy2Input;
-    foreach (const QString& fileName, namesOfFilesToBeAnalyzed) {
+    foreach (const QString& fileName, m_namesOfFilesToBeAnalyzed) {
         krazy2Input += fileName + '\n';
     }
 
@@ -226,9 +237,18 @@ void AnalysisJob::handleProcessReadyStandardError() {
 void AnalysisJob::handleProcessFinished(int exitCode) {
     Q_UNUSED(exitCode);
 
+    AnalysisResults currentFileTypeResults;
+
     ResultParser resultParser;
-    resultParser.setAnalysisResults(m_analysisResults);
+    resultParser.setAnalysisResults(&currentFileTypeResults);
     resultParser.parse(m_process->readAllStandardOutput());
+
+    m_analysisResults->addAnalysisResults(&currentFileTypeResults);
+
+    if (!m_pendingFileTypes.isEmpty()) {
+        startAnalysis(m_pendingFileTypes.takeFirst());
+        return;
+    }
 
     emitResult();
 }

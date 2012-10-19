@@ -68,3 +68,18 @@ void AnalysisResults::addIssue(const Issue* issue) {
 const QList<const Issue*>& AnalysisResults::issues() const {
     return m_issues;
 }
+
+void AnalysisResults::addAnalysisResults(const AnalysisResults* analysisResults) {
+    foreach (const Issue* issue, analysisResults->issues()) {
+        const Checker* checker = findChecker(issue->checker()->fileType(), issue->checker()->name());
+        if (!checker) {
+            const Checker* checkerCopy = new Checker(*(issue->checker()));
+            addChecker(checkerCopy);
+            checker = checkerCopy;
+        }
+
+        Issue* issueCopy = new Issue(*issue);
+        issueCopy->setChecker(checker);
+        addIssue(issueCopy);
+    }
+}

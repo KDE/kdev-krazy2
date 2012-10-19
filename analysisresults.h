@@ -85,6 +85,16 @@ public:
      */
     const QList<const Issue*>& issues() const;
 
+    /**
+     * Adds a copy of all the issues from the given AnalysisResults.
+     * If an issue references a checker with the same file type and name as one
+     * already added to this AnalysisResults, the already added Checker is used.
+     * Else, a copy of the referenced checker is added to this AnalysisResults.
+     *
+     * @param analysisResults The AnalysisResults to add its issues.
+     */
+    void addAnalysisResults(const AnalysisResults* analysisResults);
+
 private:
 
     /**

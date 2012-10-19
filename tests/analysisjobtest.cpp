@@ -93,6 +93,7 @@ private slots:
     void testRunWithCheckersSetInAnalysisParameters();
     void testRunWithExtraCheckersSetInAnalysisParameters();
     void testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisParameters();
+    void testRunWitCheckerWithDuplicatedNamesAndSpecificFileTypes();
     void testRunWithEmptyKrazy2ExecutablePath();
     void testRunWithInvalidKrazy2ExecutablePath();
 
@@ -595,6 +596,102 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
     QCOMPARE(showProgressSpy.at(2).at(3).toInt(), 66);
     QCOMPARE(showProgressSpy.at(3).at(3).toInt(), 99);
     QCOMPARE(showProgressSpy.at(4).at(3).toInt(), 100);
+}
+
+void AnalysisJobTest::testRunWitCheckerWithDuplicatedNamesAndSpecificFileTypes() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ')';
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+
+    AnalysisJob analysisJob;
+    analysisJob.setAutoDelete(false);
+
+    QList<const Checker*> availableCheckers;
+
+    Checker* cppLicenseChecker = new Checker();
+    cppLicenseChecker->setFileType("c++");
+    cppLicenseChecker->setName("license");
+    availableCheckers.append(cppLicenseChecker);
+
+    Checker* qmlSpellingChecker = new Checker();
+    qmlSpellingChecker->setFileType("qml");
+    qmlSpellingChecker->setName("spelling");
+    availableCheckers.append(qmlSpellingChecker);
+
+    QList<const Checker*> checkersToRun;
+    checkersToRun.append(cppLicenseChecker);
+    checkersToRun.append(qmlSpellingChecker);
+
+    //Both files have spelling and license issues, although different file types
+    QStringList filesToAnalyze;
+    filesToAnalyze << m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp";
+    filesToAnalyze << m_workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml";
+
+    AnalysisParameters analysisParameters;
+    analysisParameters.initializeCheckers(availableCheckers);
+    analysisParameters.setCheckersToRun(checkersToRun);
+    analysisParameters.setFilesAndDirectories(filesToAnalyze);
+    analysisJob.setAnalysisParameters(&analysisParameters);
+
+    AnalysisResults analysisResults;
+    analysisJob.setAnalysisResults(&analysisResults);
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
+    QSignalSpy showProgressSpy(analysisJob.findChild<ProgressParser*>(),
+                               SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
+
+    SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
+
+    analysisJob.start();
+
+    resultSpy.waitForSignal();
+    
+    QCOMPARE(analysisJob.error(), (int)KJob::NoError);
+    QCOMPARE(analysisResults.issues().count(), 2);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    const Issue* issue = findIssue(&analysisResults, "license",
+                                    "severalIssuesSeveralCheckers.cpp", -1);
+    QVERIFY(issue);
+    QCOMPARE(issue->message(), QString("missing license"));
+    QCOMPARE(issue->checker()->description(),
+             QString("Check for an acceptable license"));
+    QVERIFY(issue->checker()->explanation().startsWith(
+                "Each source file must contain a license"));
+    QCOMPARE(issue->checker()->fileType(), QString("c++"));
+
+    const Issue* issue2 = findIssue(&analysisResults, "spelling",
+                                    "subdirectory/severalIssuesSeveralCheckers.qml", 3);
+    QVERIFY(issue2);
+    QCOMPARE(issue2->message(), QString("occured"));
+    QCOMPARE(issue2->checker()->description(),
+             QString("Check for spelling errors"));
+    QVERIFY(issue2->checker()->explanation().startsWith(
+                "Spelling errors in comments and strings should be fixed"));
+    QCOMPARE(issue2->checker()->fileType(), QString("qml"));
+
+    //Four signals should have been emitted: one for the start, one for the
+    //finish, and one for each checker run.
+    QCOMPARE(showProgressSpy.count(), 4);
+
+    //First signal is the 0%
+    //First parameter is the ProgressParser itself
+    QCOMPARE(showProgressSpy.at(0).at(1).toInt(), 0);
+    QCOMPARE(showProgressSpy.at(0).at(2).toInt(), 100);
+    QCOMPARE(showProgressSpy.at(0).at(3).toInt(), 0);
+
+    QCOMPARE(showProgressSpy.at(1).at(3).toInt(), 50);
+    QCOMPARE(showProgressSpy.at(2).at(3).toInt(), 99);
+    QCOMPARE(showProgressSpy.at(3).at(3).toInt(), 100);
 }
 
 void AnalysisJobTest::testRunWithEmptyKrazy2ExecutablePath() {
