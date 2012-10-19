@@ -40,6 +40,16 @@ Q_OBJECT
 public:
 
     /**
+     * The index of each column.
+     */
+    enum Columns {
+        Checker = 0,
+        Problem = 1,
+        FileName = 2,
+        Line = 3
+    };
+
+    /**
      * Creates a new IssueModel.
      *
      *  @param parent The parent object.
@@ -130,16 +140,6 @@ private:
      * The analysis results used by this IssueModel.
      */
     const AnalysisResults* m_analysisResults;
-
-    /**
-     * The index of each column.
-     */
-    enum Columns {
-        Checker = 0,
-        Problem = 1,
-        FileName = 2,
-        Line = 3
-    };
 
 };
 

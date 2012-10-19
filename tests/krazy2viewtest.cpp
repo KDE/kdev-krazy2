@@ -19,6 +19,7 @@
 
 #include <qtest_kde.h>
 
+#include <QHeaderView>
 #include <QSortFilterProxyModel>
 #include <QTableView>
 #include <QTreeView>
@@ -66,6 +67,7 @@ private slots:
 
     void testAnalyze();
     void testAnalyzeWithCheckersNotInitialized();
+    void testAnalyzeAgainAfterSorting();
     void testCancelAnalyze();
     void testCancelAnalyzeWithCheckersNotInitialized();
 
@@ -880,6 +882,225 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
     QVERIFY(issue10->checker()->explanation().startsWith(
                 "Spelling errors in comments and strings should be fixed"));
     QCOMPARE(issue10->checker()->fileType(), QString("qml"));
+}
+
+
+void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+
+    Krazy2View view;
+
+    //Add several paths
+    queueAddPaths(&view, m_workingDirectory + "examples/",
+                  QStringList() << "severalIssuesSeveralCheckers.cpp"
+                                << "singleExtraIssue.cpp"
+                                << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")
+                                << "subdirectory");
+
+    selectPathsButton(&view)->click();
+
+    QList<const Checker*> availableCheckers;
+
+    Checker* doubleQuoteCharsChecker = new Checker();
+    doubleQuoteCharsChecker->setFileType("c++");
+    doubleQuoteCharsChecker->setName("doublequote_chars");
+    availableCheckers.append(doubleQuoteCharsChecker);
+
+    Checker* licenseChecker = new Checker();
+    licenseChecker->setFileType("c++");
+    licenseChecker->setName("license");
+    availableCheckers.append(licenseChecker);
+
+    Checker* spellingChecker = new Checker();
+    spellingChecker->setFileType("c++");
+    spellingChecker->setName("spelling");
+    availableCheckers.append(spellingChecker);
+
+    //Extra checkers results are outputted first by Krazy2. However, when
+    //sorting the results, the style checker should appear between license and
+    //validate.
+    Checker* styleChecker = new Checker();
+    styleChecker->setFileType("c++");
+    styleChecker->setName("style");
+    styleChecker->setExtra(true);
+    availableCheckers.append(styleChecker);
+
+    Checker* validateChecker = new Checker();
+    validateChecker->setFileType("desktop");
+    validateChecker->setName("validate");
+    availableCheckers.append(validateChecker);
+
+    Checker* qmlLicenseChecker = new Checker();
+    qmlLicenseChecker->setFileType("qml");
+    qmlLicenseChecker->setName("license");
+    availableCheckers.append(qmlLicenseChecker);
+
+    analysisParameters(&view)->initializeCheckers(availableCheckers);
+
+    //Do not run spelling checker
+    queueRemoveCheckers(&view, QStringList() << "0-2");
+
+    selectCheckersButton(&view)->click();
+
+    //Run style checker
+    queueAddCheckers(&view, QStringList() << "0-1-0");
+
+    selectCheckersButton(&view)->click();
+
+    analyzeButton(&view)->click();
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
+    IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
+    const AnalysisResults* analysisResults = issueModel->analysisResults();
+
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 7);
+
+    QModelIndex proxyIndex = proxyModel->index(0, 0);
+    const Issue* issue = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue);
+    QCOMPARE(issue->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issue->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+
+    proxyIndex = proxyModel->index(1, 0);
+    const Issue* issue2 = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue2);
+    QCOMPARE(issue2->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue2->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issue2->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+
+    proxyIndex = proxyModel->index(2, 0);
+    const Issue* issue3 = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue3);
+    QCOMPARE(issue3->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue3->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issue3->fileName(), m_workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp"));
+
+    proxyIndex = proxyModel->index(3, 0);
+    const Issue* issue4 = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue4);
+    QCOMPARE(issue4->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue4->checker()->name(), QString("license"));
+    QCOMPARE(issue4->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+
+    proxyIndex = proxyModel->index(4, 0);
+    const Issue* issue5 = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue5);
+    QCOMPARE(issue5->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue5->checker()->name(), QString("style"));
+    QCOMPARE(issue5->fileName(), m_workingDirectory + "examples/singleExtraIssue.cpp");
+
+    proxyIndex = proxyModel->index(5, 0);
+    const Issue* issue6 = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue6);
+    QCOMPARE(issue6->checker()->fileType(), QString("desktop"));
+    QCOMPARE(issue6->checker()->name(), QString("validate"));
+    QCOMPARE(issue6->fileName(), m_workingDirectory + "examples/subdirectory/singleIssue.desktop");
+
+    proxyIndex = proxyModel->index(6, 0);
+    const Issue* issue7 = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue7);
+    QCOMPARE(issue7->checker()->fileType(), QString("qml"));
+    QCOMPARE(issue7->checker()->name(), QString("license"));
+    QCOMPARE(issue7->fileName(), m_workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml");
+
+    //Sort by file name
+    resultsTableView(&view)->sortByColumn(IssueModel::FileName, Qt::AscendingOrder);
+
+    //Ensure that the previous AnalysisJob was deleted before starting a new one
+    //to be able to find the new one easily.
+    QCoreApplication::processEvents(QEventLoop::DeferredDeletion);
+    QVERIFY(!view.findChild<AnalysisJob*>());
+
+    //Analyze again after sorting by file name and check that the new results
+    //are sorted as expected.
+    analyzeButton(&view)->click();
+
+    analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
+    issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
+    analysisResults = issueModel->analysisResults();
+
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 7);
+
+    proxyIndex = proxyModel->index(0, 0);
+    issue = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue);
+    QCOMPARE(issue->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issue->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+
+    proxyIndex = proxyModel->index(1, 0);
+    issue2 = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue2);
+    QCOMPARE(issue2->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue2->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issue2->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+
+    proxyIndex = proxyModel->index(2, 0);
+    issue3 = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue3);
+    QCOMPARE(issue3->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue3->checker()->name(), QString("license"));
+    QCOMPARE(issue3->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+
+    proxyIndex = proxyModel->index(3, 0);
+    issue4 = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue4);
+    QCOMPARE(issue4->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue4->checker()->name(), QString("style"));
+    QCOMPARE(issue4->fileName(), m_workingDirectory + "examples/singleExtraIssue.cpp");
+
+    proxyIndex = proxyModel->index(4, 0);
+    issue5 = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue5);
+    QCOMPARE(issue5->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue5->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issue5->fileName(), m_workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp"));
+
+    proxyIndex = proxyModel->index(5, 0);
+    issue6 = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue6);
+    QCOMPARE(issue6->checker()->fileType(), QString("qml"));
+    QCOMPARE(issue6->checker()->name(), QString("license"));
+    QCOMPARE(issue6->fileName(), m_workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml");
+
+    proxyIndex = proxyModel->index(6, 0);
+    issue7 = issueModel->issueForIndex(proxyModel->mapToSource(proxyIndex));
+    QVERIFY(issue7);
+    QCOMPARE(issue7->checker()->fileType(), QString("desktop"));
+    QCOMPARE(issue7->checker()->name(), QString("validate"));
+    QCOMPARE(issue7->fileName(), m_workingDirectory + "examples/subdirectory/singleIssue.desktop");
 }
 
 void Krazy2ViewTest::testCancelAnalyze() {

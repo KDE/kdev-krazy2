@@ -50,9 +50,11 @@ Krazy2View::Krazy2View(QWidget* parent /*= 0*/):
     m_issueModel = new IssueModel(this);
 
     QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setDynamicSortFilter(true);
     proxyModel->setSourceModel(m_issueModel);
     m_ui->resultsTableView->setModel(proxyModel);
     m_ui->resultsTableView->setSortingEnabled(true);
+    m_ui->resultsTableView->sortByColumn(IssueModel::Checker, Qt::AscendingOrder);
 
     connect(m_ui->selectPathsButton, SIGNAL(clicked()),
             this, SLOT(selectPaths()));
