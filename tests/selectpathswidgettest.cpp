@@ -84,6 +84,8 @@ void SelectPathsWidgetTest::testConstructor() {
     assertPaths(widget, QStringList() << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp"
                                       << QDir::currentPath() + "/examples/singleIssue.cpp"
                                       << QDir::currentPath() + "/examples/subdirectory/");
+
+    QCOMPARE(pathsView(widget)->editTriggers(), QAbstractItemView::NoEditTriggers);
 }
 
 void SelectPathsWidgetTest::testConstructorWithPathsDuplicatedAndNotSorted() {

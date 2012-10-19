@@ -15,7 +15,11 @@
   </property>
   <layout class="QHBoxLayout" name="mainHorizontalLayout">
    <item>
-    <widget class="QListView" name="pathsView"/>
+    <widget class="QListView" name="pathsView">
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QVBoxLayout" name="buttonVerticalLayout">
