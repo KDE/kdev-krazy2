@@ -178,7 +178,7 @@ QVariant CheckerModel::data(const QModelIndex& index, int role /*= Qt::DisplayRo
                          "Sorry, no description given");
         }
 
-        return "<para>" + item->checker()->description() + "</para>";
+        return "<p>" + item->checker()->description() + "</p>";
     }
 
     if (item->type() == Item::FileTypeItem) {

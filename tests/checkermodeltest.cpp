@@ -86,7 +86,7 @@ void CheckerModelTest::testSingleFileTypeSingleChecker() {
     assertItem(fileTypeIndex, "fileType", "", 1, QModelIndex());
 
     QModelIndex checkerIndex = checkerModel.index(0, 0, fileTypeIndex);
-    assertItem(checkerIndex, "checkerName", "<para>checkerDescription</para>", 0, fileTypeIndex);
+    assertItem(checkerIndex, "checkerName", "<p>checkerDescription</p>", 0, fileTypeIndex);
 }
 
 void CheckerModelTest::testSingleFileTypeSingleExtraChecker() {
@@ -105,7 +105,7 @@ void CheckerModelTest::testSingleFileTypeSingleExtraChecker() {
     assertItem(extraHeaderIndex, i18nc("@item Extra Krazy2 checkers", "[EXTRA]"), "", 1, fileTypeIndex);
 
     QModelIndex extraCheckerIndex = checkerModel.index(0, 0, extraHeaderIndex);
-    assertItem(extraCheckerIndex, "extraCheckerName", "<para>extraCheckerDescription</para>", 0, extraHeaderIndex);
+    assertItem(extraCheckerIndex, "extraCheckerName", "<p>extraCheckerDescription</p>", 0, extraHeaderIndex);
 }
 
 void CheckerModelTest::testSingleFileTypeSeveralCheckers() {
@@ -123,13 +123,13 @@ void CheckerModelTest::testSingleFileTypeSeveralCheckers() {
     assertItem(fileTypeIndex, "fileType", "", 3, QModelIndex());
 
     QModelIndex checker1Index = checkerModel.index(0, 0, fileTypeIndex);
-    assertItem(checker1Index, "checker1Name", "<para>checker1Description</para>", 0, fileTypeIndex);
+    assertItem(checker1Index, "checker1Name", "<p>checker1Description</p>", 0, fileTypeIndex);
 
     QModelIndex checker2Index = checkerModel.index(1, 0, fileTypeIndex);
-    assertItem(checker2Index, "checker2Name", "<para>checker2Description</para>", 0, fileTypeIndex);
+    assertItem(checker2Index, "checker2Name", "<p>checker2Description</p>", 0, fileTypeIndex);
 
     QModelIndex checker3Index = checkerModel.index(2, 0, fileTypeIndex);
-    assertItem(checker3Index, "checker3Name", "<para>checker3Description</para>", 0, fileTypeIndex);
+    assertItem(checker3Index, "checker3Name", "<p>checker3Description</p>", 0, fileTypeIndex);
 }
 
 void CheckerModelTest::testSingleFileTypeSeveralExtraCheckers() {
@@ -150,13 +150,13 @@ void CheckerModelTest::testSingleFileTypeSeveralExtraCheckers() {
     assertItem(extraHeaderIndex, i18nc("@item Extra Krazy2 checkers", "[EXTRA]"), "", 3, fileTypeIndex);
 
     QModelIndex extraChecker1Index = checkerModel.index(0, 0, extraHeaderIndex);
-    assertItem(extraChecker1Index, "extraChecker1Name", "<para>extraChecker1Description</para>", 0, extraHeaderIndex);
+    assertItem(extraChecker1Index, "extraChecker1Name", "<p>extraChecker1Description</p>", 0, extraHeaderIndex);
 
     QModelIndex extraChecker2Index = checkerModel.index(1, 0, extraHeaderIndex);
-    assertItem(extraChecker2Index, "extraChecker2Name", "<para>extraChecker2Description</para>", 0, extraHeaderIndex);
+    assertItem(extraChecker2Index, "extraChecker2Name", "<p>extraChecker2Description</p>", 0, extraHeaderIndex);
 
     QModelIndex extraChecker3Index = checkerModel.index(2, 0, extraHeaderIndex);
-    assertItem(extraChecker3Index, "extraChecker3Name", "<para>extraChecker3Description</para>", 0, extraHeaderIndex);
+    assertItem(extraChecker3Index, "extraChecker3Name", "<p>extraChecker3Description</p>", 0, extraHeaderIndex);
 }
 
 void CheckerModelTest::testSingleFileTypeSeveralCheckersAndExtraCheckers() {
@@ -177,25 +177,25 @@ void CheckerModelTest::testSingleFileTypeSeveralCheckersAndExtraCheckers() {
     assertItem(fileTypeIndex, "fileType", "", 4, QModelIndex());
 
     QModelIndex checker1Index = checkerModel.index(0, 0, fileTypeIndex);
-    assertItem(checker1Index, "checker1Name", "<para>checker1Description</para>", 0, fileTypeIndex);
+    assertItem(checker1Index, "checker1Name", "<p>checker1Description</p>", 0, fileTypeIndex);
 
     QModelIndex checker2Index = checkerModel.index(1, 0, fileTypeIndex);
-    assertItem(checker2Index, "checker2Name", "<para>checker2Description</para>", 0, fileTypeIndex);
+    assertItem(checker2Index, "checker2Name", "<p>checker2Description</p>", 0, fileTypeIndex);
 
     QModelIndex checker3Index = checkerModel.index(2, 0, fileTypeIndex);
-    assertItem(checker3Index, "checker3Name", "<para>checker3Description</para>", 0, fileTypeIndex);
+    assertItem(checker3Index, "checker3Name", "<p>checker3Description</p>", 0, fileTypeIndex);
 
     QModelIndex extraHeaderIndex = checkerModel.index(3, 0, fileTypeIndex);
     assertItem(extraHeaderIndex, i18nc("@item Extra Krazy2 checkers", "[EXTRA]"), "", 3, fileTypeIndex);
 
     QModelIndex extraChecker1Index = checkerModel.index(0, 0, extraHeaderIndex);
-    assertItem(extraChecker1Index, "extraChecker1Name", "<para>extraChecker1Description</para>", 0, extraHeaderIndex);
+    assertItem(extraChecker1Index, "extraChecker1Name", "<p>extraChecker1Description</p>", 0, extraHeaderIndex);
 
     QModelIndex extraChecker2Index = checkerModel.index(1, 0, extraHeaderIndex);
-    assertItem(extraChecker2Index, "extraChecker2Name", "<para>extraChecker2Description</para>", 0, extraHeaderIndex);
+    assertItem(extraChecker2Index, "extraChecker2Name", "<p>extraChecker2Description</p>", 0, extraHeaderIndex);
 
     QModelIndex extraChecker3Index = checkerModel.index(2, 0, extraHeaderIndex);
-    assertItem(extraChecker3Index, "extraChecker3Name", "<para>extraChecker3Description</para>", 0, extraHeaderIndex);
+    assertItem(extraChecker3Index, "extraChecker3Name", "<p>extraChecker3Description</p>", 0, extraHeaderIndex);
 }
 
 void CheckerModelTest::testSingleFileTypeSeveralCheckersAndExtraCheckersMixedOrder() {
@@ -216,25 +216,25 @@ void CheckerModelTest::testSingleFileTypeSeveralCheckersAndExtraCheckersMixedOrd
     assertItem(fileTypeIndex, "fileType", "", 4, QModelIndex());
 
     QModelIndex checker1Index = checkerModel.index(0, 0, fileTypeIndex);
-    assertItem(checker1Index, "checker1Name", "<para>checker1Description</para>", 0, fileTypeIndex);
+    assertItem(checker1Index, "checker1Name", "<p>checker1Description</p>", 0, fileTypeIndex);
 
     QModelIndex checker2Index = checkerModel.index(1, 0, fileTypeIndex);
-    assertItem(checker2Index, "checker2Name", "<para>checker2Description</para>", 0, fileTypeIndex);
+    assertItem(checker2Index, "checker2Name", "<p>checker2Description</p>", 0, fileTypeIndex);
 
     QModelIndex checker3Index = checkerModel.index(2, 0, fileTypeIndex);
-    assertItem(checker3Index, "checker3Name", "<para>checker3Description</para>", 0, fileTypeIndex);
+    assertItem(checker3Index, "checker3Name", "<p>checker3Description</p>", 0, fileTypeIndex);
 
     QModelIndex extraHeaderIndex = checkerModel.index(3, 0, fileTypeIndex);
     assertItem(extraHeaderIndex, i18nc("@item Extra Krazy2 checkers", "[EXTRA]"), "", 3, fileTypeIndex);
 
     QModelIndex extraChecker1Index = checkerModel.index(0, 0, extraHeaderIndex);
-    assertItem(extraChecker1Index, "extraChecker1Name", "<para>extraChecker1Description</para>", 0, extraHeaderIndex);
+    assertItem(extraChecker1Index, "extraChecker1Name", "<p>extraChecker1Description</p>", 0, extraHeaderIndex);
 
     QModelIndex extraChecker2Index = checkerModel.index(1, 0, extraHeaderIndex);
-    assertItem(extraChecker2Index, "extraChecker2Name", "<para>extraChecker2Description</para>", 0, extraHeaderIndex);
+    assertItem(extraChecker2Index, "extraChecker2Name", "<p>extraChecker2Description</p>", 0, extraHeaderIndex);
 
     QModelIndex extraChecker3Index = checkerModel.index(2, 0, extraHeaderIndex);
-    assertItem(extraChecker3Index, "extraChecker3Name", "<para>extraChecker3Description</para>", 0, extraHeaderIndex);
+    assertItem(extraChecker3Index, "extraChecker3Name", "<p>extraChecker3Description</p>", 0, extraHeaderIndex);
 }
 
 void CheckerModelTest::testSeveralFileTypesSeveralCheckersAndExtraCheckers() {
@@ -260,49 +260,49 @@ void CheckerModelTest::testSeveralFileTypesSeveralCheckersAndExtraCheckers() {
     assertItem(fileType1Index, "fileType1", "", 2, QModelIndex());
 
     QModelIndex checker1_1Index = checkerModel.index(0, 0, fileType1Index);
-    assertItem(checker1_1Index, "checker1-1Name", "<para>checker1-1Description</para>", 0, fileType1Index);
+    assertItem(checker1_1Index, "checker1-1Name", "<p>checker1-1Description</p>", 0, fileType1Index);
 
     QModelIndex extraHeader1Index = checkerModel.index(1, 0, fileType1Index);
     assertItem(extraHeader1Index, i18nc("@item Extra Krazy2 checkers", "[EXTRA]"), "", 1, fileType1Index);
 
     QModelIndex extraChecker1_1Index = checkerModel.index(0, 0, extraHeader1Index);
-    assertItem(extraChecker1_1Index, "extraChecker1-1Name", "<para>extraChecker1-1Description</para>", 0, extraHeader1Index);
+    assertItem(extraChecker1_1Index, "extraChecker1-1Name", "<p>extraChecker1-1Description</p>", 0, extraHeader1Index);
 
     QModelIndex fileType2Index = checkerModel.index(1, 0);
     assertItem(fileType2Index, "fileType2", "", 4, QModelIndex());
 
     QModelIndex checker2_1Index = checkerModel.index(0, 0, fileType2Index);
-    assertItem(checker2_1Index, "checker2-1Name", "<para>checker2-1Description</para>", 0, fileType2Index);
+    assertItem(checker2_1Index, "checker2-1Name", "<p>checker2-1Description</p>", 0, fileType2Index);
 
     QModelIndex checker2_2Index = checkerModel.index(1, 0, fileType2Index);
-    assertItem(checker2_2Index, "checker2-2Name", "<para>checker2-2Description</para>", 0, fileType2Index);
+    assertItem(checker2_2Index, "checker2-2Name", "<p>checker2-2Description</p>", 0, fileType2Index);
 
     QModelIndex checker2_3Index = checkerModel.index(2, 0, fileType2Index);
-    assertItem(checker2_3Index, "checker2-3Name", "<para>checker2-3Description</para>", 0, fileType2Index);
+    assertItem(checker2_3Index, "checker2-3Name", "<p>checker2-3Description</p>", 0, fileType2Index);
 
     QModelIndex extraHeader2Index = checkerModel.index(3, 0, fileType2Index);
     assertItem(extraHeader2Index, i18nc("@item Extra Krazy2 checkers", "[EXTRA]"), "", 3, fileType2Index);
 
     QModelIndex extraChecker2_1Index = checkerModel.index(0, 0, extraHeader2Index);
-    assertItem(extraChecker2_1Index, "extraChecker2-1Name", "<para>extraChecker2-1Description</para>", 0, extraHeader2Index);
+    assertItem(extraChecker2_1Index, "extraChecker2-1Name", "<p>extraChecker2-1Description</p>", 0, extraHeader2Index);
 
     QModelIndex extraChecker2_2Index = checkerModel.index(1, 0, extraHeader2Index);
-    assertItem(extraChecker2_2Index, "extraChecker2-2Name", "<para>extraChecker2-2Description</para>", 0, extraHeader2Index);
+    assertItem(extraChecker2_2Index, "extraChecker2-2Name", "<p>extraChecker2-2Description</p>", 0, extraHeader2Index);
 
     QModelIndex extraChecker2_3Index = checkerModel.index(2, 0, extraHeader2Index);
-    assertItem(extraChecker2_3Index, "extraChecker2-3Name", "<para>extraChecker2-3Description</para>", 0, extraHeader2Index);
+    assertItem(extraChecker2_3Index, "extraChecker2-3Name", "<p>extraChecker2-3Description</p>", 0, extraHeader2Index);
 
     QModelIndex fileType3Index = checkerModel.index(2, 0);
     assertItem(fileType3Index, "fileType3", "", 3, QModelIndex());
 
     QModelIndex checker3_1Index = checkerModel.index(0, 0, fileType3Index);
-    assertItem(checker3_1Index, "checker3-1Name", "<para>checker3-1Description</para>", 0, fileType3Index);
+    assertItem(checker3_1Index, "checker3-1Name", "<p>checker3-1Description</p>", 0, fileType3Index);
 
     QModelIndex checker3_2Index = checkerModel.index(1, 0, fileType3Index);
-    assertItem(checker3_2Index, "checker3-2Name", "<para>checker3-2Description</para>", 0, fileType3Index);
+    assertItem(checker3_2Index, "checker3-2Name", "<p>checker3-2Description</p>", 0, fileType3Index);
 
     QModelIndex checker3_3Index = checkerModel.index(2, 0, fileType3Index);
-    assertItem(checker3_3Index, "checker3-3Name", "<para>checker3-3Description</para>", 0, fileType3Index);
+    assertItem(checker3_3Index, "checker3-3Name", "<p>checker3-3Description</p>", 0, fileType3Index);
 }
 
 void CheckerModelTest::testSeveralFileTypesSeveralCheckersAndExtraCheckersMixedOrder() {
@@ -328,49 +328,49 @@ void CheckerModelTest::testSeveralFileTypesSeveralCheckersAndExtraCheckersMixedO
     assertItem(fileType1Index, "fileType1", "", 2, QModelIndex());
 
     QModelIndex checker1_1Index = checkerModel.index(0, 0, fileType1Index);
-    assertItem(checker1_1Index, "checker1-1Name", "<para>checker1-1Description</para>", 0, fileType1Index);
+    assertItem(checker1_1Index, "checker1-1Name", "<p>checker1-1Description</p>", 0, fileType1Index);
 
     QModelIndex extraHeader1Index = checkerModel.index(1, 0, fileType1Index);
     assertItem(extraHeader1Index, i18nc("@item Extra Krazy2 checkers", "[EXTRA]"), "", 1, fileType1Index);
 
     QModelIndex extraChecker1_1Index = checkerModel.index(0, 0, extraHeader1Index);
-    assertItem(extraChecker1_1Index, "extraChecker1-1Name", "<para>extraChecker1-1Description</para>", 0, extraHeader1Index);
+    assertItem(extraChecker1_1Index, "extraChecker1-1Name", "<p>extraChecker1-1Description</p>", 0, extraHeader1Index);
 
     QModelIndex fileType2Index = checkerModel.index(1, 0);
     assertItem(fileType2Index, "fileType2", "", 4, QModelIndex());
 
     QModelIndex checker2_1Index = checkerModel.index(0, 0, fileType2Index);
-    assertItem(checker2_1Index, "checker2-1Name", "<para>checker2-1Description</para>", 0, fileType2Index);
+    assertItem(checker2_1Index, "checker2-1Name", "<p>checker2-1Description</p>", 0, fileType2Index);
 
     QModelIndex checker2_2Index = checkerModel.index(1, 0, fileType2Index);
-    assertItem(checker2_2Index, "checker2-2Name", "<para>checker2-2Description</para>", 0, fileType2Index);
+    assertItem(checker2_2Index, "checker2-2Name", "<p>checker2-2Description</p>", 0, fileType2Index);
 
     QModelIndex checker2_3Index = checkerModel.index(2, 0, fileType2Index);
-    assertItem(checker2_3Index, "checker2-3Name", "<para>checker2-3Description</para>", 0, fileType2Index);
+    assertItem(checker2_3Index, "checker2-3Name", "<p>checker2-3Description</p>", 0, fileType2Index);
 
     QModelIndex extraHeader2Index = checkerModel.index(3, 0, fileType2Index);
     assertItem(extraHeader2Index, i18nc("@item Extra Krazy2 checkers", "[EXTRA]"), "", 3, fileType2Index);
 
     QModelIndex extraChecker2_1Index = checkerModel.index(0, 0, extraHeader2Index);
-    assertItem(extraChecker2_1Index, "extraChecker2-1Name", "<para>extraChecker2-1Description</para>", 0, extraHeader2Index);
+    assertItem(extraChecker2_1Index, "extraChecker2-1Name", "<p>extraChecker2-1Description</p>", 0, extraHeader2Index);
 
     QModelIndex extraChecker2_2Index = checkerModel.index(1, 0, extraHeader2Index);
-    assertItem(extraChecker2_2Index, "extraChecker2-2Name", "<para>extraChecker2-2Description</para>", 0, extraHeader2Index);
+    assertItem(extraChecker2_2Index, "extraChecker2-2Name", "<p>extraChecker2-2Description</p>", 0, extraHeader2Index);
 
     QModelIndex extraChecker2_3Index = checkerModel.index(2, 0, extraHeader2Index);
-    assertItem(extraChecker2_3Index, "extraChecker2-3Name", "<para>extraChecker2-3Description</para>", 0, extraHeader2Index);
+    assertItem(extraChecker2_3Index, "extraChecker2-3Name", "<p>extraChecker2-3Description</p>", 0, extraHeader2Index);
 
     QModelIndex fileType3Index = checkerModel.index(2, 0);
     assertItem(fileType3Index, "fileType3", "", 3, QModelIndex());
 
     QModelIndex checker3_1Index = checkerModel.index(0, 0, fileType3Index);
-    assertItem(checker3_1Index, "checker3-1Name", "<para>checker3-1Description</para>", 0, fileType3Index);
+    assertItem(checker3_1Index, "checker3-1Name", "<p>checker3-1Description</p>", 0, fileType3Index);
 
     QModelIndex checker3_2Index = checkerModel.index(1, 0, fileType3Index);
-    assertItem(checker3_2Index, "checker3-2Name", "<para>checker3-2Description</para>", 0, fileType3Index);
+    assertItem(checker3_2Index, "checker3-2Name", "<p>checker3-2Description</p>", 0, fileType3Index);
 
     QModelIndex checker3_3Index = checkerModel.index(2, 0, fileType3Index);
-    assertItem(checker3_3Index, "checker3-3Name", "<para>checker3-3Description</para>", 0, fileType3Index);
+    assertItem(checker3_3Index, "checker3-3Name", "<p>checker3-3Description</p>", 0, fileType3Index);
 }
 
 void CheckerModelTest::testToolTipDataForCheckerWithoutDescription() {
