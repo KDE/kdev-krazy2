@@ -150,18 +150,24 @@ void CheckerListJobTest::testRun() {
     QVERIFY(checker);
     QCOMPARE(checker->description(),
              QString("Check single-char QString operations for efficiency"));
+    QVERIFY(checker->explanation().startsWith(
+                "Adding single characters to a QString is faster"));
     QCOMPARE(checker->isExtra(), false);
 
     const Checker* checker2 = findChecker(m_checkerList, "endswithnewline", "c++");
     QVERIFY(checker2);
     QCOMPARE(checker2->description(),
              QString("Check that file ends with a newline"));
+    QVERIFY(checker2->explanation().startsWith(
+                "Files that do not end with a newline character"));
     QCOMPARE(checker2->isExtra(), false);
 
     const Checker* checker3 = findChecker(m_checkerList, "endswithnewline", "designer");
     QVERIFY(checker3);
     QCOMPARE(checker3->description(),
              QString("Check that file ends with a newline"));
+    QVERIFY(checker3->explanation().startsWith(
+                "Files that do not end with a newline character"));
     QCOMPARE(checker3->isExtra(), false);
     QVERIFY(checker3 != checker2);
 
@@ -169,12 +175,16 @@ void CheckerListJobTest::testRun() {
     QVERIFY(checker4);
     QCOMPARE(checker4->description(),
              QString("Check for contractions in strings"));
+    QVERIFY(checker4->explanation().startsWith(
+                "The KDE Style Guide recommends not using contractions"));
     QCOMPARE(checker4->isExtra(), true);
 
     const Checker* checker5 = findChecker(m_checkerList, "contractions", "desktop");
     QVERIFY(checker5);
     QCOMPARE(checker5->description(),
              QString("Check for contractions in strings"));
+    QVERIFY(checker5->explanation().startsWith(
+                "The KDE Style Guide recommends not using contractions"));
     QCOMPARE(checker5->isExtra(), true);
     QVERIFY(checker5 != checker4);
 }

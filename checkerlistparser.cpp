@@ -51,11 +51,17 @@ void CheckerListParser::parse(const QString& data) {
         if (isStartElement("plugin")) {
             processPluginStart();
         }
+        if (isEndElement("explanation")) {
+            processExplanationEnd();
+        }
         if (isStartElement("extra")) {
             processExtraStart();
         }
         if (isEndElement("extra")) {
             processExtraEnd();
+        }
+        if (m_xmlStreamReader.isCharacters()) {
+            m_text = m_xmlStreamReader.text().toString().trimmed();
         }
     }
 }
@@ -88,7 +94,15 @@ void CheckerListParser::processPluginStart() {
     checker->setFileType(m_fileType);
     checker->setExtra(m_extra);
 
+    m_checkerBeingInitialized = checker;
+
     m_checkerList->append(checker);
+}
+
+void CheckerListParser::processExplanationEnd() {
+    if (m_text != "(no explanation available)") {
+        m_checkerBeingInitialized->setExplanation(m_text);
+    }
 }
 
 void CheckerListParser::processExtraStart() {

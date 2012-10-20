@@ -68,6 +68,16 @@ private:
     QXmlStreamReader m_xmlStreamReader;
 
     /**
+     * The checker being parsed.
+     */
+    Checker* m_checkerBeingInitialized;
+
+    /**
+     * The trimmed text of the current token, if its type is Characters.
+     */
+    QString m_text;
+
+    /**
      * The file type of which checkers are being parsed.
      */
     QString m_fileType;
@@ -103,9 +113,14 @@ private:
     void processFileTypeStart();
 
     /**
-     * Creates and initializes the checker.
+     * Creates and initializes the checker (but for the explanation).
      */
     void processPluginStart();
+
+    /**
+     * Sets the explanation of the checker.
+     */
+    void processExplanationEnd();
 
     /**
      * Enables the extra flag.

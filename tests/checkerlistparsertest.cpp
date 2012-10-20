@@ -38,14 +38,18 @@ private slots:
     void testParseSingleFileTypeSeveralNormalAndExtraCheckers();
     void testParseSeveralFileTypes();
 
+    void testParseSingleCheckerExplanationEndingWithNewLine();
+
     void testParseSingleCheckerNoDescription();
+    void testParseSingleCheckerNoExplanation();
 
     void testParseWithDataInSeveralChunks();
 
 private:
 
     void assertChecker(int index, const QString& name, const QString& description,
-                       const QString& fileType, bool extra) const;
+                       const QString& explanation, const QString& fileType,
+                       bool extra) const;
 
     CheckerListParser* m_checkerListParser;
     QList<const Checker*>* m_checkerList;
@@ -62,15 +66,27 @@ private:
     "</tool-result>\n"
 
 #define KRAZY2_SEVERAL_CHECKERS_XML \
-    "<plugin name=\"checker1Name\" short-desc=\"Checker1 description\" version=\"0.4\"/>\n" \
-    "<plugin name=\"checker2Name\" short-desc=\"Checker2 description\" version=\"0.8\"/>\n" \
-    "<plugin name=\"checker3Name\" short-desc=\"Checker3 description\" version=\"1.5\"/>\n"
+    "<plugin name=\"checker1Name\" short-desc=\"Checker1 description\" version=\"0.4\">\n" \
+        "<explanation>Checker1 explanation</explanation>\n" \
+    "</plugin>\n" \
+    "<plugin name=\"checker2Name\" short-desc=\"Checker2 description\" version=\"0.8\">\n" \
+        "<explanation>Checker2 explanation</explanation>\n" \
+    "</plugin>\n" \
+    "<plugin name=\"checker3Name\" short-desc=\"Checker3 description\" version=\"1.5\">\n" \
+        "<explanation>Checker3 explanation</explanation>\n" \
+    "</plugin>\n"
 
 #define KRAZY2_SEVERAL_EXTRA_CHECKERS_XML \
     "<extra>\n" \
-        "<plugin name=\"extraChecker1Name\" short-desc=\"Extra checker1 description\" version=\"0.4\"/>\n" \
-        "<plugin name=\"extraChecker2Name\" short-desc=\"Extra checker2 description\" version=\"0.8\"/>\n" \
-        "<plugin name=\"extraChecker3Name\" short-desc=\"Extra checker3 description\" version=\"1.5\"/>\n" \
+        "<plugin name=\"extraChecker1Name\" short-desc=\"Extra checker1 description\" version=\"0.4\">\n" \
+            "<explanation>Extra checker1 explanation</explanation>\n" \
+        "</plugin>\n" \
+        "<plugin name=\"extraChecker2Name\" short-desc=\"Extra checker2 description\" version=\"0.8\">\n" \
+            "<explanation>Extra checker2 explanation</explanation>\n" \
+        "</plugin>\n" \
+        "<plugin name=\"extraChecker3Name\" short-desc=\"Extra checker3 description\" version=\"1.5\">\n" \
+            "<explanation>Extra checker3 explanation</explanation>\n" \
+        "</plugin>\n" \
     "</extra>"
 
 void CheckerListParserTest::init() {
@@ -113,14 +129,16 @@ void CheckerListParserTest::testParseSingleFileTypeSingleChecker() {
     QString data =
         KRAZY2_HEADER_XML
         "<file-type value=\"fileType\">\n"
-            "<plugin name=\"checkerName\" short-desc=\"Checker description\" version=\"0.4\"/>\n"
+            "<plugin name=\"checkerName\" short-desc=\"Checker description\" version=\"0.4\">\n"
+                "<explanation>Checker explanation</explanation>\n"
+            "</plugin>\n"
         "</file-type>\n"
         KRAZY2_FOOTER_XML;
 
     m_checkerListParser->parse(data);
 
     QCOMPARE(m_checkerList->size(), 1);
-    assertChecker(0, "checkerName", "Checker description", "fileType", false);
+    assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType", false);
 }
 
 void CheckerListParserTest::testParseSingleFileTypeSeveralCheckers() {
@@ -134,9 +152,9 @@ void CheckerListParserTest::testParseSingleFileTypeSeveralCheckers() {
     m_checkerListParser->parse(data);
 
     QCOMPARE(m_checkerList->size(), 3);
-    assertChecker(0, "checker1Name", "Checker1 description", "fileType", false);
-    assertChecker(1, "checker2Name", "Checker2 description", "fileType", false);
-    assertChecker(2, "checker3Name", "Checker3 description", "fileType", false);
+    assertChecker(0, "checker1Name", "Checker1 description", "Checker1 explanation", "fileType", false);
+    assertChecker(1, "checker2Name", "Checker2 description", "Checker2 explanation", "fileType", false);
+    assertChecker(2, "checker3Name", "Checker3 description", "Checker3 explanation", "fileType", false);
 }
 
 void CheckerListParserTest::testParseSingleFileTypeSingleExtraChecker() {
@@ -144,7 +162,9 @@ void CheckerListParserTest::testParseSingleFileTypeSingleExtraChecker() {
         KRAZY2_HEADER_XML
         "<file-type value=\"fileType\">\n"
             "<extra>\n"
-                "<plugin name=\"extraCheckerName\" short-desc=\"Extra checker description\" version=\"0.4\"/>\n"
+                "<plugin name=\"extraCheckerName\" short-desc=\"Extra checker description\" version=\"0.4\">\n"
+                    "<explanation>Extra checker explanation</explanation>\n"
+                "</plugin>\n"
             "</extra>\n"
         "</file-type>\n"
         KRAZY2_FOOTER_XML;
@@ -152,7 +172,7 @@ void CheckerListParserTest::testParseSingleFileTypeSingleExtraChecker() {
     m_checkerListParser->parse(data);
 
     QCOMPARE(m_checkerList->size(), 1);
-    assertChecker(0, "extraCheckerName", "Extra checker description", "fileType", true);
+    assertChecker(0, "extraCheckerName", "Extra checker description", "Extra checker explanation", "fileType", true);
 }
 
 void CheckerListParserTest::testParseSingleFileTypeSeveralExtraCheckers() {
@@ -166,9 +186,9 @@ void CheckerListParserTest::testParseSingleFileTypeSeveralExtraCheckers() {
     m_checkerListParser->parse(data);
 
     QCOMPARE(m_checkerList->size(), 3);
-    assertChecker(0, "extraChecker1Name", "Extra checker1 description", "fileType", true);
-    assertChecker(1, "extraChecker2Name", "Extra checker2 description", "fileType", true);
-    assertChecker(2, "extraChecker3Name", "Extra checker3 description", "fileType", true);
+    assertChecker(0, "extraChecker1Name", "Extra checker1 description", "Extra checker1 explanation", "fileType", true);
+    assertChecker(1, "extraChecker2Name", "Extra checker2 description", "Extra checker2 explanation", "fileType", true);
+    assertChecker(2, "extraChecker3Name", "Extra checker3 description", "Extra checker3 explanation", "fileType", true);
 }
 
 void CheckerListParserTest::testParseSingleFileTypeSeveralNormalAndExtraCheckers() {
@@ -183,19 +203,21 @@ void CheckerListParserTest::testParseSingleFileTypeSeveralNormalAndExtraCheckers
     m_checkerListParser->parse(data);
 
     QCOMPARE(m_checkerList->size(), 6);
-    assertChecker(0, "checker1Name", "Checker1 description", "fileType", false);
-    assertChecker(1, "checker2Name", "Checker2 description", "fileType", false);
-    assertChecker(2, "checker3Name", "Checker3 description", "fileType", false);
-    assertChecker(3, "extraChecker1Name", "Extra checker1 description", "fileType", true);
-    assertChecker(4, "extraChecker2Name", "Extra checker2 description", "fileType", true);
-    assertChecker(5, "extraChecker3Name", "Extra checker3 description", "fileType", true);
+    assertChecker(0, "checker1Name", "Checker1 description", "Checker1 explanation", "fileType", false);
+    assertChecker(1, "checker2Name", "Checker2 description", "Checker2 explanation", "fileType", false);
+    assertChecker(2, "checker3Name", "Checker3 description", "Checker3 explanation", "fileType", false);
+    assertChecker(3, "extraChecker1Name", "Extra checker1 description", "Extra checker1 explanation", "fileType", true);
+    assertChecker(4, "extraChecker2Name", "Extra checker2 description", "Extra checker2 explanation", "fileType", true);
+    assertChecker(5, "extraChecker3Name", "Extra checker3 description", "Extra checker3 explanation", "fileType", true);
 }
 
 void CheckerListParserTest::testParseSeveralFileTypes() {
     QString data =
         KRAZY2_HEADER_XML
         "<file-type value=\"fileType1\">\n"
-            "<plugin name=\"checkerName\" short-desc=\"Checker description\" version=\"1.6\"/>\n"
+            "<plugin name=\"checkerName\" short-desc=\"Checker description\" version=\"1.6\">\n"
+                "<explanation>Checker explanation</explanation>\n"
+            "</plugin>\n"
             KRAZY2_SEVERAL_EXTRA_CHECKERS_XML
         "</file-type>\n"
         "<file-type value=\"fileType2\">\n"
@@ -205,7 +227,9 @@ void CheckerListParserTest::testParseSeveralFileTypes() {
         "<file-type value=\"fileType3\">\n"
             KRAZY2_SEVERAL_CHECKERS_XML
             "<extra>\n"
-                "<plugin name=\"extraCheckerName\" short-desc=\"Extra checker description\" version=\"2.3\"/>\n"
+                "<plugin name=\"extraCheckerName\" short-desc=\"Extra checker description\" version=\"2.3\">\n"
+                    "<explanation>Extra checker explanation</explanation>\n"
+                "</plugin>\n"
             "</extra>\n"
         "</file-type>\n"
         KRAZY2_FOOTER_XML;
@@ -213,41 +237,77 @@ void CheckerListParserTest::testParseSeveralFileTypes() {
     m_checkerListParser->parse(data);
 
     QCOMPARE(m_checkerList->size(), 14);
-    assertChecker(0, "checkerName", "Checker description", "fileType1", false);
-    assertChecker(1, "extraChecker1Name", "Extra checker1 description", "fileType1", true);
-    assertChecker(2, "extraChecker2Name", "Extra checker2 description", "fileType1", true);
-    assertChecker(3, "extraChecker3Name", "Extra checker3 description", "fileType1", true);
-    assertChecker(4, "checker1Name", "Checker1 description", "fileType2", false);
-    assertChecker(5, "checker2Name", "Checker2 description", "fileType2", false);
-    assertChecker(6, "checker3Name", "Checker3 description", "fileType2", false);
-    assertChecker(7, "extraChecker1Name", "Extra checker1 description", "fileType2", true);
-    assertChecker(8, "extraChecker2Name", "Extra checker2 description", "fileType2", true);
-    assertChecker(9, "extraChecker3Name", "Extra checker3 description", "fileType2", true);
-    assertChecker(10, "checker1Name", "Checker1 description", "fileType3", false);
-    assertChecker(11, "checker2Name", "Checker2 description", "fileType3", false);
-    assertChecker(12, "checker3Name", "Checker3 description", "fileType3", false);
-    assertChecker(13, "extraCheckerName", "Extra checker description", "fileType3", true);
+    assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType1", false);
+    assertChecker(1, "extraChecker1Name", "Extra checker1 description", "Extra checker1 explanation", "fileType1", true);
+    assertChecker(2, "extraChecker2Name", "Extra checker2 description", "Extra checker2 explanation", "fileType1", true);
+    assertChecker(3, "extraChecker3Name", "Extra checker3 description", "Extra checker3 explanation", "fileType1", true);
+    assertChecker(4, "checker1Name", "Checker1 description", "Checker1 explanation", "fileType2", false);
+    assertChecker(5, "checker2Name", "Checker2 description", "Checker2 explanation", "fileType2", false);
+    assertChecker(6, "checker3Name", "Checker3 description", "Checker3 explanation", "fileType2", false);
+    assertChecker(7, "extraChecker1Name", "Extra checker1 description", "Extra checker1 explanation", "fileType2", true);
+    assertChecker(8, "extraChecker2Name", "Extra checker2 description", "Extra checker2 explanation", "fileType2", true);
+    assertChecker(9, "extraChecker3Name", "Extra checker3 description", "Extra checker3 explanation", "fileType2", true);
+    assertChecker(10, "checker1Name", "Checker1 description", "Checker1 explanation", "fileType3", false);
+    assertChecker(11, "checker2Name", "Checker2 description", "Checker2 explanation", "fileType3", false);
+    assertChecker(12, "checker3Name", "Checker3 description", "Checker3 explanation", "fileType3", false);
+    assertChecker(13, "extraCheckerName", "Extra checker description", "Extra checker explanation", "fileType3", true);
 }
 
-void CheckerListParserTest::testParseSingleCheckerNoDescription() {
+void CheckerListParserTest::testParseSingleCheckerExplanationEndingWithNewLine() {
     QString data =
         KRAZY2_HEADER_XML
         "<file-type value=\"fileType\">\n"
-            "<plugin name=\"checkerName\" short-desc=\"(no description available)\" version=\"0.4\"/>\n"
+            "<plugin name=\"checkerName\" short-desc=\"Checker description\" version=\"0.4\">\n"
+                "<explanation>Checker explanation\n</explanation>\n"
+            "</plugin>\n"
         "</file-type>\n"
         KRAZY2_FOOTER_XML;
 
     m_checkerListParser->parse(data);
 
     QCOMPARE(m_checkerList->size(), 1);
-    assertChecker(0, "checkerName", "", "fileType", false);
+    assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType", false);
+}
+
+void CheckerListParserTest::testParseSingleCheckerNoDescription() {
+    QString data =
+        KRAZY2_HEADER_XML
+        "<file-type value=\"fileType\">\n"
+            "<plugin name=\"checkerName\" short-desc=\"(no description available)\" version=\"0.4\">\n"
+                "<explanation>Checker explanation</explanation>\n"
+            "</plugin>\n"
+        "</file-type>\n"
+        KRAZY2_FOOTER_XML;
+
+    m_checkerListParser->parse(data);
+
+    QCOMPARE(m_checkerList->size(), 1);
+    assertChecker(0, "checkerName", "", "Checker explanation", "fileType", false);
+}
+
+void CheckerListParserTest::testParseSingleCheckerNoExplanation() {
+    QString data =
+        KRAZY2_HEADER_XML
+        "<file-type value=\"fileType\">\n"
+            "<plugin name=\"checkerName\" short-desc=\"Checker description\" version=\"0.4\">\n"
+                "<explanation>(no explanation available)</explanation>\n"
+            "</plugin>\n"
+        "</file-type>\n"
+        KRAZY2_FOOTER_XML;
+
+    m_checkerListParser->parse(data);
+
+    QCOMPARE(m_checkerList->size(), 1);
+    assertChecker(0, "checkerName", "Checker description", "", "fileType", false);
 }
 
 void CheckerListParserTest::testParseWithDataInSeveralChunks() {
     QString data =
         KRAZY2_HEADER_XML
         "<file-type value=\"fileType1\">\n"
-            "<plugin name=\"checkerName\" short-desc=\"Checker description\" version=\"1.6\"/>\n"
+            "<plugin name=\"checkerName\" short-desc=\"Checker description\" version=\"1.6\">\n"
+                "<explanation>Checker explanation</explanation>\n"
+            "</plugin>\n"
             KRAZY2_SEVERAL_EXTRA_CHECKERS_XML
         "</file-type>\n"
         "<file-type value=\"fileType2\">\n"
@@ -257,7 +317,9 @@ void CheckerListParserTest::testParseWithDataInSeveralChunks() {
         "<file-type value=\"fileType3\">\n"
             KRAZY2_SEVERAL_CHECKERS_XML
             "<extra>\n"
-                "<plugin name=\"extraCheckerName\" short-desc=\"Extra checker description\" version=\"2.3\"/>\n"
+                "<plugin name=\"extraCheckerName\" short-desc=\"Extra checker description\" version=\"2.3\">\n"
+                    "<explanation>Extra checker explanation</explanation>\n"
+                "</plugin>\n"
             "</extra>\n"
         "</file-type>\n"
         KRAZY2_FOOTER_XML;
@@ -289,31 +351,33 @@ void CheckerListParserTest::testParseWithDataInSeveralChunks() {
         }
 
         QCOMPARE(m_checkerList->size(), 14);
-        assertChecker(0, "checkerName", "Checker description", "fileType1", false);
-        assertChecker(1, "extraChecker1Name", "Extra checker1 description", "fileType1", true);
-        assertChecker(2, "extraChecker2Name", "Extra checker2 description", "fileType1", true);
-        assertChecker(3, "extraChecker3Name", "Extra checker3 description", "fileType1", true);
-        assertChecker(4, "checker1Name", "Checker1 description", "fileType2", false);
-        assertChecker(5, "checker2Name", "Checker2 description", "fileType2", false);
-        assertChecker(6, "checker3Name", "Checker3 description", "fileType2", false);
-        assertChecker(7, "extraChecker1Name", "Extra checker1 description", "fileType2", true);
-        assertChecker(8, "extraChecker2Name", "Extra checker2 description", "fileType2", true);
-        assertChecker(9, "extraChecker3Name", "Extra checker3 description", "fileType2", true);
-        assertChecker(10, "checker1Name", "Checker1 description", "fileType3", false);
-        assertChecker(11, "checker2Name", "Checker2 description", "fileType3", false);
-        assertChecker(12, "checker3Name", "Checker3 description", "fileType3", false);
-        assertChecker(13, "extraCheckerName", "Extra checker description", "fileType3", true);
+        assertChecker(0, "checkerName", "Checker description", "Checker explanation", "fileType1", false);
+        assertChecker(1, "extraChecker1Name", "Extra checker1 description", "Extra checker1 explanation", "fileType1", true);
+        assertChecker(2, "extraChecker2Name", "Extra checker2 description", "Extra checker2 explanation", "fileType1", true);
+        assertChecker(3, "extraChecker3Name", "Extra checker3 description", "Extra checker3 explanation", "fileType1", true);
+        assertChecker(4, "checker1Name", "Checker1 description", "Checker1 explanation", "fileType2", false);
+        assertChecker(5, "checker2Name", "Checker2 description", "Checker2 explanation", "fileType2", false);
+        assertChecker(6, "checker3Name", "Checker3 description", "Checker3 explanation", "fileType2", false);
+        assertChecker(7, "extraChecker1Name", "Extra checker1 description", "Extra checker1 explanation", "fileType2", true);
+        assertChecker(8, "extraChecker2Name", "Extra checker2 description", "Extra checker2 explanation", "fileType2", true);
+        assertChecker(9, "extraChecker3Name", "Extra checker3 description", "Extra checker3 explanation", "fileType2", true);
+        assertChecker(10, "checker1Name", "Checker1 description", "Checker1 explanation", "fileType3", false);
+        assertChecker(11, "checker2Name", "Checker2 description", "Checker2 explanation", "fileType3", false);
+        assertChecker(12, "checker3Name", "Checker3 description", "Checker3 explanation", "fileType3", false);
+        assertChecker(13, "extraCheckerName", "Extra checker description", "Extra checker explanation", "fileType3", true);
     }
 }
 
 ////////////////////////////////// Helpers /////////////////////////////////////
 
 void CheckerListParserTest::assertChecker(int index, const QString& name, const QString& description,
-                                          const QString& fileType, bool extra) const {
+                                          const QString& explanation, const QString& fileType,
+                                          bool extra) const {
     const Checker* checker = m_checkerList->at(index);
     QVERIFY(checker);
     QCOMPARE(checker->name(), name);
     QCOMPARE(checker->description(), description);
+    QCOMPARE(checker->explanation(), explanation);
     QCOMPARE(checker->fileType(), fileType);
     QCOMPARE(checker->isExtra(), extra);
 }

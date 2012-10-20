@@ -51,6 +51,7 @@ void CheckerListJob::start() {
 
     QStringList arguments;
     arguments << "--list";
+    arguments << "--explain";
     arguments << "--export" << "xml";
 
     m_process->setProgram(krazy2Path.toLocalFile(), arguments);
