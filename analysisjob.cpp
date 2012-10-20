@@ -258,16 +258,16 @@ void AnalysisJob::handleProcessError(QProcess::ProcessError processError) {
 
     if (processError == QProcess::FailedToStart && m_process->program().first().isEmpty()) {
         setErrorText(i18nc("@info", "<para>There is no path set in the Krazy2 configuration "
-                                    "for the <command>krazy2</command> executable</para>"));
+                                    "for the <command>krazy2</command> executable.</para>"));
     } else if (processError == QProcess::FailedToStart) {
         setErrorText(i18nc("@info", "<para><command>krazy2</command> failed to start "
                                     "using the path set in the Krazy2 configuration "
-                                    "(<filename>%1</filename>)</para>", m_process->program().first()));
+                                    "(<filename>%1</filename>).</para>", m_process->program().first()));
     } else if (processError == QProcess::Crashed) {
-        setErrorText(i18nc("@info", "<para><command>krazy2</command> crashed</para>"));
+        setErrorText(i18nc("@info", "<para><command>krazy2</command> crashed.</para>"));
     } else {
         setErrorText(i18nc("@info", "<para>An error occured while executing "
-                                    "<command>krazy2</command></para>"));
+                                    "<command>krazy2</command>.</para>"));
     }
 
     emitResult();

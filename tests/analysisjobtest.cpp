@@ -725,7 +725,7 @@ void AnalysisJobTest::testRunWithEmptyKrazy2ExecutablePath() {
     QCOMPARE(analysisJob.error(), (int)KJob::UserDefinedError);
     QCOMPARE(analysisJob.errorString(),
              i18nc("@info", "<para>There is no path set in the Krazy2 configuration "
-                            "for the <command>krazy2</command> executable</para>"));
+                            "for the <command>krazy2</command> executable.</para>"));
     QCOMPARE(analysisResults.issues().count(), 0);
 }
 
@@ -761,7 +761,7 @@ void AnalysisJobTest::testRunWithInvalidKrazy2ExecutablePath() {
     QCOMPARE(analysisJob.errorString(),
              i18nc("@info", "<para><command>krazy2</command> failed to start "
                             "using the path set in the Krazy2 configuration "
-                            "(<filename>%1</filename>)</para>", "invalid/krazy2/path"));
+                            "(<filename>%1</filename>).</para>", "invalid/krazy2/path"));
     QCOMPARE(analysisResults.issues().count(), 0);
 }
 

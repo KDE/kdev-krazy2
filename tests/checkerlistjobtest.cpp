@@ -196,7 +196,7 @@ void CheckerListJobTest::testRunWithEmptyPaths() {
     QCOMPARE(checkerListJob.error(), (int)KJob::UserDefinedError);
     QCOMPARE(checkerListJob.errorString(),
              i18nc("@info", "<para>There is no path set in the Krazy2 configuration "
-                            "for the <command>krazy2</command> executable</para>"));
+                            "for the <command>krazy2</command> executable.</para>"));
     QCOMPARE(m_checkerList->count(), 0);
 }
 
@@ -218,7 +218,7 @@ void CheckerListJobTest::testRunWithInvalidPaths() {
     QCOMPARE(checkerListJob.errorString(),
              i18nc("@info", "<para><command>krazy2</command> failed to start "
                             "using the path set in the Krazy2 configuration "
-                            "(<filename>%1</filename>)</para>", "invalid/krazy2/path"));
+                            "(<filename>%1</filename>).</para>", "invalid/krazy2/path"));
     QCOMPARE(m_checkerList->count(), 0);
 }
 
