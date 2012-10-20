@@ -94,7 +94,8 @@ private:
      * If the checkers are already being initialized nothing is done.
      *
      * The actual initialization will be made by the given handler once the job
-     * finishes.
+     * finishes. The handler must unset the cursor for this Krazy2View, as it is
+     * set to "Busy" here.
      *
      * @param handlerName The name of the slot to initialize the checkers.
      */

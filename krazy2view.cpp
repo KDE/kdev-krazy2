@@ -80,6 +80,8 @@ void Krazy2View::initializeCheckers(const char* handlerName) {
 
     m_checkersAreBeingInitialized = true;
 
+    setCursor(Qt::BusyCursor);
+
     m_ui->analyzeButton->setEnabled(false);
 
     CheckerListJob* checkerListJob = new CheckerListJob(this);
@@ -159,6 +161,7 @@ void Krazy2View::selectCheckers() {
     } else {
         initializeCheckers(SLOT(handleCheckerInitializationBeforeSelectingCheckers(KJob*)));
         dialog->button(KDialog::Ok)->setEnabled(false);
+        dialog->setCursor(Qt::BusyCursor);
     }
     dialog->setMainWidget(selectCheckersWidget);
     dialog->setWindowTitle(selectCheckersWidget->windowTitle());
@@ -178,6 +181,8 @@ void Krazy2View::selectCheckers() {
 void Krazy2View::handleCheckerInitializationBeforeSelectingCheckers(KJob* job) {
     m_checkersAreBeingInitialized = false;
 
+    unsetCursor();
+
     if (job->error() != KJob::NoError) {
         updateAnalyzeButtonStatus();
         return;
@@ -196,10 +201,13 @@ void Krazy2View::handleCheckerInitializationBeforeSelectingCheckers(KJob* job) {
     selectCheckersWidget->setCheckers(m_analysisParameters->availableCheckers(),
                                       m_analysisParameters->checkersToRun());
     dialog->button(KDialog::Ok)->setEnabled(true);
+    dialog->unsetCursor();
 }
 
 void Krazy2View::handleCheckerInitializationBeforeAnalysis(KJob* job) {
     m_checkersAreBeingInitialized = false;
+
+    unsetCursor();
 
     if (job->error() != KJob::NoError) {
         restoreGuiAfterAnalysis();

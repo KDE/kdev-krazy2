@@ -325,6 +325,8 @@ void Krazy2ViewTest::testSetCheckersNotInitialized() {
 
     selectCheckersButton(&view)->click();
 
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
     QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
     QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
 
@@ -362,6 +364,8 @@ void Krazy2ViewTest::testSetCheckersWhileInitializing() {
 
     QCOMPARE(view.findChildren<CheckerListJob*>().count(), 1);
 
+    QCOMPARE(view.cursor().shape(), Qt::BusyCursor);
+
     QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
     QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
 
@@ -376,6 +380,8 @@ void Krazy2ViewTest::testSetCheckersWhileInitializing() {
     selectCheckersButton(&view)->click();
 
     QCOMPARE(view.findChildren<CheckerListJob*>().count(), 1);
+
+    QCOMPARE(view.cursor().shape(), Qt::BusyCursor);
 
     QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
     QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
@@ -392,6 +398,8 @@ void Krazy2ViewTest::testSetCheckersWhileInitializing() {
     selectCheckersButton(&view)->click();
 
     QCOMPARE(view.findChildren<CheckerListJob*>().count(), 0);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
     QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
@@ -430,6 +438,8 @@ void Krazy2ViewTest::testSetCheckersClosingWidgetBeforeInitializing() {
 
     QCOMPARE(view.findChildren<CheckerListJob*>().count(), 1);
 
+    QCOMPARE(view.cursor().shape(), Qt::BusyCursor);
+
     QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
     QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
 
@@ -441,6 +451,8 @@ void Krazy2ViewTest::testSetCheckersClosingWidgetBeforeInitializing() {
     //Wait until the checkers are initialized to ensure that the test does not
     //crash when setting the checkers in a deleted SelectCheckersWidget.
     QTest::kWaitForSignal(view.findChild<CheckerListJob*>(), SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
     QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
@@ -476,6 +488,8 @@ void Krazy2ViewTest::testSetCheckersRejectWidgetAfterInitializing() {
     queueRejectCheckersDialogOnceInitialized(&view);
 
     selectCheckersButton(&view)->click();
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     //Even if the dialog was cancelled, the checkers to run were implicitly set
     //to the default ones when the checkers were initialized.
@@ -514,11 +528,15 @@ void Krazy2ViewTest::testSetCheckersCancellingInitialization() {
 
     selectCheckersButton(&view)->click();
 
+    QCOMPARE(view.cursor().shape(), Qt::BusyCursor);
+
     //Queue killing the job to ensure that kWaitForSignal is already waiting for
     //the finished signal when it is emitted.
     CheckerListJob* checkerListJob = view.findChild<CheckerListJob*>();
     QTimer::singleShot(100, checkerListJob, SLOT(kill()));
     QTest::kWaitForSignal(checkerListJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
     QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
@@ -550,11 +568,15 @@ void Krazy2ViewTest::testSetCheckersWithoutPaths() {
 
     selectCheckersButton(&view)->click();
 
+    QCOMPARE(view.cursor().shape(), Qt::BusyCursor);
+
     //Queue killing the job to ensure that kWaitForSignal is already waiting for
     //the finished signal when it is emitted.
     CheckerListJob* checkerListJob = view.findChild<CheckerListJob*>();
     QTimer::singleShot(100, checkerListJob, SLOT(kill()));
     QTest::kWaitForSignal(checkerListJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
     QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
@@ -571,8 +593,12 @@ void Krazy2ViewTest::testSetCheckersWithoutPaths() {
 
     QCOMPARE(view.findChildren<CheckerListJob*>().count(), 1);
 
+    QCOMPARE(view.cursor().shape(), Qt::BusyCursor);
+
     //Wait until the checkers are initialized.
     QTest::kWaitForSignal(view.findChild<CheckerListJob*>(), SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
     QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
@@ -586,6 +612,8 @@ void Krazy2ViewTest::testSetCheckersWithoutPaths() {
     queueAcceptCheckersDialog(&view);
 
     selectCheckersButton(&view)->click();
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
     QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
@@ -668,9 +696,13 @@ void Krazy2ViewTest::testAnalyze() {
 
     analyzeButton(&view)->click();
 
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
     QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -777,13 +809,32 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
     //Start analysis before initializing the checkers
     analyzeButton(&view)->click();
 
+    QCOMPARE(view.cursor().shape(), Qt::BusyCursor);
+
     CheckerListJob* checkerListJob = view.findChild<CheckerListJob*>();
     QVERIFY(checkerListJob);
     QTest::kWaitForSignal(checkerListJob, SIGNAL(finished(KJob*)));
 
+    //If QCOMPARE fails this test method will end and the view and the
+    //AnalysisJob started when the CheckerListJob finished will be destroyed (as
+    //the view was created in the stack).
+    //However, when a IStatus is registered in KDevelop, its signals are
+    //connected using a queued connection (StatusBar::registerStatus(QObject*)).
+    //When the AnalysisJob starts a 0% progress signal is emitted, but it is not
+    //handled until the control returns to the event loop. Thus, the pending
+    //events must be processed before executing the QCOMPARE. Otherwise, if it
+    //failed, when the control returns to the event loop the emitting object
+    //will no longer exist, and StatusBar::showProgress(IStatus*,int,int,int)
+    //would crash (and in the testAnalyzeAgainAfterSorting() method, which would
+    //be very misleading).
+    QApplication::processEvents();
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
     QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -960,9 +1011,13 @@ void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
 
     analyzeButton(&view)->click();
 
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
     QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -1037,9 +1092,13 @@ void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
     //are sorted as expected.
     analyzeButton(&view)->click();
 
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
     analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
     QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -1170,10 +1229,14 @@ void Krazy2ViewTest::testCancelAnalyze() {
 
     analyzeButton(&view)->click();
 
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
     //Queue stopping the job to ensure that kWaitForSignal is already waiting
     //for the signal when it is emitted.
     QTimer::singleShot(100, KDevelop::ICore::self()->runController(), SLOT(stopAllProcesses()));
     QTest::kWaitForSignal(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -1215,10 +1278,14 @@ void Krazy2ViewTest::testCancelAnalyzeWithCheckersNotInitialized() {
     //Start analysis before initializing the checkers
     analyzeButton(&view)->click();
 
+    QCOMPARE(view.cursor().shape(), Qt::BusyCursor);
+
     //Queue stopping the job to ensure that kWaitForSignal is already waiting
     //for the signal when it is emitted.
     QTimer::singleShot(100, KDevelop::ICore::self()->runController(), SLOT(stopAllProcesses()));
     QTest::kWaitForSignal(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -1437,10 +1504,27 @@ public Q_SLOTS:
 
     void acceptDialog() {
         KDialog* selectCheckersDialog = m_view->findChild<KDialog*>();
-        if (!selectCheckersDialog || !selectCheckersDialog->isVisible() ||
-            !selectCheckersDialog->button(KDialog::Ok)->isEnabled()) {
+        if (!selectCheckersDialog || !selectCheckersDialog->isVisible()) {
             QTimer::singleShot(100, this, SLOT(acceptDialog()));
             return;
+        }
+
+        if (!selectCheckersDialog->button(KDialog::Ok)->isEnabled()) {
+            if (selectCheckersDialog->cursor().shape() != Qt::BusyCursor) {
+                //As QFAIL causes a return from this method, the modal dialog
+                //must be closed before failing for the tests to be able to
+                //continue.
+                selectCheckersDialog->close();
+                QFAIL("The cursor shape of the dialog is not BusyCursor");
+            }
+
+            QTimer::singleShot(100, this, SLOT(acceptDialog()));
+            return;
+        }
+
+        if (selectCheckersDialog->cursor().shape() != Qt::ArrowCursor) {
+            selectCheckersDialog->close();
+            QFAIL("The cursor shape of the dialog is not ArrowCursor");
         }
 
         selectCheckersDialog->accept();
@@ -1453,15 +1537,46 @@ public Q_SLOTS:
             return;
         }
 
+        if (!selectCheckersDialog->button(KDialog::Ok)->isEnabled() &&
+            selectCheckersDialog->cursor().shape() != Qt::BusyCursor) {
+            //As QFAIL causes a return from this method, the modal dialog must
+            //be closed before failing for the tests to be able to continue.
+            selectCheckersDialog->close();
+            QFAIL("The cursor shape of the dialog is not BusyCursor");
+        }
+
+        if (selectCheckersDialog->button(KDialog::Ok)->isEnabled() &&
+            selectCheckersDialog->cursor().shape() != Qt::ArrowCursor) {
+            selectCheckersDialog->close();
+            QFAIL("The cursor shape of the dialog is not ArrowCursor");
+        }
+
         selectCheckersDialog->reject();
     }
 
     void rejectDialogOnceInitialized() {
         KDialog* selectCheckersDialog = m_view->findChild<KDialog*>();
-        if (!selectCheckersDialog || !selectCheckersDialog->isVisible() ||
-            !selectCheckersDialog->button(KDialog::Ok)->isEnabled()) {
+        if (!selectCheckersDialog || !selectCheckersDialog->isVisible()) {
             QTimer::singleShot(100, this, SLOT(rejectDialogOnceInitialized()));
             return;
+        }
+
+        if (!selectCheckersDialog->button(KDialog::Ok)->isEnabled()) {
+            if (selectCheckersDialog->cursor().shape() != Qt::BusyCursor) {
+                //As QFAIL causes a return from this method, the modal dialog
+                //must be closed before failing for the tests to be able to
+                //continue.
+                selectCheckersDialog->close();
+                QFAIL("The cursor shape of the dialog is not BusyCursor");
+            }
+
+            QTimer::singleShot(100, this, SLOT(rejectDialogOnceInitialized()));
+            return;
+        }
+
+        if (selectCheckersDialog->cursor().shape() != Qt::ArrowCursor) {
+            selectCheckersDialog->close();
+            QFAIL("The cursor shape of the dialog is not ArrowCursor");
         }
 
         selectCheckersDialog->reject();
