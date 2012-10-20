@@ -694,6 +694,15 @@ void Krazy2ViewTest::testAnalyze() {
 
     selectCheckersButton(&view)->click();
 
+    //Under the hood, as an extra checker was specified, krazy2 will execute
+    //every normal c++ checker but the spelling checker. Every c++ checker, not
+    //just doublequote_chars and license. However, the c++ files to analyze only
+    //have doublequote_chars, license, spelling and style issues, so the result
+    //is the same as specifying all the actual available checkers and then
+    //deselecting spelling.
+    //Even if the way to test this is not the proper one, it is easier to
+    //deselect the spelling checker and select the style checker when all the
+    //checkers are known.
     analyzeButton(&view)->click();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
