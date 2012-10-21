@@ -86,6 +86,7 @@ Q_OBJECT
 private slots:
 
     void initTestCase();
+    void init();
     void cleanupTestCase();
 
     void testConstructor();
@@ -127,6 +128,18 @@ void AnalysisJobTest::initTestCase() {
     KDevelop::TestCore::initialize();
 }
 
+void AnalysisJobTest::init() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ')';
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+}
+
 void AnalysisJobTest::cleanupTestCase() {
     KDevelop::TestCore::shutdown();
 }
@@ -142,16 +155,6 @@ void AnalysisJobTest::testConstructor() {
 }
 
 void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ')';
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
 
@@ -328,16 +331,6 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
 }
 
 void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ')';
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
 
@@ -528,16 +521,6 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
 }
 
 void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisParameters() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ')';
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
 
@@ -628,16 +611,6 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
 }
 
 void AnalysisJobTest::testRunWitCheckerWithDuplicatedNamesAndSpecificFileTypes() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ')';
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
 
@@ -803,16 +776,6 @@ void AnalysisJobTest::testRunWithInvalidKrazy2ExecutablePath() {
 }
 
 void AnalysisJobTest::testKill() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
 

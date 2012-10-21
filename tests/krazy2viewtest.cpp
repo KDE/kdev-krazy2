@@ -51,6 +51,7 @@ Q_OBJECT
 private slots:
 
     void initTestCase();
+    void init();
     void cleanupTestCase();
 
     void testConstructor();
@@ -112,6 +113,18 @@ void Krazy2ViewTest::initTestCase() {
     KDevelop::TestCore::initialize();
 }
 
+void Krazy2ViewTest::init() {
+    if (!examplesInSubdirectory()) {
+        QString message = "The examples were not found in the subdirectory 'examples' "
+                          "of the working directory (" + m_workingDirectory + ")";
+        QSKIP(message.toAscii(), SkipAll);
+    }
+
+    if (!krazy2InPath()) {
+        QSKIP("krazy2 is not in the execution path", SkipAll);
+    }
+}
+
 void Krazy2ViewTest::cleanupTestCase() {
     KDevelop::TestCore::shutdown();
 }
@@ -130,12 +143,6 @@ void Krazy2ViewTest::testConstructor() {
 }
 
 void Krazy2ViewTest::testSetPaths() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
     Krazy2View view;
 
     //Add several paths
@@ -187,12 +194,6 @@ void Krazy2ViewTest::testSetPaths() {
 }
 
 void Krazy2ViewTest::testSetCheckers() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
     Krazy2View view;
 
     //Add a valid directory so, when the analyze button is updated, it being
@@ -299,16 +300,6 @@ void Krazy2ViewTest::testSetCheckers() {
 }
 
 void Krazy2ViewTest::testSetCheckersNotInitialized() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
@@ -338,16 +329,6 @@ void Krazy2ViewTest::testSetCheckersNotInitialized() {
 }
 
 void Krazy2ViewTest::testSetCheckersWhileInitializing() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
@@ -412,16 +393,6 @@ void Krazy2ViewTest::testSetCheckersWhileInitializing() {
 }
 
 void Krazy2ViewTest::testSetCheckersClosingWidgetBeforeInitializing() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
@@ -465,16 +436,6 @@ void Krazy2ViewTest::testSetCheckersClosingWidgetBeforeInitializing() {
 }
 
 void Krazy2ViewTest::testSetCheckersRejectWidgetAfterInitializing() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
@@ -504,16 +465,6 @@ void Krazy2ViewTest::testSetCheckersRejectWidgetAfterInitializing() {
 }
 
 void Krazy2ViewTest::testSetCheckersCancellingInitialization() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
@@ -549,16 +500,6 @@ void Krazy2ViewTest::testSetCheckersCancellingInitialization() {
 }
 
 void Krazy2ViewTest::testSetCheckersWithoutPaths() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
@@ -626,16 +567,6 @@ void Krazy2ViewTest::testSetCheckersWithoutPaths() {
 }
 
 void Krazy2ViewTest::testAnalyze() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
@@ -806,16 +737,6 @@ void Krazy2ViewTest::testAnalyze() {
 }
 
 void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
@@ -958,16 +879,6 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
 
 
 void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
@@ -1181,16 +1092,6 @@ void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
 }
 
 void Krazy2ViewTest::testCancelAnalyze() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
@@ -1265,16 +1166,6 @@ void Krazy2ViewTest::testCancelAnalyze() {
 }
 
 void Krazy2ViewTest::testCancelAnalyzeWithCheckersNotInitialized() {
-    if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
-        QSKIP(message.toAscii(), SkipAll);
-    }
-
-    if (!krazy2InPath()) {
-        QSKIP("krazy2 is not in the execution path", SkipAll);
-    }
-
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
