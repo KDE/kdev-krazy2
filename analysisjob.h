@@ -66,6 +66,11 @@ public:
 
     /**
      * Sets the analysis parameters.
+     * The checkers from the list of available checkers will be copied to the
+     * AnalysisResults object, so they must be fully initialized. The reason is
+     * that krazy2 does not provide information in the results about whether a
+     * checker is extra or not, so that information has to be got from the list
+     * of available checkers.
      *
      * @param analysisParameters The analysis parameters.
      */

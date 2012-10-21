@@ -160,26 +160,41 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
     Checker* doubleQuoteCharsChecker = new Checker();
     doubleQuoteCharsChecker->setFileType("c++");
     doubleQuoteCharsChecker->setName("doublequote_chars");
+    doubleQuoteCharsChecker->setDescription("Check single-char QString operations for efficiency");
+    doubleQuoteCharsChecker->setExplanation("Adding single characters to a QString "
+                                            "is faster if the characters are QChars...");
     availableCheckers.append(doubleQuoteCharsChecker);
 
     Checker* licenseChecker = new Checker();
     licenseChecker->setFileType("c++");
     licenseChecker->setName("license");
+    licenseChecker->setDescription("Check for an acceptable license");
+    licenseChecker->setExplanation("Each source file must contain a license "
+                                   "or a reference to a license which states...");
     availableCheckers.append(licenseChecker);
 
     Checker* spellingChecker = new Checker();
     spellingChecker->setFileType("c++");
     spellingChecker->setName("spelling");
+    spellingChecker->setDescription("Check for spelling errors");
+    spellingChecker->setExplanation("Spelling errors in comments and strings "
+                                    "should be fixed as they may show up later...");
     availableCheckers.append(spellingChecker);
 
     Checker* validateChecker = new Checker();
     validateChecker->setFileType("desktop");
     validateChecker->setName("validate");
+    validateChecker->setDescription("Validates desktop files using 'desktop-file-validate'");
+    validateChecker->setExplanation("Please make sure your .desktop files conform "
+                                    "to the freedesktop.org standard. See the spec...");
     availableCheckers.append(validateChecker);
 
     Checker* qmlLicenseChecker = new Checker();
     qmlLicenseChecker->setFileType("qml");
     qmlLicenseChecker->setName("license");
+    qmlLicenseChecker->setDescription("Check for an acceptable license");
+    qmlLicenseChecker->setExplanation("Each source file must contain a license "
+                                      "or a reference to a license which states...");
     availableCheckers.append(qmlLicenseChecker);
 
     //Do not set spelling checker
@@ -224,6 +239,7 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
     QVERIFY(issue->checker()->explanation().startsWith(
                 "Adding single characters to a QString is faster"));
     QCOMPARE(issue->checker()->fileType(), QString("c++"));
+    QVERIFY(!issue->checker()->isExtra());
 
     const Issue* issue2 = findIssue(&analysisResults, "doublequote_chars",
                                     "severalIssuesSingleChecker.cpp", 8);
@@ -258,6 +274,7 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
     QVERIFY(issue6->checker()->explanation().startsWith(
                 "Each source file must contain a license"));
     QCOMPARE(issue6->checker()->fileType(), QString("c++"));
+    QVERIFY(!issue6->checker()->isExtra());
 
     const Issue* issue7 = findIssue(&analysisResults, "validate",
                                      "subdirectory/singleIssue.desktop", -1);
@@ -268,6 +285,7 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
     QVERIFY(issue7->checker()->explanation().startsWith(
                 "Please make sure your .desktop files conform to the freedesktop.org"));
     QCOMPARE(issue7->checker()->fileType(), QString("desktop"));
+    QVERIFY(!issue7->checker()->isExtra());
 
     const Issue* issue8 = findIssue(&analysisResults, "doublequote_chars",
                                      QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"), 8);
@@ -290,6 +308,7 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
     QVERIFY(issue10->checker()->explanation().startsWith(
                 "Each source file must contain a license"));
     QCOMPARE(issue10->checker()->fileType(), QString("qml"));
+    QVERIFY(!issue10->checker()->isExtra());
 
     //Six signals should have been emitted: one for the start, one for the
     //finish, and one for each checker run.
@@ -367,6 +386,7 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
     QVERIFY(issue->checker()->explanation().startsWith(
                 "Adding single characters to a QString is faster"));
     QCOMPARE(issue->checker()->fileType(), QString("c++"));
+    QVERIFY(!issue->checker()->isExtra());
 
     const Issue* issue2 = findIssue(&analysisResults, "doublequote_chars",
                                     "severalIssuesSingleChecker.cpp", 8);
@@ -401,6 +421,7 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
     QVERIFY(issue6->checker()->explanation().startsWith(
                 "Each source file must contain a license"));
     QCOMPARE(issue6->checker()->fileType(), QString("c++"));
+    QVERIFY(!issue6->checker()->isExtra());
 
     const Issue* issue7 = findIssue(&analysisResults, "spelling",
                                     "severalIssuesSeveralCheckers.cpp", 6);
@@ -411,6 +432,7 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
     QVERIFY(issue7->checker()->explanation().startsWith(
                 "Spelling errors in comments and strings should be fixed"));
     QCOMPARE(issue7->checker()->fileType(), QString("c++"));
+    QVERIFY(!issue7->checker()->isExtra());
 
     const Issue* issue8 = findIssue(&analysisResults, "spelling",
                                     "severalIssuesSeveralCheckers.cpp", 10);
@@ -433,6 +455,7 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
     QVERIFY(issue10->checker()->explanation().startsWith(
                 "Please make sure your .desktop files conform to the freedesktop.org"));
     QCOMPARE(issue10->checker()->fileType(), QString("desktop"));
+    QVERIFY(!issue10->checker()->isExtra());
 
     const Issue* issue11 = findIssue(&analysisResults, "doublequote_chars",
                                      QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"), 8);
@@ -455,6 +478,7 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
     QVERIFY(issue13->checker()->explanation().startsWith(
                 "Please follow the coding style guidelines"));
     QCOMPARE(issue13->checker()->fileType(), QString("c++"));
+    QVERIFY(issue13->checker()->isExtra());
 
     const Issue* issue14 = findIssue(&analysisResults, "license",
                                     "subdirectory/severalIssuesSeveralCheckers.qml", -1);
@@ -465,6 +489,7 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
     QVERIFY(issue14->checker()->explanation().startsWith(
                 "Each source file must contain a license"));
     QCOMPARE(issue14->checker()->fileType(), QString("qml"));
+    QVERIFY(!issue14->checker()->isExtra());
 
     const Issue* issue15 = findIssue(&analysisResults, "spelling",
                                     "subdirectory/severalIssuesSeveralCheckers.qml", 3);
@@ -475,6 +500,7 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
     QVERIFY(issue15->checker()->explanation().startsWith(
                 "Spelling errors in comments and strings should be fixed"));
     QCOMPARE(issue15->checker()->fileType(), QString("qml"));
+    QVERIFY(!issue15->checker()->isExtra());
 
     //At least nine signals should have been emitted: one for the start, one for
     //the finish, and one for each checker with issues.
@@ -561,6 +587,7 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
     QVERIFY(issue1->checker()->explanation().startsWith(
                 "Each source file must contain a license"));
     QCOMPARE(issue1->checker()->fileType(), QString("c++"));
+    QVERIFY(!issue1->checker()->isExtra());
 
     const Issue* issue2 = findIssue(&analysisResults, "style",
                                     "singleExtraIssue.cpp", 7);
@@ -571,6 +598,7 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
     QVERIFY(issue2->checker()->explanation().startsWith(
                 "Please follow the coding style guidelines"));
     QCOMPARE(issue2->checker()->fileType(), QString("c++"));
+    QVERIFY(issue2->checker()->isExtra());
 
     const Issue* issue3 = findIssue(&analysisResults, "license",
                                     "subdirectory/severalIssuesSeveralCheckers.qml", -1);
@@ -581,6 +609,7 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
     QVERIFY(issue3->checker()->explanation().startsWith(
                 "Each source file must contain a license"));
     QCOMPARE(issue3->checker()->fileType(), QString("qml"));
+    QVERIFY(!issue3->checker()->isExtra());
 
     //Five signals should have been emitted: one for the start, one for the
     //finish, and one for each checker run.
@@ -617,11 +646,17 @@ void AnalysisJobTest::testRunWitCheckerWithDuplicatedNamesAndSpecificFileTypes()
     Checker* cppLicenseChecker = new Checker();
     cppLicenseChecker->setFileType("c++");
     cppLicenseChecker->setName("license");
+    cppLicenseChecker->setDescription("Check for an acceptable license");
+    cppLicenseChecker->setExplanation("Each source file must contain a license "
+                                      "or a reference to a license which states...");
     availableCheckers.append(cppLicenseChecker);
 
     Checker* qmlSpellingChecker = new Checker();
     qmlSpellingChecker->setFileType("qml");
     qmlSpellingChecker->setName("spelling");
+    qmlSpellingChecker->setDescription("Check for spelling errors");
+    qmlSpellingChecker->setExplanation("Spelling errors in comments and strings "
+                                       "should be fixed as they may show up later...");
     availableCheckers.append(qmlSpellingChecker);
 
     QList<const Checker*> checkersToRun;
@@ -668,6 +703,7 @@ void AnalysisJobTest::testRunWitCheckerWithDuplicatedNamesAndSpecificFileTypes()
     QVERIFY(issue->checker()->explanation().startsWith(
                 "Each source file must contain a license"));
     QCOMPARE(issue->checker()->fileType(), QString("c++"));
+    QVERIFY(!issue->checker()->isExtra());
 
     const Issue* issue2 = findIssue(&analysisResults, "spelling",
                                     "subdirectory/severalIssuesSeveralCheckers.qml", 3);
@@ -678,6 +714,7 @@ void AnalysisJobTest::testRunWitCheckerWithDuplicatedNamesAndSpecificFileTypes()
     QVERIFY(issue2->checker()->explanation().startsWith(
                 "Spelling errors in comments and strings should be fixed"));
     QCOMPARE(issue2->checker()->fileType(), QString("qml"));
+    QVERIFY(!issue2->checker()->isExtra());
 
     //Four signals should have been emitted: one for the start, one for the
     //finish, and one for each checker run.

@@ -238,6 +238,9 @@ void AnalysisJob::handleProcessFinished(int exitCode) {
     Q_UNUSED(exitCode);
 
     AnalysisResults currentFileTypeResults;
+    foreach (const Checker* checker, m_analysisParameters->availableCheckers()) {
+        currentFileTypeResults.addChecker(new Checker(*checker));
+    }
 
     ResultParser resultParser;
     resultParser.setAnalysisResults(&currentFileTypeResults);

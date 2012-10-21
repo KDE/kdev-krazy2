@@ -654,32 +654,49 @@ void Krazy2ViewTest::testAnalyze() {
     Checker* doubleQuoteCharsChecker = new Checker();
     doubleQuoteCharsChecker->setFileType("c++");
     doubleQuoteCharsChecker->setName("doublequote_chars");
+    doubleQuoteCharsChecker->setDescription("Check single-char QString operations for efficiency");
+    doubleQuoteCharsChecker->setExplanation("Adding single characters to a QString "
+                                            "is faster if the characters are QChars...");
     availableCheckers.append(doubleQuoteCharsChecker);
 
     Checker* licenseChecker = new Checker();
     licenseChecker->setFileType("c++");
     licenseChecker->setName("license");
+    licenseChecker->setDescription("Check for an acceptable license");
+    licenseChecker->setExplanation("Each source file must contain a license "
+                                   "or a reference to a license which states...");
     availableCheckers.append(licenseChecker);
 
     Checker* spellingChecker = new Checker();
     spellingChecker->setFileType("c++");
     spellingChecker->setName("spelling");
+    spellingChecker->setDescription("Check for spelling errors");
+    spellingChecker->setExplanation("Spelling errors in comments and strings "
+                                    "should be fixed as they may show up later...");
     availableCheckers.append(spellingChecker);
 
     Checker* styleChecker = new Checker();
     styleChecker->setFileType("c++");
     styleChecker->setName("style");
+    styleChecker->setDescription("Check for adherence to a coding style");
+    styleChecker->setExplanation("Please follow the coding style guidelines at...");
     styleChecker->setExtra(true);
     availableCheckers.append(styleChecker);
 
     Checker* validateChecker = new Checker();
     validateChecker->setFileType("desktop");
     validateChecker->setName("validate");
+    validateChecker->setDescription("Validates desktop files using 'desktop-file-validate'");
+    validateChecker->setExplanation("Please make sure your .desktop files conform "
+                                    "to the freedesktop.org standard. See the spec...");
     availableCheckers.append(validateChecker);
 
     Checker* qmlLicenseChecker = new Checker();
     qmlLicenseChecker->setFileType("qml");
     qmlLicenseChecker->setName("license");
+    qmlLicenseChecker->setDescription("Check for an acceptable license");
+    qmlLicenseChecker->setExplanation("Each source file must contain a license "
+                                      "or a reference to a license which states...");
     availableCheckers.append(qmlLicenseChecker);
 
     analysisParameters(&view)->initializeCheckers(availableCheckers);
