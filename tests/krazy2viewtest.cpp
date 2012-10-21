@@ -78,7 +78,7 @@ private:
     bool examplesInSubdirectory() const;
     bool krazy2InPath() const;
 
-    AnalysisParameters* analysisParameters(Krazy2View* view) const;
+    AnalysisParameters* analysisParametersFrom(Krazy2View* view) const;
     const AnalysisResults* analysisResultsFrom(Krazy2View* view) const;
 
     KPushButton* selectPathsButton(const Krazy2View* view) const;
@@ -126,7 +126,7 @@ void Krazy2ViewTest::testConstructor() {
     QVERIFY(!analyzeButton(view)->isEnabled());
     QVERIFY(!resultsTableView(view)->isEnabled());
 
-    QVERIFY(analysisParameters(view)->filesToBeAnalyzed().isEmpty());
+    QVERIFY(analysisParametersFrom(view)->filesToBeAnalyzed().isEmpty());
 }
 
 void Krazy2ViewTest::testSetPaths() {
@@ -146,7 +146,7 @@ void Krazy2ViewTest::testSetPaths() {
 
     selectPathsButton(&view)->click();
 
-    QStringList filesAndDirectories = analysisParameters(&view)->filesAndDirectories();
+    QStringList filesAndDirectories = analysisParametersFrom(&view)->filesAndDirectories();
     QCOMPARE(filesAndDirectories.count(), 3);
     QCOMPARE(filesAndDirectories[0], m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
     QCOMPARE(filesAndDirectories[1], m_workingDirectory + "examples/singleExtraIssue.cpp");
@@ -162,7 +162,7 @@ void Krazy2ViewTest::testSetPaths() {
 
     selectPathsButton(&view)->click();
 
-    filesAndDirectories = analysisParameters(&view)->filesAndDirectories();
+    filesAndDirectories = analysisParametersFrom(&view)->filesAndDirectories();
     QCOMPARE(filesAndDirectories.count(), 4);
     QCOMPARE(filesAndDirectories[0], m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
     QCOMPARE(filesAndDirectories[1], m_workingDirectory + "examples/severalIssuesSingleChecker.cpp");
@@ -178,7 +178,7 @@ void Krazy2ViewTest::testSetPaths() {
 
     selectPathsButton(&view)->click();
 
-    filesAndDirectories = analysisParameters(&view)->filesToBeAnalyzed();
+    filesAndDirectories = analysisParametersFrom(&view)->filesToBeAnalyzed();
     QCOMPARE(filesAndDirectories.count(), 0);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
@@ -229,14 +229,14 @@ void Krazy2ViewTest::testSetCheckers() {
     extraChecker2_1->setExtra(true);
     availableCheckers.append(extraChecker2_1);
 
-    analysisParameters(&view)->initializeCheckers(availableCheckers);
+    analysisParametersFrom(&view)->initializeCheckers(availableCheckers);
 
     //Add several checkers
     queueAddCheckers(&view, QStringList() << "0-0-0" << "0-0-1");
 
     selectCheckersButton(&view)->click();
 
-    QList<const Checker*> checkersToRun = analysisParameters(&view)->checkersToRun();
+    QList<const Checker*> checkersToRun = analysisParametersFrom(&view)->checkersToRun();
     QCOMPARE(checkersToRun.count(), 5);
     QVERIFY(checkersToRun.contains(checker1_1));
     QVERIFY(checkersToRun.contains(checker1_2));
@@ -254,7 +254,7 @@ void Krazy2ViewTest::testSetCheckers() {
 
     selectCheckersButton(&view)->click();
 
-    checkersToRun = analysisParameters(&view)->checkersToRun();
+    checkersToRun = analysisParametersFrom(&view)->checkersToRun();
     QCOMPARE(checkersToRun.count(), 6);
     QVERIFY(checkersToRun.contains(checker1_1));
     QVERIFY(checkersToRun.contains(checker1_2));
@@ -273,7 +273,7 @@ void Krazy2ViewTest::testSetCheckers() {
 
     selectCheckersButton(&view)->click();
 
-    checkersToRun = analysisParameters(&view)->checkersToRun();
+    checkersToRun = analysisParametersFrom(&view)->checkersToRun();
     QCOMPARE(checkersToRun.count(), 3);
     QVERIFY(checkersToRun.contains(checker1_2));
     QVERIFY(checkersToRun.contains(extraChecker1_1));
@@ -289,7 +289,7 @@ void Krazy2ViewTest::testSetCheckers() {
 
     selectCheckersButton(&view)->click();
 
-    checkersToRun = analysisParameters(&view)->checkersToRun();
+    checkersToRun = analysisParametersFrom(&view)->checkersToRun();
     QCOMPARE(checkersToRun.count(), 0);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
@@ -328,8 +328,8 @@ void Krazy2ViewTest::testSetCheckersNotInitialized() {
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
-    QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
-    QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
+    QVERIFY(analysisParametersFrom(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParametersFrom(&view)->checkersToRun().count() > 0);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -367,8 +367,8 @@ void Krazy2ViewTest::testSetCheckersWhileInitializing() {
 
     QCOMPARE(view.cursor().shape(), Qt::BusyCursor);
 
-    QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
-    QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
+    QVERIFY(!analysisParametersFrom(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParametersFrom(&view)->checkersToRun().isEmpty());
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -384,8 +384,8 @@ void Krazy2ViewTest::testSetCheckersWhileInitializing() {
 
     QCOMPARE(view.cursor().shape(), Qt::BusyCursor);
 
-    QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
-    QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
+    QVERIFY(!analysisParametersFrom(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParametersFrom(&view)->checkersToRun().isEmpty());
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -402,8 +402,8 @@ void Krazy2ViewTest::testSetCheckersWhileInitializing() {
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
-    QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
-    QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
+    QVERIFY(analysisParametersFrom(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParametersFrom(&view)->checkersToRun().count() > 0);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -441,8 +441,8 @@ void Krazy2ViewTest::testSetCheckersClosingWidgetBeforeInitializing() {
 
     QCOMPARE(view.cursor().shape(), Qt::BusyCursor);
 
-    QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
-    QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
+    QVERIFY(!analysisParametersFrom(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParametersFrom(&view)->checkersToRun().isEmpty());
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -455,8 +455,8 @@ void Krazy2ViewTest::testSetCheckersClosingWidgetBeforeInitializing() {
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
-    QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
-    QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
+    QVERIFY(analysisParametersFrom(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParametersFrom(&view)->checkersToRun().count() > 0);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -494,8 +494,8 @@ void Krazy2ViewTest::testSetCheckersRejectWidgetAfterInitializing() {
 
     //Even if the dialog was cancelled, the checkers to run were implicitly set
     //to the default ones when the checkers were initialized.
-    QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
-    QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
+    QVERIFY(analysisParametersFrom(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParametersFrom(&view)->checkersToRun().count() > 0);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -539,8 +539,8 @@ void Krazy2ViewTest::testSetCheckersCancellingInitialization() {
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
-    QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
-    QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
+    QVERIFY(!analysisParametersFrom(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParametersFrom(&view)->checkersToRun().isEmpty());
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -579,8 +579,8 @@ void Krazy2ViewTest::testSetCheckersWithoutPaths() {
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
-    QVERIFY(!analysisParameters(&view)->wereCheckersInitialized());
-    QVERIFY(analysisParameters(&view)->checkersToRun().isEmpty());
+    QVERIFY(!analysisParametersFrom(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParametersFrom(&view)->checkersToRun().isEmpty());
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -601,8 +601,8 @@ void Krazy2ViewTest::testSetCheckersWithoutPaths() {
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
-    QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
-    QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
+    QVERIFY(analysisParametersFrom(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParametersFrom(&view)->checkersToRun().count() > 0);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -616,8 +616,8 @@ void Krazy2ViewTest::testSetCheckersWithoutPaths() {
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
-    QVERIFY(analysisParameters(&view)->wereCheckersInitialized());
-    QVERIFY(analysisParameters(&view)->checkersToRun().count() > 0);
+    QVERIFY(analysisParametersFrom(&view)->wereCheckersInitialized());
+    QVERIFY(analysisParametersFrom(&view)->checkersToRun().count() > 0);
 
     QVERIFY(selectPathsButton(&view)->isEnabled());
     QVERIFY(selectCheckersButton(&view)->isEnabled());
@@ -700,7 +700,7 @@ void Krazy2ViewTest::testAnalyze() {
                                       "or a reference to a license which states...");
     availableCheckers.append(qmlLicenseChecker);
 
-    analysisParameters(&view)->initializeCheckers(availableCheckers);
+    analysisParametersFrom(&view)->initializeCheckers(availableCheckers);
 
     //Do not run spelling checker
     queueRemoveCheckers(&view, QStringList() << "0-2");
@@ -1018,7 +1018,7 @@ void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
     qmlLicenseChecker->setName("license");
     availableCheckers.append(qmlLicenseChecker);
 
-    analysisParameters(&view)->initializeCheckers(availableCheckers);
+    analysisParametersFrom(&view)->initializeCheckers(availableCheckers);
 
     //Do not run spelling checker
     queueRemoveCheckers(&view, QStringList() << "0-2");
@@ -1233,7 +1233,7 @@ void Krazy2ViewTest::testCancelAnalyze() {
     validateChecker->setName("validate");
     availableCheckers.append(validateChecker);
 
-    analysisParameters(&view)->initializeCheckers(availableCheckers);
+    analysisParametersFrom(&view)->initializeCheckers(availableCheckers);
 
     //Do not run spelling checker
     queueRemoveCheckers(&view, QStringList() << "0-2");
@@ -1340,7 +1340,7 @@ bool Krazy2ViewTest::krazy2InPath() const {
     return true;
 }
 
-AnalysisParameters* Krazy2ViewTest::analysisParameters(Krazy2View* view) const {
+AnalysisParameters* Krazy2ViewTest::analysisParametersFrom(Krazy2View* view) const {
     return view->m_analysisParameters;
 }
 
