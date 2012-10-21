@@ -76,6 +76,13 @@ private:
 
     QString m_workingDirectory;
 
+    Checker* m_cppDoubleQuoteCharsChecker;
+    Checker* m_cppLicenseChecker;
+    Checker* m_cppSpellingChecker;
+    Checker* m_cppStyleChecker;
+    Checker* m_desktopValidateChecker;
+    Checker* m_qmlLicenseChecker;
+
     bool examplesInSubdirectory() const;
     bool krazy2InPath() const;
 
@@ -111,6 +118,48 @@ void Krazy2ViewTest::initTestCase() {
 
     KDevelop::AutoTestShell::init();
     KDevelop::TestCore::initialize();
+
+    m_cppDoubleQuoteCharsChecker = new Checker();
+    m_cppDoubleQuoteCharsChecker->setFileType("c++");
+    m_cppDoubleQuoteCharsChecker->setName("doublequote_chars");
+    m_cppDoubleQuoteCharsChecker->setDescription("Check single-char QString operations for efficiency");
+    m_cppDoubleQuoteCharsChecker->setExplanation("Adding single characters to a QString "
+                                                 "is faster if the characters are QChars...");
+
+    m_cppLicenseChecker = new Checker();
+    m_cppLicenseChecker->setFileType("c++");
+    m_cppLicenseChecker->setName("license");
+    m_cppLicenseChecker->setDescription("Check for an acceptable license");
+    m_cppLicenseChecker->setExplanation("Each source file must contain a license "
+                                        "or a reference to a license which states...");
+
+    m_cppSpellingChecker = new Checker();
+    m_cppSpellingChecker->setFileType("c++");
+    m_cppSpellingChecker->setName("spelling");
+    m_cppSpellingChecker->setDescription("Check for spelling errors");
+    m_cppSpellingChecker->setExplanation("Spelling errors in comments and strings "
+                                         "should be fixed as they may show up later...");
+
+    m_cppStyleChecker = new Checker();
+    m_cppStyleChecker->setFileType("c++");
+    m_cppStyleChecker->setName("style");
+    m_cppStyleChecker->setDescription("Check for adherence to a coding style");
+    m_cppStyleChecker->setExplanation("Please follow the coding style guidelines at...");
+    m_cppStyleChecker->setExtra(true);
+
+    m_desktopValidateChecker = new Checker();
+    m_desktopValidateChecker->setFileType("desktop");
+    m_desktopValidateChecker->setName("validate");
+    m_desktopValidateChecker->setDescription("Validates desktop files using 'desktop-file-validate'");
+    m_desktopValidateChecker->setExplanation("Please make sure your .desktop files conform "
+                                             "to the freedesktop.org standard. See the spec...");
+
+    m_qmlLicenseChecker = new Checker();
+    m_qmlLicenseChecker->setFileType("qml");
+    m_qmlLicenseChecker->setName("license");
+    m_qmlLicenseChecker->setDescription("Check for an acceptable license");
+    m_qmlLicenseChecker->setExplanation("Each source file must contain a license "
+                                        "or a reference to a license which states...");
 }
 
 void Krazy2ViewTest::init() {
@@ -129,6 +178,13 @@ void Krazy2ViewTest::init() {
 }
 
 void Krazy2ViewTest::cleanupTestCase() {
+    delete m_cppDoubleQuoteCharsChecker;
+    delete m_cppLicenseChecker;
+    delete m_cppSpellingChecker;
+    delete m_cppStyleChecker;
+    delete m_desktopValidateChecker;
+    delete m_qmlLicenseChecker;
+
     KDevelop::TestCore::shutdown();
 }
 
@@ -564,54 +620,12 @@ void Krazy2ViewTest::testAnalyze() {
     selectPathsButton(&view)->click();
 
     QList<const Checker*> availableCheckers;
-
-    Checker* doubleQuoteCharsChecker = new Checker();
-    doubleQuoteCharsChecker->setFileType("c++");
-    doubleQuoteCharsChecker->setName("doublequote_chars");
-    doubleQuoteCharsChecker->setDescription("Check single-char QString operations for efficiency");
-    doubleQuoteCharsChecker->setExplanation("Adding single characters to a QString "
-                                            "is faster if the characters are QChars...");
-    availableCheckers.append(doubleQuoteCharsChecker);
-
-    Checker* licenseChecker = new Checker();
-    licenseChecker->setFileType("c++");
-    licenseChecker->setName("license");
-    licenseChecker->setDescription("Check for an acceptable license");
-    licenseChecker->setExplanation("Each source file must contain a license "
-                                   "or a reference to a license which states...");
-    availableCheckers.append(licenseChecker);
-
-    Checker* spellingChecker = new Checker();
-    spellingChecker->setFileType("c++");
-    spellingChecker->setName("spelling");
-    spellingChecker->setDescription("Check for spelling errors");
-    spellingChecker->setExplanation("Spelling errors in comments and strings "
-                                    "should be fixed as they may show up later...");
-    availableCheckers.append(spellingChecker);
-
-    Checker* styleChecker = new Checker();
-    styleChecker->setFileType("c++");
-    styleChecker->setName("style");
-    styleChecker->setDescription("Check for adherence to a coding style");
-    styleChecker->setExplanation("Please follow the coding style guidelines at...");
-    styleChecker->setExtra(true);
-    availableCheckers.append(styleChecker);
-
-    Checker* validateChecker = new Checker();
-    validateChecker->setFileType("desktop");
-    validateChecker->setName("validate");
-    validateChecker->setDescription("Validates desktop files using 'desktop-file-validate'");
-    validateChecker->setExplanation("Please make sure your .desktop files conform "
-                                    "to the freedesktop.org standard. See the spec...");
-    availableCheckers.append(validateChecker);
-
-    Checker* qmlLicenseChecker = new Checker();
-    qmlLicenseChecker->setFileType("qml");
-    qmlLicenseChecker->setName("license");
-    qmlLicenseChecker->setDescription("Check for an acceptable license");
-    qmlLicenseChecker->setExplanation("Each source file must contain a license "
-                                      "or a reference to a license which states...");
-    availableCheckers.append(qmlLicenseChecker);
+    availableCheckers.append(new Checker(*m_cppDoubleQuoteCharsChecker));
+    availableCheckers.append(new Checker(*m_cppLicenseChecker));
+    availableCheckers.append(new Checker(*m_cppSpellingChecker));
+    availableCheckers.append(new Checker(*m_cppStyleChecker));
+    availableCheckers.append(new Checker(*m_desktopValidateChecker));
+    availableCheckers.append(new Checker(*m_qmlLicenseChecker));
 
     analysisParametersFrom(&view)->initializeCheckers(availableCheckers);
 
@@ -870,40 +884,15 @@ void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
     selectPathsButton(&view)->click();
 
     QList<const Checker*> availableCheckers;
-
-    Checker* doubleQuoteCharsChecker = new Checker();
-    doubleQuoteCharsChecker->setFileType("c++");
-    doubleQuoteCharsChecker->setName("doublequote_chars");
-    availableCheckers.append(doubleQuoteCharsChecker);
-
-    Checker* licenseChecker = new Checker();
-    licenseChecker->setFileType("c++");
-    licenseChecker->setName("license");
-    availableCheckers.append(licenseChecker);
-
-    Checker* spellingChecker = new Checker();
-    spellingChecker->setFileType("c++");
-    spellingChecker->setName("spelling");
-    availableCheckers.append(spellingChecker);
-
+    availableCheckers.append(new Checker(*m_cppDoubleQuoteCharsChecker));
+    availableCheckers.append(new Checker(*m_cppLicenseChecker));
+    availableCheckers.append(new Checker(*m_cppSpellingChecker));
     //Extra checkers results are outputted first by Krazy2. However, when
     //sorting the results, the style checker should appear between license and
     //validate.
-    Checker* styleChecker = new Checker();
-    styleChecker->setFileType("c++");
-    styleChecker->setName("style");
-    styleChecker->setExtra(true);
-    availableCheckers.append(styleChecker);
-
-    Checker* validateChecker = new Checker();
-    validateChecker->setFileType("desktop");
-    validateChecker->setName("validate");
-    availableCheckers.append(validateChecker);
-
-    Checker* qmlLicenseChecker = new Checker();
-    qmlLicenseChecker->setFileType("qml");
-    qmlLicenseChecker->setName("license");
-    availableCheckers.append(qmlLicenseChecker);
+    availableCheckers.append(new Checker(*m_cppStyleChecker));
+    availableCheckers.append(new Checker(*m_desktopValidateChecker));
+    availableCheckers.append(new Checker(*m_qmlLicenseChecker));
 
     analysisParametersFrom(&view)->initializeCheckers(availableCheckers);
 
@@ -1080,32 +1069,11 @@ void Krazy2ViewTest::testCancelAnalyze() {
     selectPathsButton(&view)->click();
 
     QList<const Checker*> availableCheckers;
-
-    Checker* doubleQuoteCharsChecker = new Checker();
-    doubleQuoteCharsChecker->setFileType("c++");
-    doubleQuoteCharsChecker->setName("doublequote_chars");
-    availableCheckers.append(doubleQuoteCharsChecker);
-
-    Checker* licenseChecker = new Checker();
-    licenseChecker->setFileType("c++");
-    licenseChecker->setName("license");
-    availableCheckers.append(licenseChecker);
-
-    Checker* spellingChecker = new Checker();
-    spellingChecker->setFileType("c++");
-    spellingChecker->setName("spelling");
-    availableCheckers.append(spellingChecker);
-
-    Checker* styleChecker = new Checker();
-    styleChecker->setFileType("c++");
-    styleChecker->setName("style");
-    styleChecker->setExtra(true);
-    availableCheckers.append(styleChecker);
-
-    Checker* validateChecker = new Checker();
-    validateChecker->setFileType("desktop");
-    validateChecker->setName("validate");
-    availableCheckers.append(validateChecker);
+    availableCheckers.append(new Checker(*m_cppDoubleQuoteCharsChecker));
+    availableCheckers.append(new Checker(*m_cppLicenseChecker));
+    availableCheckers.append(new Checker(*m_cppSpellingChecker));
+    availableCheckers.append(new Checker(*m_cppStyleChecker));
+    availableCheckers.append(new Checker(*m_desktopValidateChecker));
 
     analysisParametersFrom(&view)->initializeCheckers(availableCheckers);
 
