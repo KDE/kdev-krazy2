@@ -138,6 +138,9 @@ void AnalysisJobTest::init() {
     if (!krazy2InPath()) {
         QSKIP("krazy2 is not in the execution path", SkipAll);
     }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 }
 
 void AnalysisJobTest::cleanupTestCase() {
@@ -215,9 +218,6 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
 
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);
-
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
     QSignalSpy showProgressSpy(analysisJob.findChild<ProgressParser*>(),
                                SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
@@ -352,9 +352,6 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
 
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);
-
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
     QSignalSpy showProgressSpy(analysisJob.findChild<ProgressParser*>(),
                                SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
@@ -544,9 +541,6 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);
 
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
     QSignalSpy showProgressSpy(analysisJob.findChild<ProgressParser*>(),
                                SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
 
@@ -649,9 +643,6 @@ void AnalysisJobTest::testRunWitCheckerWithDuplicatedNamesAndSpecificFileTypes()
 
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);
-
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
     QSignalSpy showProgressSpy(analysisJob.findChild<ProgressParser*>(),
                                SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
@@ -788,9 +779,6 @@ void AnalysisJobTest::testKill() {
 
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);
-
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
     SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
 

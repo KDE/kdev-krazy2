@@ -123,6 +123,9 @@ void Krazy2ViewTest::init() {
     if (!krazy2InPath()) {
         QSKIP("krazy2 is not in the execution path", SkipAll);
     }
+
+    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 }
 
 void Krazy2ViewTest::cleanupTestCase() {
@@ -300,9 +303,6 @@ void Krazy2ViewTest::testSetCheckers() {
 }
 
 void Krazy2ViewTest::testSetCheckersNotInitialized() {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
     Krazy2View view;
 
     //Add a valid directory so, when the analyze button is updated, it being
@@ -329,9 +329,6 @@ void Krazy2ViewTest::testSetCheckersNotInitialized() {
 }
 
 void Krazy2ViewTest::testSetCheckersWhileInitializing() {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
     Krazy2View view;
 
     //Add a valid directory so, when the analyze button is updated, it being
@@ -393,9 +390,6 @@ void Krazy2ViewTest::testSetCheckersWhileInitializing() {
 }
 
 void Krazy2ViewTest::testSetCheckersClosingWidgetBeforeInitializing() {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
     Krazy2View view;
 
     //Add a valid directory so, when the analyze button is updated, it being
@@ -436,9 +430,6 @@ void Krazy2ViewTest::testSetCheckersClosingWidgetBeforeInitializing() {
 }
 
 void Krazy2ViewTest::testSetCheckersRejectWidgetAfterInitializing() {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
     Krazy2View view;
 
     //Add a valid directory so, when the analyze button is updated, it being
@@ -465,9 +456,6 @@ void Krazy2ViewTest::testSetCheckersRejectWidgetAfterInitializing() {
 }
 
 void Krazy2ViewTest::testSetCheckersCancellingInitialization() {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
     Krazy2View view;
 
     //Add a valid directory so, when the analyze button is updated, it being
@@ -500,9 +488,6 @@ void Krazy2ViewTest::testSetCheckersCancellingInitialization() {
 }
 
 void Krazy2ViewTest::testSetCheckersWithoutPaths() {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
     Krazy2View view;
 
     //Reject the dialog before the checkers initialization ended.
@@ -567,9 +552,6 @@ void Krazy2ViewTest::testSetCheckersWithoutPaths() {
 }
 
 void Krazy2ViewTest::testAnalyze() {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
     Krazy2View view;
 
     //Add several paths
@@ -737,9 +719,6 @@ void Krazy2ViewTest::testAnalyze() {
 }
 
 void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
     Krazy2View view;
 
     //Add several paths
@@ -879,9 +858,6 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
 
 
 void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
     Krazy2View view;
 
     //Add several paths
@@ -1092,9 +1068,6 @@ void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
 }
 
 void Krazy2ViewTest::testCancelAnalyze() {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
     Krazy2View view;
 
     //Add several paths
@@ -1166,9 +1139,6 @@ void Krazy2ViewTest::testCancelAnalyze() {
 }
 
 void Krazy2ViewTest::testCancelAnalyzeWithCheckersNotInitialized() {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
-
     Krazy2View view;
 
     //Add several paths
