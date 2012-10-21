@@ -79,6 +79,7 @@ private:
     bool krazy2InPath() const;
 
     AnalysisParameters* analysisParameters(Krazy2View* view) const;
+    const AnalysisResults* analysisResultsFrom(Krazy2View* view) const;
 
     KPushButton* selectPathsButton(const Krazy2View* view) const;
     KPushButton* selectCheckersButton(const Krazy2View* view) const;
@@ -735,10 +736,7 @@ void Krazy2ViewTest::testAnalyze() {
     QVERIFY(analyzeButton(&view)->isEnabled());
     QVERIFY(resultsTableView(&view)->isEnabled());
 
-    QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
-    IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
-    const AnalysisResults* analysisResults = issueModel->analysisResults();
-
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
     QVERIFY(analysisResults);
     QCOMPARE(analysisResults->issues().count(), 7);
 
@@ -867,10 +865,7 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
     QVERIFY(analyzeButton(&view)->isEnabled());
     QVERIFY(resultsTableView(&view)->isEnabled());
 
-    QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
-    IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
-    const AnalysisResults* analysisResults = issueModel->analysisResults();
-
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
     QVERIFY(analysisResults);
     QCOMPARE(analysisResults->issues().count(), 10);
 
@@ -1052,8 +1047,8 @@ void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
 
     QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
     IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
-    const AnalysisResults* analysisResults = issueModel->analysisResults();
 
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
     QVERIFY(analysisResults);
     QCOMPARE(analysisResults->issues().count(), 7);
 
@@ -1131,10 +1126,7 @@ void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
     QVERIFY(analyzeButton(&view)->isEnabled());
     QVERIFY(resultsTableView(&view)->isEnabled());
 
-    proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
-    issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
-    analysisResults = issueModel->analysisResults();
-
+    analysisResults = analysisResultsFrom(&view);
     QVERIFY(analysisResults);
     QCOMPARE(analysisResults->issues().count(), 7);
 
@@ -1269,11 +1261,7 @@ void Krazy2ViewTest::testCancelAnalyze() {
     QVERIFY(analyzeButton(&view)->isEnabled());
     QVERIFY(!resultsTableView(&view)->isEnabled());
 
-    QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
-    IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
-    const AnalysisResults* analysisResults = issueModel->analysisResults();
-
-    QVERIFY(!analysisResults);
+    QVERIFY(!analysisResultsFrom(&view));
 }
 
 void Krazy2ViewTest::testCancelAnalyzeWithCheckersNotInitialized() {
@@ -1318,11 +1306,7 @@ void Krazy2ViewTest::testCancelAnalyzeWithCheckersNotInitialized() {
     QVERIFY(analyzeButton(&view)->isEnabled());
     QVERIFY(!resultsTableView(&view)->isEnabled());
 
-    QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
-    IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
-    const AnalysisResults* analysisResults = issueModel->analysisResults();
-
-    QVERIFY(!analysisResults);
+    QVERIFY(!analysisResultsFrom(&view));
 }
 
 ///////////////////////////////// Helpers //////////////////////////////////////
@@ -1358,6 +1342,12 @@ bool Krazy2ViewTest::krazy2InPath() const {
 
 AnalysisParameters* Krazy2ViewTest::analysisParameters(Krazy2View* view) const {
     return view->m_analysisParameters;
+}
+
+const AnalysisResults* Krazy2ViewTest::analysisResultsFrom(Krazy2View* view) const {
+    QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(view)->model());
+    IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
+    return issueModel->analysisResults();
 }
 
 KPushButton* Krazy2ViewTest::selectPathsButton(const Krazy2View* view) const {
