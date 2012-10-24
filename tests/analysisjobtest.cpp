@@ -91,10 +91,10 @@ private slots:
 
     void testConstructor();
 
-    void testRunWithCheckersSetInAnalysisParameters();
-    void testRunWithExtraCheckersSetInAnalysisParameters();
-    void testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisParameters();
-    void testRunWitCheckerWithDuplicatedNamesAndSpecificFileTypes();
+    void testRunCheckers();
+    void testRunExtraCheckers();
+    void testRunExtraCheckersAndSubsetOfCheckers();
+    void testRunCheckerWithDuplicatedNamesAndSpecificFileTypes();
     void testRunWithEmptyKrazy2ExecutablePath();
     void testRunWithInvalidKrazy2ExecutablePath();
 
@@ -157,7 +157,7 @@ void AnalysisJobTest::testConstructor() {
              i18nc("@action:inmenu", "<command>krazy2</command> analysis"));
 }
 
-void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
+void AnalysisJobTest::testRunCheckers() {
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
 
@@ -330,7 +330,7 @@ void AnalysisJobTest::testRunWithCheckersSetInAnalysisParameters() {
     QCOMPARE(showProgressSpy.at(5).at(3).toInt(), 100);
 }
 
-void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
+void AnalysisJobTest::testRunExtraCheckers() {
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
 
@@ -517,7 +517,7 @@ void AnalysisJobTest::testRunWithExtraCheckersSetInAnalysisParameters() {
     QVERIFY(showProgressSpy.at(showProgressSpy.count()-3).at(3).toInt() <= 99);
 }
 
-void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisParameters() {
+void AnalysisJobTest::testRunExtraCheckersAndSubsetOfCheckers() {
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
 
@@ -604,7 +604,7 @@ void AnalysisJobTest::testRunWithExtraCheckersAndSubsetOfCheckersSetInAnalysisPa
     QCOMPARE(showProgressSpy.at(4).at(3).toInt(), 100);
 }
 
-void AnalysisJobTest::testRunWitCheckerWithDuplicatedNamesAndSpecificFileTypes() {
+void AnalysisJobTest::testRunCheckerWithDuplicatedNamesAndSpecificFileTypes() {
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
 
