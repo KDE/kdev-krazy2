@@ -37,7 +37,7 @@
 //public:
 
 AnalysisJob::AnalysisJob(QObject* parent /*= 0*/): KJob(parent),
-    m_analysisParameters(0),
+    m_currentAnalysisParameters(0),
     m_analysisResults(0),
     m_progressParser(new ProgressParser(this)),
     m_process(new KProcess(this)) {
@@ -53,34 +53,36 @@ AnalysisJob::AnalysisJob(QObject* parent /*= 0*/): KJob(parent),
 }
 
 void AnalysisJob::start() {
-    Q_ASSERT(m_analysisParameters);
-    Q_ASSERT(m_analysisParameters->wereCheckersInitialized());
-    Q_ASSERT(!m_analysisParameters->filesToBeAnalyzed().isEmpty());
-    Q_ASSERT(!m_analysisParameters->checkersToRun().isEmpty());
+    Q_ASSERT(!m_analysisParametersList.isEmpty());
     Q_ASSERT(m_analysisResults);
 
     KDevelop::ICore::self()->uiController()->registerStatus(m_progressParser);
     connect(this, SIGNAL(finished(KJob*)), m_progressParser, SLOT(finish()));
 
-    m_namesOfFilesToBeAnalyzed = m_analysisParameters->filesToBeAnalyzed();
+    int totalNumberOfCheckers = 0;
+    foreach (const AnalysisParameters* analysisParameters, m_analysisParametersList) {
+        QStringList namesOfFilesToBeAnalyzed = analysisParameters->filesToBeAnalyzed();
+        m_namesOfFilesToBeAnalyzed.append(namesOfFilesToBeAnalyzed);
 
-    m_progressParser->setNumberOfCheckers(
-        calculateNumberOfCheckersToBeExecuted(m_namesOfFilesToBeAnalyzed));
+        totalNumberOfCheckers += calculateNumberOfCheckersToBeExecuted(namesOfFilesToBeAnalyzed,
+                                                                       analysisParameters->checkersToRun());
+    }
+
+    m_progressParser->setNumberOfCheckers(totalNumberOfCheckers);
     m_progressParser->start();
 
-    foreach (const Checker* checker, m_analysisParameters->checkersToRun()) {
-        if (!m_pendingFileTypes.contains(checker->fileType())) {
-            m_pendingFileTypes.append(checker->fileType());
-        }
-    }
+    prepareNextAnalysisParameters();
 
     startAnalysis(m_pendingFileTypes.takeFirst());
 }
 
-void AnalysisJob::setAnalysisParameters(const AnalysisParameters* analysisParameters) {
+void AnalysisJob::addAnalysisParameters(const AnalysisParameters* analysisParameters) {
     Q_ASSERT(analysisParameters);
+    Q_ASSERT(analysisParameters->wereCheckersInitialized());
+    Q_ASSERT(!analysisParameters->filesToBeAnalyzed().isEmpty());
+    Q_ASSERT(!analysisParameters->checkersToRun().isEmpty());
 
-    m_analysisParameters = analysisParameters;
+    m_analysisParametersList.append(analysisParameters);
 }
 
 void AnalysisJob::setAnalysisResults(AnalysisResults* analysisResults) {
@@ -90,6 +92,7 @@ void AnalysisJob::setAnalysisResults(AnalysisResults* analysisResults) {
 //protected:
 
 bool AnalysisJob::doKill() {
+    m_analysisParametersList.clear();
     m_pendingFileTypes.clear();
 
     m_process->kill();
@@ -99,11 +102,10 @@ bool AnalysisJob::doKill() {
 
 //private:
 
-int AnalysisJob::calculateNumberOfCheckersToBeExecuted(const QStringList& namesOfFilesToBeAnalyzed) const {
-    //The executed checkers will depend on the types of the files
-    //analyzed and the file types supported by each checker.
+int AnalysisJob::calculateNumberOfCheckersToBeExecuted(const QStringList& namesOfFilesToBeAnalyzed,
+                                                       const QList<const Checker*>& checkersToRun) const {
     int numberOfCheckersToBeExecuted = 0;
-    foreach (const Checker* checker, m_analysisParameters->checkersToRun()) {
+    foreach (const Checker* checker, checkersToRun) {
         if (isCheckerCompatibleWithAnyFile(checker, namesOfFilesToBeAnalyzed)) {
             numberOfCheckersToBeExecuted++;
         }
@@ -165,10 +167,26 @@ bool AnalysisJob::isCheckerCompatibleWithFile(const Checker* checker,
     return false;
 }
 
+void AnalysisJob::prepareNextAnalysisParameters() {
+    Q_ASSERT(m_pendingFileTypes.isEmpty());
+    Q_ASSERT(!m_analysisParametersList.isEmpty());
+
+    m_progressParser->resetNumberOfFilesForEachFileType();
+
+    m_currentAnalysisParameters = m_analysisParametersList.takeFirst();
+    m_currentNamesOfFilesToBeAnalyzed = m_namesOfFilesToBeAnalyzed.takeFirst();
+
+    foreach (const Checker* checker, m_currentAnalysisParameters->checkersToRun()) {
+        if (!m_pendingFileTypes.contains(checker->fileType())) {
+            m_pendingFileTypes.append(checker->fileType());
+        }
+    }
+}
+
 QStringList AnalysisJob::checkersToRunAsKrazy2Arguments(const QString& fileType) const {
     QStringList namesOfCheckersToRun;
     QStringList namesOfExtraCheckersToRun;
-    foreach (const Checker* checker, m_analysisParameters->checkersToRun()) {
+    foreach (const Checker* checker, m_currentAnalysisParameters->checkersToRun()) {
         if (checker->fileType() == fileType && !checker->isExtra()) {
             namesOfCheckersToRun.append(checker->name());
         } else if (checker->fileType() == fileType && checker->isExtra()) {
@@ -186,7 +204,7 @@ QStringList AnalysisJob::checkersToRunAsKrazy2Arguments(const QString& fileType)
     }
 
     QStringList namesOfCheckersNotToRun;
-    foreach (const Checker* checker, m_analysisParameters->availableCheckers()) {
+    foreach (const Checker* checker, m_currentAnalysisParameters->availableCheckers()) {
         if (!checker->isExtra() && checker->fileType() == fileType &&
                 !namesOfCheckersToRun.contains(checker->name())) {
             namesOfCheckersNotToRun.append(checker->name());
@@ -217,7 +235,7 @@ void AnalysisJob::startAnalysis(const QString& fileType) {
     m_process->start();
 
     QString krazy2Input;
-    foreach (const QString& fileName, m_namesOfFilesToBeAnalyzed) {
+    foreach (const QString& fileName, m_currentNamesOfFilesToBeAnalyzed) {
         krazy2Input += fileName + '\n';
     }
 
@@ -238,7 +256,7 @@ void AnalysisJob::handleProcessFinished(int exitCode) {
     Q_UNUSED(exitCode);
 
     AnalysisResults currentFileTypeResults;
-    foreach (const Checker* checker, m_analysisParameters->availableCheckers()) {
+    foreach (const Checker* checker, m_currentAnalysisParameters->availableCheckers()) {
         currentFileTypeResults.addChecker(new Checker(*checker));
     }
 
@@ -247,6 +265,10 @@ void AnalysisJob::handleProcessFinished(int exitCode) {
     resultParser.parse(m_process->readAllStandardOutput());
 
     m_analysisResults->addAnalysisResults(&currentFileTypeResults);
+
+    if (m_pendingFileTypes.isEmpty() && !m_analysisParametersList.isEmpty()) {
+        prepareNextAnalysisParameters();
+    }
 
     if (!m_pendingFileTypes.isEmpty()) {
         startAnalysis(m_pendingFileTypes.takeFirst());

@@ -58,6 +58,18 @@
  * (because the file can not be accessed, or because the file type is not
  * supported). When a file is filtered out, krazy2 prints a message explaining
  * why. Those messages are parsed and discarded by the ProgressParser.
+ *
+ * The ProgressParser can be used to parse the progress of several krazy2
+ * executions in one single batch. That is, if two executions are parsed one
+ * after the other, and the first execution runs seven checkers and the second
+ * executions runs three checkers, the progress reported at the end of the first
+ * execution will be 70%, and the progress reported at the end of the second
+ * execution will be 99%. start() must be called before the first krazy2
+ * execution, and end() must be called after the last krazy2 execution, like
+ * done with a single execution. The only difference with several executions is
+ * that, whenever the analyzed files change between executions,
+ * resetNumberOfFilesForEachFileType() must be called, as the number of files
+ * analyzed by the checkers of each file type may have changed.
  */
 class ProgressParser: public QObject, public KDevelop::IStatus {
 Q_OBJECT
@@ -98,6 +110,14 @@ public:
      * @param numberOfCheckers The number of checkers that will be run.
      */
     void setNumberOfCheckers(int numberOfCheckers);
+
+    /**
+     * Resets the number of files assumed for each file type.
+     * If this ProgressParser is used to parse the progress of several krazy2
+     * executions in a single batch, this method must be called whenever the
+     * analyzed files change between executions.
+     */
+    void resetNumberOfFilesForEachFileType();
 
 public Q_SLOTS:
 

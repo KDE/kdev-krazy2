@@ -91,6 +91,11 @@ public:
      * already added to this AnalysisResults, the already added Checker is used.
      * Else, a copy of the referenced checker is added to this AnalysisResults.
      *
+     * If an issue to be added has the same checker (based on the file type and
+     * name), file name and line as one already added to this AnalysisResults,
+     * the issue to be added is ignored (that is, a duplicated issue is not
+     * added).
+     *
      * @param analysisResults The AnalysisResults to add its issues.
      */
     void addAnalysisResults(const AnalysisResults* analysisResults);

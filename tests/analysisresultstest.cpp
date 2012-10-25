@@ -34,6 +34,7 @@ private slots:
     void testAddIssue();
 
     void testAddAnalysisResults();
+    void testAddAnalysisResultsWithDuplicatedIssues();
 
 };
 
@@ -242,6 +243,60 @@ void AnalysisResultsTest::testAddAnalysisResults() {
     QCOMPARE(newFileType1Checker1Issue2->line(), 16);
     QCOMPARE(newFileType1Checker1Issue2->message(), QString("fileType1Checker1Issue2Message"));
     QVERIFY(newFileType1Checker1Issue2->checker() == fileType1Checker1);
+}
+
+void AnalysisResultsTest::testAddAnalysisResultsWithDuplicatedIssues() {
+    Checker* checker1 = new Checker();
+    checker1->setFileType("fileType");
+    checker1->setName("name1");
+    Issue* issue1 = new Issue();
+    issue1->setChecker(checker1);
+    issue1->setFileName("fileName");
+    Issue* issue2 = new Issue();
+    issue2->setChecker(checker1);
+    issue2->setFileName("fileName");
+    issue2->setLine(42);
+
+    AnalysisResults analysisResults;
+    analysisResults.addChecker(checker1);
+    analysisResults.addIssue(issue1);
+    analysisResults.addIssue(issue2);
+
+    //Other AnalysisResults with repeated checkers and issues
+    Checker* checker1b = new Checker();
+    checker1b->setFileType("fileType");
+    checker1b->setName("name1");
+    Issue* issue1DifferentChecker = new Issue();
+    issue1DifferentChecker->setChecker(checker1b);
+    issue1DifferentChecker->setFileName("fileName");
+    Issue* issue2DifferentChecker = new Issue();
+    issue2DifferentChecker->setChecker(checker1b);
+    issue2DifferentChecker->setFileName("fileName");
+    issue2DifferentChecker->setLine(42);
+    Issue* issue3DifferentChecker = new Issue();
+    issue3DifferentChecker->setChecker(checker1b);
+    issue3DifferentChecker->setFileName("fileName2");
+    issue3DifferentChecker->setLine(108);
+
+    AnalysisResults analysisResultsToAdd;
+    analysisResultsToAdd.addChecker(checker1b);
+    analysisResultsToAdd.addIssue(issue1DifferentChecker);
+    analysisResultsToAdd.addIssue(issue2DifferentChecker);
+    analysisResultsToAdd.addIssue(issue3DifferentChecker);
+
+    analysisResults.addAnalysisResults(&analysisResultsToAdd);
+
+    QCOMPARE(analysisResults.issues().size(), 3);
+    QCOMPARE(analysisResults.issues()[0], issue1);
+    QCOMPARE(analysisResults.issues()[0]->checker(), checker1);
+    QCOMPARE(analysisResults.issues()[1], issue2);
+    QCOMPARE(analysisResults.issues()[1]->checker(), checker1);
+
+    const Issue* newIssue3 = analysisResults.issues()[2];
+    QVERIFY(newIssue3 != issue3DifferentChecker);
+    QCOMPARE(newIssue3->fileName(), QString("fileName2"));
+    QCOMPARE(newIssue3->line(), 108);
+    QCOMPARE(newIssue3->checker(), checker1);
 }
 
 QTEST_KDEMAIN(AnalysisResultsTest, NoGUI)

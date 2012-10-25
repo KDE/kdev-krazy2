@@ -46,6 +46,8 @@ private slots:
     void parseSeveralDotsAtOnce();
     void parseSeveralLinesAtOnce();
 
+    void parseAfterResettingNumberOfFilesForEachFileType();
+
     void parseMoreCheckersThanTheNumberSet();
 
     void parseSingleCannotAccessFileBeforeCheckers();
@@ -419,6 +421,55 @@ void ProgressParserTest::parseSeveralLinesAtOnce() {
     assertShowProgress(5, 0, 100, 60);
     assertShowProgress(6, 0, 100, 70);
     assertShowProgress(7, 0, 100, 80);
+}
+
+void ProgressParserTest::parseAfterResettingNumberOfFilesForEachFileType() {
+    m_progressParser->setNumberOfCheckers(10);
+    m_progressParser->parse("=>fileType1/checkerName1 test in-progress.....done\n");
+    m_progressParser->parse("=>fileType2/checkerName2 test in-progress..done\n");
+    m_progressParser->parse("=>fileType1/checkerName3 test in-progress.....done\n");
+    m_progressParser->parse("=>fileType2/checkerName4 test in-progress..done\n");
+
+    QCOMPARE(m_showMessageSpy->count(), 4);
+    assertShowMessage(0, i18nc("@info:progress", "Running %1/%2", "fileType1", "checkerName1"));
+    assertShowMessage(1, i18nc("@info:progress", "Running %1/%2", "fileType2", "checkerName2"));
+    assertShowMessage(2, i18nc("@info:progress", "Running %1/%2", "fileType1", "checkerName3"));
+    assertShowMessage(3, i18nc("@info:progress", "Running %1/%2", "fileType2", "checkerName4"));
+
+    QCOMPARE(m_showProgressSpy->count(), 9);
+    assertShowProgress(0, 0, 100, 10);
+    assertShowProgress(1, 0, 100, 20);
+    assertShowProgress(2, 0, 100, 22);
+    assertShowProgress(3, 0, 100, 24);
+    assertShowProgress(4, 0, 100, 26);
+    assertShowProgress(5, 0, 100, 28);
+    assertShowProgress(6, 0, 100, 30);
+    assertShowProgress(7, 0, 100, 35);
+    assertShowProgress(8, 0, 100, 40);
+
+    m_progressParser->resetNumberOfFilesForEachFileType();
+
+    m_progressParser->parse("=>fileType1/checkerName5 test in-progress..done\n");
+    m_progressParser->parse("=>fileType2/checkerName6 test in-progress.....done\n");
+    m_progressParser->parse("=>fileType1/checkerName7 test in-progress..done\n");
+    m_progressParser->parse("=>fileType2/checkerName8 test in-progress.....done\n");
+
+    QCOMPARE(m_showMessageSpy->count(), 8);
+    assertShowMessage(4, i18nc("@info:progress", "Running %1/%2", "fileType1", "checkerName5"));
+    assertShowMessage(5, i18nc("@info:progress", "Running %1/%2", "fileType2", "checkerName6"));
+    assertShowMessage(6, i18nc("@info:progress", "Running %1/%2", "fileType1", "checkerName7"));
+    assertShowMessage(7, i18nc("@info:progress", "Running %1/%2", "fileType2", "checkerName8"));
+
+    QCOMPARE(m_showProgressSpy->count(), 18);
+    assertShowProgress(9, 0, 100, 50);
+    assertShowProgress(10, 0, 100, 60);
+    assertShowProgress(11, 0, 100, 65);
+    assertShowProgress(12, 0, 100, 70);
+    assertShowProgress(13, 0, 100, 72);
+    assertShowProgress(14, 0, 100, 74);
+    assertShowProgress(15, 0, 100, 76);
+    assertShowProgress(16, 0, 100, 78);
+    assertShowProgress(17, 0, 100, 80);
 }
 
 void ProgressParserTest::parseMoreCheckersThanTheNumberSet() {

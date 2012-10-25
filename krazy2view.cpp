@@ -105,7 +105,7 @@ void Krazy2View::startAnalysis() {
     m_analysisResults = new AnalysisResults();
 
     AnalysisJob* analysisJob = new AnalysisJob(this);
-    analysisJob->setAnalysisParameters(m_analysisParameters);
+    analysisJob->addAnalysisParameters(m_analysisParameters);
     analysisJob->setAnalysisResults(m_analysisResults);
 
     connect(analysisJob, SIGNAL(finished(KJob*)),

@@ -37,6 +37,10 @@ void ProgressParser::setNumberOfCheckers(int numberOfCheckers) {
     m_numberOfCheckers = numberOfCheckers;
 }
 
+void ProgressParser::resetNumberOfFilesForEachFileType() {
+    m_fileTypeToNumberOfDots.clear();
+}
+
 //public slots:
 
 void ProgressParser::start() {

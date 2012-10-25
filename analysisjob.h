@@ -35,8 +35,16 @@ class ProgressParser;
  * Job to analyze a directory with krazy2.
  * The job executes a krazy2 process asking it to analyze all the files
  * specified in the AnalysisParameters and then parses the output to populate an
- * AnalysisTesults object. The checkers to run on the files are specified in the
- * AnalysisParameters too.
+ * AnalysisResults object. The checkers to run on the files are specified in the
+ * AnalysisParameters too. The progress of the analysis is also notified.
+ *
+ * Several AnalysisParameters can be added to the job to be executed in the same
+ * batch. That is, the AnalysisResults object will contain all the issues found
+ * using each of the AnalysisParameters (although without duplicated issues) and
+ * the progress report will take into account all the AnalysisParameters (the
+ * progress will be proportional to the total number of checkers to be run), but
+ * from the analysis perspective, each AnalysisParameters will be executed on
+ * its own, like running several jobs each one with a single AnalysisParameters.
  *
  * The path to the krazy2 executable is got from "Krazy2" configuration group.
  *
@@ -56,25 +64,25 @@ public:
     //<KJob>
 
     /**
-     * Starts krazy2 asking it to analyze all the files specified in the
-     * AnalysisParameters.
-     * The checkers and paths have to have been initialized.
+     * Starts the analysis.
      */
     virtual void start();
 
     //</KJob>
 
     /**
-     * Sets the analysis parameters.
+     * Adds analysis parameters.
+     * The checkers and paths have to have been initialized.
+     *
      * The checkers from the list of available checkers will be copied to the
      * AnalysisResults object, so they must be fully initialized. The reason is
      * that krazy2 does not provide information in the results about whether a
      * checker is extra or not, so that information has to be got from the list
      * of available checkers.
      *
-     * @param analysisParameters The analysis parameters.
+     * @param analysisParameters The analysis parameters to add.
      */
-    void setAnalysisParameters(const AnalysisParameters* analysisParameters);
+    void addAnalysisParameters(const AnalysisParameters* analysisParameters);
 
     /**
      * Sets the AnalysisResults to populate.
@@ -99,22 +107,34 @@ protected:
 private:
 
     /**
-     * The analysis parameters to use.
+     * The list of AnalysisParameters.
      */
-    const AnalysisParameters* m_analysisParameters;
+    QList<const AnalysisParameters*> m_analysisParametersList;
 
     /**
-     * A list with the names of the files to be analyzed.
-     * It is just the names returned by AnalysisParameters, stored to avoid
-     * resolving the file names each time a new process is executed.
+     * The analysis parameters to use for the current krazy2 execution.
      */
-    QStringList m_namesOfFilesToBeAnalyzed;
+    const AnalysisParameters* m_currentAnalysisParameters;
 
     /**
-     * The file types of the checkers to run that have not been run yet.
+     * A list of the lists with the names of the files to be analyzed.
+     * They are just the names returned by each AnalysisParameters, stored to
+     * avoid resolving the file names each time a new process is executed.
+     */
+    QList<QStringList> m_namesOfFilesToBeAnalyzed;
+
+    /**
+     * A list with the names of the files to be analyzed in the current krazy2
+     * execution.
+     */
+    QStringList m_currentNamesOfFilesToBeAnalyzed;
+
+    /**
+     * The file types of the checkers to run of the current analysis parameters
+     * that have not been run yet.
      * Only the checkers with a given file type are run each time. Thus, several
-     * krazy2 executions may be needed to run all the checkers, and this list
-     * keeps track of the pending file types.
+     * krazy2 executions may be needed to run all the checkers of the current
+     * analysis parameters, and this list keeps track of the pending file types.
      *
      * @see checkersToRunAsKrazy2Arguments(QString)
      */
@@ -137,14 +157,18 @@ private:
 
     /**
      * Returns the number of checkers that will be executed.
+     * The executed checkers will depend on the types of the files analyzed and
+     * the file types supported by each checker.
      * The returned number is just a hint. It will probably be the right number,
      * but it also may not.
      *
      * @param namesOfFilesToBeAnalyzed A list with file names.
+     * @param checkersToRun The list of checkers to run on the given file names.
      * @return The number of checkers that will be executed.
      * @see isCheckerCompatibleWith(Checker*,QString)
      */
-    int calculateNumberOfCheckersToBeExecuted(const QStringList& namesOfFilesToBeAnalyzed) const;
+    int calculateNumberOfCheckersToBeExecuted(const QStringList& namesOfFilesToBeAnalyzed,
+                                              const QList<const Checker*>& checkersToRun) const;
 
     /**
      * Returns whether the given checker can analyze any of the files with the
@@ -175,12 +199,22 @@ private:
     bool isCheckerCompatibleWithFile(const Checker* checker, const QString& fileName) const;
 
     /**
+     * Sets the current analysis parameters (and names of files to be analyzed).
+     * The list with the pending file types is populated with the file types of
+     * the checkers of the now current analysis parameters.
+     *
+     * As a new set of analysis parameters is going to be used the number of
+     * files for each file type assumed by the progress parser is reset too.
+     */
+    void prepareNextAnalysisParameters();
+
+    /**
      * Returns the list of checkers to run as a list of strings to be passed to
      * krazy2 as arguments.
-     * The checkers to run are got from the AnalysisParameter. The list returned
-     * by AnalysisParameter contains both normal and extra checkers. However,
-     * when telling krazy2 which checkers to run, normal checkers and extra
-     * checkers must be passed in different arguments.
+     * The checkers to run are got from the current analysis parameters. The
+     * list returned by AnalysisParameters contains both normal and extra
+     * checkers. However, when telling krazy2 which checkers to run, normal
+     * checkers and extra checkers must be passed in different arguments.
      *
      * Moreover, normal checkers and extra checkers can not be specified at the
      * same time; if "--check" argument is used, "--extra" argument takes no
@@ -206,7 +240,8 @@ private:
 
     /**
      * Starts the krazy2 process.
-     * Only the checkers to run for the given file type are executed.
+     * Only the checkers to run of the current analysis parameters and for the
+     * given file type are executed.
      *
      * @param fileType The file type of the subgroup of checkers to run.
      */
@@ -221,8 +256,9 @@ private Q_SLOTS:
 
     /**
      * Adds the results for the current file type to the general results.
-     * If there are other file types pending, starts a new analysis for the next
-     * file type. Else, ends this AnalysisJob emitting the result.
+     * The next AnalysisParameters are prepared, if needed. Then, if there are
+     * other file types pending, starts a new analysis for the next file type.
+     * Else, ends this AnalysisJob emitting the result.
      *
      * @param exitCode Unused.
      */

@@ -78,8 +78,20 @@ void AnalysisResults::addAnalysisResults(const AnalysisResults* analysisResults)
             checker = checkerCopy;
         }
 
-        Issue* issueCopy = new Issue(*issue);
-        issueCopy->setChecker(checker);
-        addIssue(issueCopy);
+        bool duplicated = false;
+        foreach (const Issue* issueToCompare, m_issues) {
+            if (issue->checker()->fileType() == issueToCompare->checker()->fileType() &&
+                issue->checker()->name() == issueToCompare->checker()->name() &&
+                issue->fileName() == issueToCompare->fileName() &&
+                issue->line() == issueToCompare->line()) {
+                duplicated = true;
+            }
+        }
+
+        if (!duplicated) {
+            Issue* issueCopy = new Issue(*issue);
+            issueCopy->setChecker(checker);
+            addIssue(issueCopy);
+        }
     }
 }
