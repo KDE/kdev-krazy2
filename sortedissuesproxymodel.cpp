@@ -26,6 +26,15 @@ SortedIssuesProxyModel::SortedIssuesProxyModel(QObject* parent /*= 0*/):
         QSortFilterProxyModel(parent) {
 }
 
+QVariant SortedIssuesProxyModel::headerData(int section, Qt::Orientation orientation,
+                                            int role /*= Qt::DisplayRole*/) const {
+        if (orientation != Qt::Vertical || (orientation == Qt::Vertical && role != Qt::DisplayRole)) {
+            return QSortFilterProxyModel::headerData(section, orientation, role);
+        }
+
+        return section + 1;
+}
+
 void SortedIssuesProxyModel::sort(int column, Qt::SortOrder order /*= Qt::AscendingOrder*/) {
     emit layoutAboutToBeChanged();
 

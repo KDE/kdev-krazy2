@@ -977,6 +977,12 @@ void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
     QCOMPARE(issue7->checker()->name(), QString("license"));
     QCOMPARE(issue7->fileName(), m_workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml");
 
+    //Ensure that vertical headers go from 1 to the number of issues, no matter
+    //the sorting used.
+    for (int i=0; i<resultsTableView(&view)->model()->rowCount(); ++i) {
+        QCOMPARE(resultsTableView(&view)->model()->headerData(i, Qt::Vertical).toInt(), i+1);
+    }
+
     //Sort by file name
     resultsTableView(&view)->sortByColumn(IssueModel::FileName, Qt::AscendingOrder);
 
@@ -1054,6 +1060,12 @@ void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
     QCOMPARE(issue7->checker()->fileType(), QString("desktop"));
     QCOMPARE(issue7->checker()->name(), QString("validate"));
     QCOMPARE(issue7->fileName(), m_workingDirectory + "examples/subdirectory/singleIssue.desktop");
+
+    //Ensure that vertical headers go from 1 to the number of issues, no matter
+    //the sorting used.
+    for (int i=0; i<resultsTableView(&view)->model()->rowCount(); ++i) {
+        QCOMPARE(resultsTableView(&view)->model()->headerData(i, Qt::Vertical).toInt(), i+1);
+    }
 }
 
 void Krazy2ViewTest::testCancelAnalyze() {

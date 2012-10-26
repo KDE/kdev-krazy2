@@ -29,6 +29,9 @@
  * QSortFilterProxyModel just orders by a column, but keeps a stable sorting of
  * the items, so it is affected by how the items were already sorted.
  *
+ * The vertical header data for the display role is the row number, as the issue
+ * number provided by the IssueModel is of little help once the sorting changes.
+ *
  * The source model for this proxy model must be an IssueModel.
  */
 class SortedIssuesProxyModel: public QSortFilterProxyModel {
@@ -43,6 +46,23 @@ public:
     explicit SortedIssuesProxyModel(QObject* parent = 0);
 
     //<QSortFilterProxyModel>
+
+    /**
+     * Returns the data for the given role and section in the header with the
+     * specified orientation.
+     * The header data for the vertical orientation and the display role is the
+     * row number (the section plus one, as the sections are indexed from 0).
+     * For other roles and the headers for horizontal orientation the default
+     * implementation of the base class is used.
+     *
+     * @param section The section of the header.
+     * @param orientation The orientation of the header.
+     * @param role The role for the header data.
+     * @return The data for the given role, orientation and section of the
+     *         headers.
+     */
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
 
     /**
      * Sorts by column in the given order.

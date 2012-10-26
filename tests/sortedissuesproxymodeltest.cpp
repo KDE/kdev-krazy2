@@ -43,6 +43,8 @@ private slots:
     void sortByLine();
     void sortByLineInDescendingOrder();
 
+    void testDisplayHeaderData();
+
 private:
 
     Checker* newChecker(int fileType, int name) const;
@@ -569,6 +571,70 @@ void SortedIssuesProxyModelTest::sortByLineInDescendingOrder() {
     compareIssues(issueAtRow(&proxyModel, 3), issue2_1_1_1);
     compareIssues(issueAtRow(&proxyModel, 4), issue1_1_2_1);
     compareIssues(issueAtRow(&proxyModel, 5), issue1_2_2_1);
+}
+
+void SortedIssuesProxyModelTest::testDisplayHeaderData() {
+    AnalysisResults analysisResults;
+
+    Checker* checker1_1 = newChecker(1, 1);
+    analysisResults.addChecker(checker1_1);
+    Checker* checker1_2 = newChecker(1, 2);
+    analysisResults.addChecker(checker1_2);
+    Checker* checker2_1 = newChecker(2, 1);
+    analysisResults.addChecker(checker2_1);
+
+    Issue* issue1_2_2_1 = newIssue(checker1_2, 2, 1);
+    analysisResults.addIssue(issue1_2_2_1);
+
+    Issue* issue1_1_2_1 = newIssue(checker1_1, 2, 1);
+    analysisResults.addIssue(issue1_1_2_1);
+
+    Issue* issue1_2_1_2 = newIssue(checker1_2, 1, 2);
+    analysisResults.addIssue(issue1_2_1_2);
+
+    Issue* issue1_2_1_1 = newIssue(checker1_2, 1, 1);
+    analysisResults.addIssue(issue1_2_1_1);
+
+    Issue* issue2_1_1_1 = newIssue(checker2_1, 1, 1);
+    analysisResults.addIssue(issue2_1_1_1);
+
+    Issue* issue1_2_1_3 = newIssue(checker1_2, 1, 3);
+    analysisResults.addIssue(issue1_2_1_3);
+
+    IssueModel issueModel;
+    issueModel.setAnalysisResults(&analysisResults);
+
+    SortedIssuesProxyModel proxyModel;
+    proxyModel.setSourceModel(&issueModel);
+
+    proxyModel.sort(IssueModel::Checker);
+
+    //Ensure that horizontal headers are the same that the source model
+    for (int i=0; i<proxyModel.rowCount(); ++i) {
+        QCOMPARE(proxyModel.headerData(i, Qt::Horizontal, Qt::DisplayRole),
+                 issueModel.headerData(i, Qt::Horizontal, Qt::DisplayRole));
+    }
+
+    //Ensure that vertical headers go from 1 to the number of issues, no matter
+    //the sorting used.
+    for (int i=0; i<proxyModel.rowCount(); ++i) {
+        QCOMPARE(proxyModel.headerData(i, Qt::Vertical, Qt::DisplayRole).toInt(), i+1);
+    }
+
+    //Sort again by a different column
+    proxyModel.sort(IssueModel::FileName);
+
+    //Ensure that horizontal headers are the same that the source model
+    for (int i=0; i<proxyModel.rowCount(); ++i) {
+        QCOMPARE(proxyModel.headerData(i, Qt::Horizontal, Qt::DisplayRole),
+                 issueModel.headerData(i, Qt::Horizontal, Qt::DisplayRole));
+    }
+
+    //Ensure that vertical headers go from 1 to the number of issues, no matter
+    //the sorting used.
+    for (int i=0; i<proxyModel.rowCount(); ++i) {
+        QCOMPARE(proxyModel.headerData(i, Qt::Vertical, Qt::DisplayRole).toInt(), i+1);
+    }
 }
 
 ///////////////////////////////// Helpers //////////////////////////////////////
