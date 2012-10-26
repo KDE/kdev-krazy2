@@ -19,8 +19,6 @@
 
 #include "krazy2view.h"
 
-#include <QSortFilterProxyModel>
-
 #include <kdevplatform/interfaces/icore.h>
 #include <kdevplatform/interfaces/iruncontroller.h>
 
@@ -31,6 +29,7 @@
 #include "issuemodel.h"
 #include "selectcheckerswidget.h"
 #include "selectpathswidget.h"
+#include "sortedissuesproxymodel.h"
 
 #include "ui_krazy2view.h"
 
@@ -49,7 +48,7 @@ Krazy2View::Krazy2View(QWidget* parent /*= 0*/):
 
     m_issueModel = new IssueModel(this);
 
-    QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
+    QSortFilterProxyModel* proxyModel = new SortedIssuesProxyModel(this);
     proxyModel->setDynamicSortFilter(true);
     proxyModel->setSourceModel(m_issueModel);
     m_ui->resultsTableView->setModel(proxyModel);

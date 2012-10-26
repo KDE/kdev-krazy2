@@ -31,6 +31,7 @@ set(kdevkrazy2_library_SRCS
     resultparser.cpp
     selectcheckerswidget.cpp
     selectpathswidget.cpp
+    sortedissuesproxymodel.cpp
 )
 
 # Instead of compiling the plugin directly from the sources, the sources are

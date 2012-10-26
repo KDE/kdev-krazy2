@@ -34,6 +34,7 @@ unit_tests(
     resultparser
     selectcheckerswidget
     selectpathswidget
+    sortedissuesproxymodel
 )
 
 macro(MEM_TESTS)
@@ -58,6 +59,7 @@ mem_tests(
     resultparser
     selectcheckerswidget
     selectpathswidget
+    sortedissuesproxymodel
 )
 
 # Copy example files for real Krazy2 tests to binary directory. The source files
