@@ -20,7 +20,10 @@
 #ifndef ISSUEWIDGET_H
 #define ISSUEWIDGET_H
 
+#include <QPointer>
 #include <QTableView>
+
+#include <kdevplatform/util/activetooltip.h>
 
 class Issue;
 
@@ -76,7 +79,32 @@ protected:
      */
     virtual void contextMenuEvent(QContextMenuEvent* event);
 
+    /**
+     * Handles the event received by the viewport.
+     * Events other than ToolTip are delegated to the base method in the parent
+     * class.
+     *
+     * A custom tool tip is used as the issue explanation may contain links, but
+     * a standard tool tip does not allow links to be opened or copied (as it
+     * hiddens when the cursor goes over the tool tip itself). Besides that, a
+     * single tool tip is shown for the full row, instead of one tool tip for
+     * each item (as the tool tips for the items provided by IssueModel are
+     * equal all along the same row).
+     *
+     * @param event The event received by the viewport.
+     */
+    virtual bool viewportEvent(QEvent* event);
+
 private:
+
+    /**
+     * The current tool tip being shown, if any.
+     * No other tool tip is shown when there is one being shown already. Else,
+     * the previous one would be hidden when the new one was shown, thus making
+     * the tool tip follow the cursor, and also causing flickering each time the
+     * cursor was moved on this IssueWidget.
+     */
+    QPointer<KDevelop::ActiveToolTip> m_currentToolTip;
 
     /**
      * Returns the issue associated to the given index.

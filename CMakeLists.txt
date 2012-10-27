@@ -46,6 +46,7 @@ kde4_add_ui_files(kdevkrazy2_library_SRCS
 kde4_add_library(kdevkrazy2_library ${kdevkrazy2_library_SRCS})
 target_link_libraries(kdevkrazy2_library
     ${KDEVPLATFORM_INTERFACES_LIBRARIES}
+    ${KDEVPLATFORM_UTIL_LIBRARIES}
 )
 
 # In x86_64, linking fails when a static library is added to a shared library.

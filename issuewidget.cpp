@@ -21,7 +21,10 @@
 
 #include <QAbstractProxyModel>
 #include <QContextMenuEvent>
+#include <QHeaderView>
+#include <QLabel>
 #include <QMenu>
+#include <QVBoxLayout>
 
 #include <KLocalizedString>
 
@@ -76,6 +79,52 @@ void IssueWidget::contextMenuEvent(QContextMenuEvent* event) {
     delete menu;
 
     event->accept();
+}
+
+bool IssueWidget::viewportEvent(QEvent* event) {
+    if (event->type() != QEvent::ToolTip) {
+        return QAbstractItemView::viewportEvent(event);
+    }
+
+    if (m_currentToolTip) {
+        return true;
+    }
+
+    QHelpEvent* helpEvent = static_cast<QHelpEvent*>(event);
+
+    QModelIndex index = indexAt(helpEvent->pos());
+    QString toolTipText = index.data(Qt::ToolTipRole).toString();
+    if (toolTipText.isEmpty()) {
+        //Should not happen, but just in case
+        return false;
+    }
+
+    m_currentToolTip = new KDevelop::ActiveToolTip(this, helpEvent->globalPos());
+
+    QLabel* label = new QLabel(m_currentToolTip);
+    label->setText(toolTipText);
+    label->setWordWrap(true);
+
+    QVBoxLayout* layout = new QVBoxLayout(m_currentToolTip);
+    layout->addWidget(label);
+    m_currentToolTip->resize(m_currentToolTip->sizeHint());
+
+    //Do not hide the tool tip if the cursor is on any item of the row
+    QModelIndex firstIndexInRow = model()->index(index.row(), 0);
+    QModelIndex lastIndexInRow = model()->index(index.row(), model()->columnCount() - 1);
+    QRect rowBounds;
+    if (isLeftToRight()) {
+        rowBounds.setTopLeft(viewport()->mapToGlobal(visualRect(firstIndexInRow).topLeft()));
+        rowBounds.setBottomRight(viewport()->mapToGlobal(visualRect(lastIndexInRow).bottomRight()));
+    } else {
+        rowBounds.setTopLeft(viewport()->mapToGlobal(visualRect(lastIndexInRow).topLeft()));
+        rowBounds.setBottomRight(viewport()->mapToGlobal(visualRect(firstIndexInRow).bottomRight()));
+    }
+    m_currentToolTip->addExtendRect(rowBounds);
+
+    KDevelop::ActiveToolTip::showToolTip(m_currentToolTip, 100, "toolTipOnKrazy2Issue");
+
+    return true;
 }
 
 //private:
