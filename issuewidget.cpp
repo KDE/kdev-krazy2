@@ -20,6 +20,10 @@
 #include "issuewidget.h"
 
 #include <QAbstractProxyModel>
+#include <QContextMenuEvent>
+#include <QMenu>
+
+#include <KLocalizedString>
 
 #include <kdevplatform/interfaces/icore.h>
 #include <kdevplatform/interfaces/idocumentcontroller.h>
@@ -34,6 +38,44 @@ IssueWidget::IssueWidget(QWidget* parent /*= 0*/): QTableView(parent) {
 
     connect(this, SIGNAL(activated(QModelIndex)),
             this, SLOT(openDocumentForActivatedIssue(QModelIndex)));
+}
+
+//protected:
+
+void IssueWidget::contextMenuEvent(QContextMenuEvent* event) {
+    QModelIndex indexAtMenu = indexAt(event->pos());
+    if (!indexAtMenu.isValid()) {
+        QTableView::contextMenuEvent(event);
+        return;
+    }
+
+    QModelIndexList selectedRows = selectionModel()->selectedRows();
+    if (selectedRows.isEmpty()) {
+        QTableView::contextMenuEvent(event);
+        return;
+    }
+
+    QStringList selectedFiles;
+    foreach (const QModelIndex& index, selectedRows) {
+        const Issue* issue = issueForIndex(index);
+        if (issue && !selectedFiles.contains(issue->fileName())) {
+            selectedFiles.append(issue->fileName());
+        }
+    }
+
+    QMenu* menu = new QMenu(this);
+    QMenu* analyzeAgainMenu = menu->addMenu(i18nc("@item:inmenu", "Analyze again"));
+    analyzeAgainMenu->addAction(i18ncp("@item:inmenu", "Selected issue",
+                                                       "Selected issues", selectedRows.count()),
+                                this, SLOT(emitAnalyzeAgainIssues()));
+    analyzeAgainMenu->addAction(i18ncp("@item:inmenu", "Selected file",
+                                                       "Selected files", selectedFiles.count()),
+                                this, SLOT(emitAnalyzeAgainFiles()));
+
+    menu->exec(event->globalPos());
+    delete menu;
+
+    event->accept();
 }
 
 //private:
@@ -70,4 +112,38 @@ void IssueWidget::openDocumentForActivatedIssue(const QModelIndex& index) const 
     KTextEditor::Cursor line(issue->line() - 1, 0);
 
     KDevelop::ICore::self()->documentController()->openDocument(url, line);
+}
+
+void IssueWidget::emitAnalyzeAgainIssues() {
+    QModelIndexList selectedRows = selectionModel()->selectedRows();
+    if (selectedRows.isEmpty()) {
+        return;
+    }
+    
+    QList<const Issue*> issues;
+    foreach (const QModelIndex& index, selectedRows) {
+        const Issue* issue = issueForIndex(index);
+        if (issue) {
+            issues.append(issue);
+        }
+    }
+
+    emit analyzeAgainIssues(issues);
+}
+
+void IssueWidget::emitAnalyzeAgainFiles() {
+    QModelIndexList selectedRows = selectionModel()->selectedRows();
+    if (selectedRows.isEmpty()) {
+        return;
+    }
+
+    QStringList fileNames;
+    foreach (const QModelIndex& index, selectedRows) {
+        const Issue* issue = issueForIndex(index);
+        if (issue && !fileNames.contains(issue->fileName())) {
+            fileNames.append(issue->fileName());
+        }
+    }
+
+    emit analyzeAgainFiles(fileNames);
 }

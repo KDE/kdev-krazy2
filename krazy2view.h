@@ -27,6 +27,7 @@ class KJob;
 class AnalysisParameters;
 class AnalysisResults;
 class Checker;
+class Issue;
 class IssueModel;
 
 namespace Ui {
@@ -75,14 +76,37 @@ private:
     QList<const Checker*> m_availableCheckers;
 
     /**
-     * The Krazy2 analysis parameters.
+     * The user selected Krazy2 analysis parameters.
+     * These analysis parameters are modified using the dialogs to select the
+     * paths and the checkers of the analysis.
      */
     AnalysisParameters* m_analysisParameters;
+
+    /**
+     * The list of analysis parameters to use in the current analysis.
+     * When the analysis is started using the "Analyze" button, this list will
+     * contain just the analysis parameters selected by the user.
+     * When the analysis is started using the "Analyze again" menu, this list
+     * will contain one or more analysis parameters to analyze again the issues
+     * or files selected in the results view.
+     */
+    QList<const AnalysisParameters*> m_analysisParametersListForCurrentAnalysis;
 
     /**
      * The Krazy2 analysis results.
      */
     AnalysisResults* m_analysisResults;
+
+    /**
+     * The issues that will be analyzed again.
+     * It is not just the list of issues passed to analyzeAgainIssues. It
+     * contains all the issues that will be analyzed again, even if they are not
+     * explicitly set. That is, it contains all the issues found by the checkers
+     * that will be run again on the files that will be analyzed again.
+     * This list is populated both when analyzing again a list of issues and a
+     * list of files.
+     */
+    QList<const Issue*> m_issuesToAnalyzeAgain;
 
     /**
      * The IssueModel for the AnalysisResults.
@@ -111,8 +135,11 @@ private:
 
     /**
      * Starts the actual analysis registering an AnalysisJob.
+     * The given handler will update the results once the job finishes.
+     *
+     * @param handlerName The name of the slot to update the results.
      */
-    void startAnalysis();
+    void startAnalysis(const char* handlerName);
 
     /**
      * Disables the GUI items before an analysis.
@@ -175,6 +202,36 @@ private Q_SLOTS:
      * @param job The finished job.
      */
     void handleAnalysisResult(KJob* job);
+
+    /**
+     * Analyzes again the given issues.
+     * The checker of each issue is run again on its file.
+     *
+     * @param issues The issues to analyze again.
+     */
+    void analyzeAgainIssues(const QList<const Issue*>& issues);
+
+    /**
+     * Analyzes again the given files.
+     * All the checkers selected by the user are run again on the given files.
+     *
+     * @param fileNames The names of the files to analyze again.
+     */
+    void analyzeAgainFiles(const QStringList& fileNames);
+
+    /**
+     * Updates the results when the analysis job finishes.
+     * The issues to analyze again are removed from the analysis results being
+     * shown in the results view, and then the results found in the current
+     * analysis are added to them. Thus, if an issue was fixed it will no longer
+     * appear, if it was not fixed it will be added again, and if new ones were
+     * introduced they will also be added.
+     *
+     * If the job was killed or any error occured the results are not updated.
+     *
+     * @param job The finished job.
+     */
+    void handleMergeAnalysisResult(KJob* job);
 
 };
 

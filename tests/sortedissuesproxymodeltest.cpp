@@ -45,6 +45,8 @@ private slots:
 
     void testDisplayHeaderData();
 
+    void testAutoSortAfterAnalysisResultsChange();
+
 private:
 
     Checker* newChecker(int fileType, int name) const;
@@ -635,6 +637,54 @@ void SortedIssuesProxyModelTest::testDisplayHeaderData() {
     for (int i=0; i<proxyModel.rowCount(); ++i) {
         QCOMPARE(proxyModel.headerData(i, Qt::Vertical, Qt::DisplayRole).toInt(), i+1);
     }
+}
+
+void SortedIssuesProxyModelTest::testAutoSortAfterAnalysisResultsChange() {
+    AnalysisResults previousAnalysisResults;
+
+    IssueModel issueModel;
+    issueModel.setAnalysisResults(&previousAnalysisResults);
+
+    SortedIssuesProxyModel proxyModel;
+    proxyModel.setSourceModel(&issueModel);
+
+    proxyModel.sort(IssueModel::FileName);
+
+    AnalysisResults analysisResults;
+
+    Checker* checker1_1 = newChecker(1, 1);
+    analysisResults.addChecker(checker1_1);
+    Checker* checker1_2 = newChecker(1, 2);
+    analysisResults.addChecker(checker1_2);
+    Checker* checker2_1 = newChecker(2, 1);
+    analysisResults.addChecker(checker2_1);
+
+    Issue* issue1_2_2_1 = newIssue(checker1_2, 2, 1);
+    analysisResults.addIssue(issue1_2_2_1);
+
+    Issue* issue1_1_3_1 = newIssue(checker1_1, 3, 1);
+    analysisResults.addIssue(issue1_1_3_1);
+
+    Issue* issue1_2_1_2 = newIssue(checker1_2, 1, 2);
+    analysisResults.addIssue(issue1_2_1_2);
+
+    Issue* issue1_2_1_1 = newIssue(checker1_2, 1, 1);
+    analysisResults.addIssue(issue1_2_1_1);
+
+    Issue* issue2_1_1_1 = newIssue(checker2_1, 1, 1);
+    analysisResults.addIssue(issue2_1_1_1);
+
+    Issue* issue1_1_1_1 = newIssue(checker1_1, 1, 1);
+    analysisResults.addIssue(issue1_1_1_1);
+
+    issueModel.setAnalysisResults(&analysisResults);
+
+    compareIssues(issueAtRow(&proxyModel, 0), issue1_1_1_1);
+    compareIssues(issueAtRow(&proxyModel, 1), issue1_2_1_1);
+    compareIssues(issueAtRow(&proxyModel, 2), issue1_2_1_2);
+    compareIssues(issueAtRow(&proxyModel, 3), issue2_1_1_1);
+    compareIssues(issueAtRow(&proxyModel, 4), issue1_2_2_1);
+    compareIssues(issueAtRow(&proxyModel, 5), issue1_1_3_1);
 }
 
 ///////////////////////////////// Helpers //////////////////////////////////////

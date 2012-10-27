@@ -25,7 +25,9 @@
 #include "analysisjob.h"
 #include "analysisparameters.h"
 #include "analysisresults.h"
+#include "checker.h"
 #include "checkerlistjob.h"
+#include "issue.h"
 #include "issuemodel.h"
 #include "selectcheckerswidget.h"
 #include "selectpathswidget.h"
@@ -49,7 +51,6 @@ Krazy2View::Krazy2View(QWidget* parent /*= 0*/):
     m_issueModel = new IssueModel(this);
 
     QSortFilterProxyModel* proxyModel = new SortedIssuesProxyModel(this);
-    proxyModel->setDynamicSortFilter(true);
     proxyModel->setSourceModel(m_issueModel);
     m_ui->resultsTableView->setModel(proxyModel);
     m_ui->resultsTableView->setSortingEnabled(true);
@@ -62,6 +63,11 @@ Krazy2View::Krazy2View(QWidget* parent /*= 0*/):
 
     connect(m_ui->analyzeButton, SIGNAL(clicked()),
             this, SLOT(analyze()));
+
+    connect(m_ui->resultsTableView, SIGNAL(analyzeAgainIssues(QList<const Issue*>)),
+            this, SLOT(analyzeAgainIssues(QList<const Issue*>)));
+    connect(m_ui->resultsTableView, SIGNAL(analyzeAgainFiles(QStringList)),
+            this, SLOT(analyzeAgainFiles(QStringList)));
 }
 
 Krazy2View::~Krazy2View() {
@@ -100,15 +106,16 @@ void Krazy2View::updateAnalyzeButtonStatus() {
     }
 }
 
-void Krazy2View::startAnalysis() {
+void Krazy2View::startAnalysis(const char* handlerName) {
     m_analysisResults = new AnalysisResults();
 
     AnalysisJob* analysisJob = new AnalysisJob(this);
-    analysisJob->addAnalysisParameters(m_analysisParameters);
+    foreach (const AnalysisParameters* analysisParameters, m_analysisParametersListForCurrentAnalysis) {
+        analysisJob->addAnalysisParameters(analysisParameters);
+    }
     analysisJob->setAnalysisResults(m_analysisResults);
 
-    connect(analysisJob, SIGNAL(finished(KJob*)),
-            this, SLOT(handleAnalysisResult(KJob*)));
+    connect(analysisJob, SIGNAL(finished(KJob*)), this, handlerName);
 
     KDevelop::ICore::self()->runController()->registerJob(analysisJob);
 }
@@ -215,7 +222,9 @@ void Krazy2View::handleCheckerInitializationBeforeAnalysis(KJob* job) {
 
     m_analysisParameters->initializeCheckers(m_availableCheckers);
 
-    startAnalysis();
+    m_analysisParametersListForCurrentAnalysis.append(m_analysisParameters);
+
+    startAnalysis(SLOT(handleAnalysisResult(KJob*)));
 }
 
 void Krazy2View::analyze() {
@@ -226,10 +235,14 @@ void Krazy2View::analyze() {
         return;
     }
 
-    startAnalysis();
+    m_analysisParametersListForCurrentAnalysis.append(m_analysisParameters);
+
+    startAnalysis(SLOT(handleAnalysisResult(KJob*)));
 }
 
 void Krazy2View::handleAnalysisResult(KJob* job) {
+    m_analysisParametersListForCurrentAnalysis.clear();
+
     if (job->error() != KJob::NoError) {
         restoreGuiAfterAnalysis();
         return;
@@ -238,6 +251,127 @@ void Krazy2View::handleAnalysisResult(KJob* job) {
     const AnalysisResults* previousAnalysisResults = m_issueModel->analysisResults();
     m_issueModel->setAnalysisResults(m_analysisResults);
     delete previousAnalysisResults;
+
+    restoreGuiAfterAnalysis();
+}
+
+void Krazy2View::analyzeAgainIssues(const QList<const Issue*>& issues) {
+    disableGuiBeforeAnalysis();
+
+    //The issues to analyze again are all the issues found by the same checker
+    //and in the same file of any of the issues explicitly selected to be
+    //checked again
+    QStringList issueGroupsToAnalyzeAgain;
+    foreach (const Issue* issue, issues) {
+        QString key = issue->fileName() + ' ' +
+                      issue->checker()->fileType() + '/' +  issue->checker()->name();
+        if (!issueGroupsToAnalyzeAgain.contains(key)) {
+            issueGroupsToAnalyzeAgain.append(key);
+        }
+    }
+
+    m_issuesToAnalyzeAgain.clear();
+    foreach (const Issue* issue, m_issueModel->analysisResults()->issues()) {
+        QString key = issue->fileName() + ' ' +
+                      issue->checker()->fileType() + '/' +  issue->checker()->name();
+        if (issueGroupsToAnalyzeAgain.contains(key)) {
+            m_issuesToAnalyzeAgain.append(issue);
+        }
+    }
+
+    //Group all the files to be analyzed by the same checker in the same
+    //AnalysisParameters
+    QMultiMap<QString, const Issue*> issuesByChecker;
+    foreach (const Issue* issue, issues) {
+        QString checkerKey = issue->checker()->fileType() + '/' + issue->checker()->name();
+        issuesByChecker.insert(checkerKey, issue);
+    }
+
+    foreach (const QString& checkerKey, issuesByChecker.uniqueKeys()) {
+        QHash<QString, const Checker*> checkerCopyFromFileTypeAndName;
+        QList<const Checker*> availableCheckers;
+        foreach (const Checker* checker, m_analysisParameters->availableCheckers()) {
+            Checker* checkerCopy = new Checker(*checker);
+            availableCheckers.append(checkerCopy);
+            checkerCopyFromFileTypeAndName.insert(checker->fileType() + '/' + checker->name(), checkerCopy);
+        }
+
+        QList<const Checker*> checkersToRun;
+        checkersToRun.append(checkerCopyFromFileTypeAndName.value(checkerKey));
+
+        QStringList filesToBeAnalyzed;
+        foreach (const Issue* issue, issuesByChecker.values(checkerKey)) {
+            filesToBeAnalyzed.append(issue->fileName());
+        }
+
+        AnalysisParameters* analysisParameters = new AnalysisParameters();
+        analysisParameters->initializeCheckers(availableCheckers);
+        analysisParameters->setCheckersToRun(checkersToRun);
+        analysisParameters->setFilesAndDirectories(filesToBeAnalyzed);
+        m_analysisParametersListForCurrentAnalysis.append(analysisParameters);
+    }
+
+    startAnalysis(SLOT(handleMergeAnalysisResult(KJob*)));
+}
+
+void Krazy2View::analyzeAgainFiles(const QStringList& fileNames) {
+    disableGuiBeforeAnalysis();
+
+    m_issuesToAnalyzeAgain.clear();
+    foreach (const Issue* issue, m_issueModel->analysisResults()->issues()) {
+        if (fileNames.contains(issue->fileName())) {
+            m_issuesToAnalyzeAgain.append(issue);
+        }
+    }
+
+    QHash<QString, const Checker*> checkerCopyFromFileTypeAndName;
+    QList<const Checker*> availableCheckers;
+    foreach (const Checker* checker, m_analysisParameters->availableCheckers()) {
+        Checker* checkerCopy = new Checker(*checker);
+        availableCheckers.append(checkerCopy);
+        checkerCopyFromFileTypeAndName.insert(checker->fileType() + '/' + checker->name(), checkerCopy);
+    }
+
+    QList<const Checker*> checkersToRun;
+    foreach (const Checker* checker, m_analysisParameters->checkersToRun()) {
+        checkersToRun.append(checkerCopyFromFileTypeAndName.value(checker->fileType() + '/' + checker->name()));
+    }
+
+    AnalysisParameters* analysisParameters = new AnalysisParameters();
+    analysisParameters->initializeCheckers(availableCheckers);
+    analysisParameters->setCheckersToRun(checkersToRun);
+    analysisParameters->setFilesAndDirectories(fileNames);
+    m_analysisParametersListForCurrentAnalysis.append(analysisParameters);
+
+    startAnalysis(SLOT(handleMergeAnalysisResult(KJob*)));
+}
+
+void Krazy2View::handleMergeAnalysisResult(KJob* job) {
+    qDeleteAll(m_analysisParametersListForCurrentAnalysis);
+    m_analysisParametersListForCurrentAnalysis.clear();
+
+    if (job->error() != KJob::NoError) {
+        restoreGuiAfterAnalysis();
+        return;
+    }
+
+    AnalysisResults* mergedAnalysisResults = new AnalysisResults();
+    foreach (const Checker* checker, m_analysisParameters->availableCheckers()) {
+        mergedAnalysisResults->addChecker(new Checker(*checker));
+    }
+
+    const AnalysisResults* previousAnalysisResults = m_issueModel->analysisResults();
+    foreach (const Issue* issue, previousAnalysisResults->issues()) {
+        if (!m_issuesToAnalyzeAgain.contains(issue)) {
+            Issue* issueCopy = new Issue(*issue);
+            issueCopy->setChecker(mergedAnalysisResults->findChecker(issue->checker()->fileType(),
+                                                                     issue->checker()->name()));
+            mergedAnalysisResults->addIssue(issueCopy);
+        }
+    }
+    mergedAnalysisResults->addAnalysisResults(m_analysisResults);
+
+    m_issueModel->setAnalysisResults(mergedAnalysisResults);
 
     restoreGuiAfterAnalysis();
 }

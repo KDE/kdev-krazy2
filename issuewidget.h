@@ -28,6 +28,12 @@ class Issue;
  * Table view for IssueModel.
  * A regular table view that opens the file referenced by the activated issue.
  *
+ * It also provides a context menu to analyze again the selected issues or
+ * files. The signals analyzeAgainIssues(QList&lt;Issue*&gt;) and
+ * analyzeAgainFiles(QStringList) must be handled to perform the actual
+ * analysis (this view only shows the context menu and emits the signals with
+ * the list of issues or files to analyze again).
+ *
  * The model for this view must be an IssueModel, or a proxy model of which
  * source is an IssueModel.
  */
@@ -41,6 +47,34 @@ public:
      *  @param parent The parent object.
      */
     explicit IssueWidget(QWidget* parent = 0);
+
+Q_SIGNALS:
+
+    /**
+     * A new analysis of the given issues was requested.
+     *
+     * @param issues The issues to analyze again.
+     */
+    void analyzeAgainIssues(QList<const Issue*> issues);
+
+    /**
+     * A new analysis of the given files was requested.
+     *
+     * @param fileNames The names of the files to analyze again.
+     */
+    void analyzeAgainFiles(QStringList fileNames);
+
+protected:
+
+    /**
+     * Shows a menu to analyze again the selected issues or files.
+     * If the menu was requested outside any item of the table or there are no
+     * rows selected, the menu event is delegated to the base method in the
+     * parent class.
+     *
+     * @param event The context menu event.
+     */
+    virtual void contextMenuEvent(QContextMenuEvent* event);
 
 private:
 
@@ -65,6 +99,20 @@ private Q_SLOTS:
      * @param index The index of the activated issue.
      */
     void openDocumentForActivatedIssue(const QModelIndex& index) const;
+
+    /**
+     * Emits analyzeAgainIssues(QList&lt;Issues*&gt;) with the issues associated
+     * to the currently selected items.
+     */
+    void emitAnalyzeAgainIssues();
+
+    /**
+     * Emits analyzeAgainIssues(QList&lt;Issues*&gt;) with the files of the
+     * issues associated to the currently selected items.
+     * Each file is included only once, even if several issues refer to the same
+     * file.
+     */
+    void emitAnalyzeAgainFiles();
 
 };
 

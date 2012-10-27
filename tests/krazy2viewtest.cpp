@@ -52,6 +52,7 @@ private slots:
 
     void initTestCase();
     void init();
+    void cleanup();
     void cleanupTestCase();
 
     void testConstructor();
@@ -68,9 +69,23 @@ private slots:
 
     void testAnalyze();
     void testAnalyzeWithCheckersNotInitialized();
-    void testAnalyzeAgainAfterSorting();
+    void testAnalyzeAfterSorting();
     void testCancelAnalyze();
     void testCancelAnalyzeWithCheckersNotInitialized();
+
+    void testAnalyzeAgainSingleIssue();
+    void testAnalyzeAgainSingleIssueNoChanges();
+    void testAnalyzeAgainSingleIssueNoChangesCheckingOrder();
+    void testAnalyzeAgainSingleIssueNewIssues();
+    void testAnalyzeAgainSeveralIssues();
+    void testAnalyzeAgainSingleIssueCancellingAnalysis();
+
+    void testAnalyzeAgainSingleFile();
+    void testAnalyzeAgainSingleFileNoChanges();
+    void testAnalyzeAgainSingleFileNoChangesCheckingOrder();
+    void testAnalyzeAgainSingleFileNewIssues();
+    void testAnalyzeAgainSeveralFiles();
+    void testAnalyzeAgainSingleFileCancellingAnalysis();
 
 private:
 
@@ -86,8 +101,8 @@ private:
     bool examplesInSubdirectory() const;
     bool krazy2InPath() const;
 
-    AnalysisParameters* analysisParametersFrom(Krazy2View* view) const;
-    const AnalysisResults* analysisResultsFrom(Krazy2View* view) const;
+    AnalysisParameters* analysisParametersFrom(const Krazy2View* view) const;
+    const AnalysisResults* analysisResultsFrom(const Krazy2View* view) const;
 
     KPushButton* selectPathsButton(const Krazy2View* view) const;
     KPushButton* selectCheckersButton(const Krazy2View* view) const;
@@ -97,6 +112,14 @@ private:
     const Issue* findIssue(const AnalysisResults* analysisResults,
                            const QString& checkerName,
                            const QString& exampleFileName, int line) const;
+
+    bool appendTextToFile(const QString& fileName, const QString& text) const;
+
+    void setUpToAnalyzeAgainIssues(const Krazy2View* view);
+    void setUpToAnalyzeAgainFiles(const Krazy2View* view);
+
+    void analyzeAgainIssues(const Krazy2View* view, const QList<int> issueRows);
+    void analyzeAgainFiles(const Krazy2View* view, const QList<int> issueRows);
 
     void queueAddPaths(const Krazy2View* view,
                        const QString& directory,
@@ -175,6 +198,11 @@ void Krazy2ViewTest::init() {
 
     KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
+}
+
+void Krazy2ViewTest::cleanup() {
+    QFile::remove(m_workingDirectory + "examples/singleIssueCopy.cpp");
+    QFile::remove(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
 }
 
 void Krazy2ViewTest::cleanupTestCase() {
@@ -763,8 +791,7 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
     //events must be processed before executing the QCOMPARE. Otherwise, if it
     //failed, when the control returns to the event loop the emitting object
     //will no longer exist, and StatusBar::showProgress(IStatus*,int,int,int)
-    //would crash (and in the testAnalyzeAgainAfterSorting() method, which would
-    //be very misleading).
+    //would crash (and in the nex test method, which would be very misleading).
     QApplication::processEvents();
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -870,8 +897,7 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
     QCOMPARE(issue10->checker()->fileType(), QString("qml"));
 }
 
-
-void Krazy2ViewTest::testAnalyzeAgainAfterSorting() {
+void Krazy2ViewTest::testAnalyzeAfterSorting() {
     Krazy2View view;
 
     //Add several paths
@@ -1150,6 +1176,646 @@ void Krazy2ViewTest::testCancelAnalyzeWithCheckersNotInitialized() {
     QVERIFY(!analysisResultsFrom(&view));
 }
 
+void Krazy2ViewTest::testAnalyzeAgainSingleIssue() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainIssues(&view);
+
+    //Add another spelling issue, but on a different file
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "//A spelling issue: occured\n");
+
+    //Remove the issue to be checked again, but add another one for a different
+    //checker
+    QFile::remove(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QVERIFY(QFile::copy(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp",
+                        m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp"));
+
+    //The code is added outside the main function... but it does not matter ;)
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
+
+    //Analyze again the last issue
+    analyzeAgainIssues(&view, QList<int>() << 6);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 6);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 6));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 10));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
+}
+
+void Krazy2ViewTest::testAnalyzeAgainSingleIssueNoChanges() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainIssues(&view);
+
+    //Add another spelling issue, but on a different file
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "//A spelling issue: occured\n");
+
+    //The code is added outside the main function... but it does not matter ;)
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
+
+    //Analyze again the last issue
+    analyzeAgainIssues(&view, QList<int>() << 6);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 7);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 6));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 10));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 18));
+}
+
+void Krazy2ViewTest::testAnalyzeAgainSingleIssueNoChangesCheckingOrder() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainIssues(&view);
+
+    //Analyze the first issue. The doublequote_chars issues in that file will be
+    //removed from the analysis results, and then appended after the rest of the
+    //issues (as they will still be present in the file when it is checked
+    //again). However, to the user it should appear in the same position as it
+    //was. If sorted using a standard QSortFilterProxyModel, a stable sort by
+    //checker name would be made, so the issue would appear after the rest of
+    //doublequote_chars issues, instead of before them.
+    analyzeAgainIssues(&view, QList<int>() << 0);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 7);
+
+    //Check that the doublequote_chars issues in
+    //severalIssuesSeveralCheckersCopy.cpp were actually appended to the results
+    const Issue* issue6 = analysisResults->issues()[5];
+    QCOMPARE(issue6->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue6->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issue6->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QCOMPARE(issue6->line(), 8);
+
+    const Issue* issue7 = analysisResults->issues()[6];
+    QCOMPARE(issue7->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue7->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issue7->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QCOMPARE(issue7->line(), 12);
+
+    QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
+    IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
+
+    QModelIndex index1 = proxyModel->mapToSource(proxyModel->index(0, 0));
+    QCOMPARE(issueModel->issueForIndex(index1)->checker()->fileType(), QString("c++"));
+    QCOMPARE(issueModel->issueForIndex(index1)->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issueModel->issueForIndex(index1)->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QCOMPARE(issueModel->issueForIndex(index1)->line(), 8);
+    QCOMPARE(issueModel->issueForIndex(index1), issue6);
+
+    QModelIndex index2 = proxyModel->mapToSource(proxyModel->index(1, 0));
+    QCOMPARE(issueModel->issueForIndex(index2)->checker()->fileType(), QString("c++"));
+    QCOMPARE(issueModel->issueForIndex(index2)->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issueModel->issueForIndex(index2)->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QCOMPARE(issueModel->issueForIndex(index2)->line(), 12);
+    QCOMPARE(issueModel->issueForIndex(index2), issue7);
+}
+
+void Krazy2ViewTest::testAnalyzeAgainSingleIssueNewIssues() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainIssues(&view);
+
+    //Add another spelling issue, but on a different file
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "//A spelling issue: occured\n");
+
+    //Remove the issue to be checked again, but add another one for a different
+    //checker, and another one for the same checker
+    QFile::remove(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QVERIFY(QFile::copy(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp",
+                        m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp"));
+
+    //The code is added outside the main function... but it does not matter ;)
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "//A new spelling issue: speling\n");
+
+    //Analyze again the last issue
+    analyzeAgainIssues(&view, QList<int>() << 6);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 7);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 6));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 10));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 19));
+}
+
+void Krazy2ViewTest::testAnalyzeAgainSeveralIssues() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainIssues(&view);
+
+    //Add a doublequote_chars issue and a spelling issue to the file checked for
+    //doublequote_chars issues
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "//A spelling issue: occured\n");
+
+    //Remove the last spelling issue and add a doublequote_chars issue to the
+    //file checked for spelling issues
+    QFile::remove(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QVERIFY(QFile::copy(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp",
+                        m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp"));
+
+    //The code is added outside the main function... but it does not matter ;)
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
+
+    //Analyze again the doublequote_chars issue in singleIssueCopy.cpp and the
+    //second and the last spelling issue in severalIssuesSeveralCheckersCopy.cpp
+    analyzeAgainIssues(&view, QList<int>() << 2 << 4 << 6);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 7);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 6));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 10));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
+}
+
+void Krazy2ViewTest::testAnalyzeAgainSingleIssueCancellingAnalysis() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainIssues(&view);
+
+    //Add another spelling issue, but on a different file
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "//A spelling issue: occured\n");
+
+    //Remove the issue to be checked again, but add another one for a different
+    //checker
+    QFile::remove(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QVERIFY(QFile::copy(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp",
+                        m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp"));
+
+    //The code is added outside the main function... but it does not matter ;)
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
+
+    //Analyze again the last issue
+    analyzeAgainIssues(&view, QList<int>() << 6);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(view.findChild<AnalysisJob*>());
+
+    //Queue stopping the job to ensure that kWaitForSignal is already waiting
+    //for the signal when it is emitted.
+    QTimer::singleShot(100, KDevelop::ICore::self()->runController(), SLOT(stopAllProcesses()));
+    QTest::kWaitForSignal(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 7);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 6));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 10));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 18));
+}
+
+void Krazy2ViewTest::testAnalyzeAgainSingleFile() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainFiles(&view);
+
+    //Add a doublequote_chars issue and a spelling issue, but on a different
+    //file
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "//A spelling issue: occured\n");
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
+
+    //Remove some of the issues from the file to be checked again
+    QFile::remove(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QVERIFY(QFile::copy(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp",
+                        m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp"));
+
+    //Analyze again the file of the last issue
+    analyzeAgainFiles(&view, QList<int>() << 6);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 6);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 6));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 10));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
+}
+
+void Krazy2ViewTest::testAnalyzeAgainSingleFileNoChanges() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainFiles(&view);
+
+    //Add a doublequote_chars issue and a spelling issue, but on a different
+    //file
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "//A spelling issue: occured\n");
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
+
+    //Analyze again the file of the last issue
+    analyzeAgainFiles(&view, QList<int>() << 6);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 8);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 19));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 6));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 10));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 18));
+}
+
+void Krazy2ViewTest::testAnalyzeAgainSingleFileNoChangesCheckingOrder() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainIssues(&view);
+
+    //Analyze the file of the first issue. The issues of that file will be
+    //removed from the analysis results, and then appended after the rest of the
+    //issues (as they will still be present in the file when it is checked
+    //again). However, to the user they should appear in the same position as
+    //they were. If sorted using a standard QSortFilterProxyModel, a stable
+    //sort by checker name would be made, so the doublequote_chars issues would
+    //appear after the rest of the doublequote_chars issues, instead of before
+    //them (the spelling issues are not affected, as all the spelling issues
+    //appear in the file checked again).
+    analyzeAgainFiles(&view, QList<int>() << 0);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 7);
+
+    //Check that the doublequote_chars issues in
+    //severalIssuesSeveralCheckersCopy.cpp were actually appended to the results
+    const Issue* issue2 = analysisResults->issues()[1];
+    QCOMPARE(issue2->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue2->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issue2->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QCOMPARE(issue2->line(), 8);
+
+    const Issue* issue3 = analysisResults->issues()[2];
+    QCOMPARE(issue3->checker()->fileType(), QString("c++"));
+    QCOMPARE(issue3->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issue3->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QCOMPARE(issue3->line(), 12);
+
+    QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(&view)->model());
+    IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
+
+    QModelIndex index1 = proxyModel->mapToSource(proxyModel->index(0, 0));
+    QCOMPARE(issueModel->issueForIndex(index1)->checker()->fileType(), QString("c++"));
+    QCOMPARE(issueModel->issueForIndex(index1)->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issueModel->issueForIndex(index1)->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QCOMPARE(issueModel->issueForIndex(index1)->line(), 8);
+    QCOMPARE(issueModel->issueForIndex(index1), issue2);
+
+    QModelIndex index2 = proxyModel->mapToSource(proxyModel->index(1, 0));
+    QCOMPARE(issueModel->issueForIndex(index2)->checker()->fileType(), QString("c++"));
+    QCOMPARE(issueModel->issueForIndex(index2)->checker()->name(), QString("doublequote_chars"));
+    QCOMPARE(issueModel->issueForIndex(index2)->fileName(), m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QCOMPARE(issueModel->issueForIndex(index2)->line(), 12);
+    QCOMPARE(issueModel->issueForIndex(index2), issue3);
+}
+
+void Krazy2ViewTest::testAnalyzeAgainSingleFileNewIssues() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainFiles(&view);
+
+    //Add a doublequote_chars issue and a spelling issue, but on a different
+    //file
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "//A spelling issue: occured\n");
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
+
+    //Remove some of the issues from the file to be checked again, but add new
+    //doublequote_chars issues and spelling issues
+    QFile::remove(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QVERIFY(QFile::copy(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp",
+                        m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp"));
+
+    //The code is added outside the main function... but it does not matter ;)
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "std::cout << QString(\"Hello Again and Again World!\") + \"\\n\";\n");
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "//A new spelling issue: speling\n");
+
+    //Analyze again the file of the last issue
+    analyzeAgainFiles(&view, QList<int>() << 6);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 8);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 18));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 6));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 10));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 19));
+}
+
+void Krazy2ViewTest::testAnalyzeAgainSeveralFiles() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainFiles(&view);
+
+    //Add a doublequote_chars issue and a spelling issue to the file checked for
+    //doublequote_chars issues
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "//A spelling issue: occured\n");
+
+    //Remove some of the issues from the file of the last issue, but add new
+    //doublequote_chars issues and spelling issues
+    QFile::remove(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QVERIFY(QFile::copy(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp",
+                        m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp"));
+
+    //The code is added outside the main function... but it does not matter ;)
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "std::cout << QString(\"Hello Again and Again World!\") + \"\\n\";\n");
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "//A new spelling issue: speling\n");
+
+    //Analyze again the first doublequote_chars issue in
+    //severalIssuesSeveralCheckersCopy.cpp, the doublequote_chars issue in
+    //singleIssueCopy.cpp and the last spelling issue in
+    //severalIssuesSeveralCheckersCopy.cpp
+    analyzeAgainFiles(&view, QList<int>() << 0 << 3 << 7);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 10);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 18));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 6));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 10));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 19));
+    QVERIFY(findIssue(analysisResults, "spelling", "singleIssueCopy.cpp", 13));
+}
+
+void Krazy2ViewTest::testAnalyzeAgainSingleFileCancellingAnalysis() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainFiles(&view);
+
+    //Add a doublequote_chars issue and a spelling issue, but on a different
+    //file
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "//A spelling issue: occured\n");
+    appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
+                     "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
+
+    //Remove some of the issues from the file to be checked again
+    QFile::remove(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+    QVERIFY(QFile::copy(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp",
+                        m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp"));
+
+    //Analyze again the file of the last issue
+    analyzeAgainFiles(&view, QList<int>() << 6);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(view.findChild<AnalysisJob*>());
+
+    //Queue stopping the job to ensure that kWaitForSignal is already waiting
+    //for the signal when it is emitted.
+    QTimer::singleShot(100, KDevelop::ICore::self()->runController(), SLOT(stopAllProcesses()));
+    QTest::kWaitForSignal(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 8);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 19));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 6));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 10));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 18));
+}
+
 ///////////////////////////////// Helpers //////////////////////////////////////
 
 bool Krazy2ViewTest::examplesInSubdirectory() const {
@@ -1181,11 +1847,11 @@ bool Krazy2ViewTest::krazy2InPath() const {
     return true;
 }
 
-AnalysisParameters* Krazy2ViewTest::analysisParametersFrom(Krazy2View* view) const {
+AnalysisParameters* Krazy2ViewTest::analysisParametersFrom(const Krazy2View* view) const {
     return view->m_analysisParameters;
 }
 
-const AnalysisResults* Krazy2ViewTest::analysisResultsFrom(Krazy2View* view) const {
+const AnalysisResults* Krazy2ViewTest::analysisResultsFrom(const Krazy2View* view) const {
     QSortFilterProxyModel* proxyModel = static_cast<QSortFilterProxyModel*>(resultsTableView(view)->model());
     IssueModel* issueModel = static_cast<IssueModel*>(proxyModel->sourceModel());
     return issueModel->analysisResults();
@@ -1220,6 +1886,246 @@ const Issue* Krazy2ViewTest::findIssue(const AnalysisResults* analysisResults,
     }
 
     return 0;
+}
+
+bool Krazy2ViewTest::appendTextToFile(const QString& fileName, const QString& text) const {
+    QFile file(fileName);
+    if (!file.open(QIODevice::Append | QIODevice::Text)) {
+        return false;
+    }
+
+    QTextStream out(&file);
+    out << QString(text);
+    file.close();
+
+    return true;
+}
+
+void Krazy2ViewTest::setUpToAnalyzeAgainIssues(const Krazy2View* view) {
+    QVERIFY(QFile::copy(m_workingDirectory + "examples/singleIssue.cpp",
+                        m_workingDirectory + "examples/singleIssueCopy.cpp"));
+    QVERIFY(QFile::copy(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp",
+                        m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp"));
+
+    //Add another spelling issue
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "//And even another spelling issue: occured\n");
+
+    //Add several paths
+    queueAddPaths(view, m_workingDirectory + "examples/",
+                  QStringList() << "severalIssuesSeveralCheckersCopy.cpp"
+                                << "singleIssueCopy.cpp"
+                                << "subdirectory");
+
+    selectPathsButton(view)->click();
+
+    QList<const Checker*> availableCheckers;
+    availableCheckers.append(new Checker(*m_cppDoubleQuoteCharsChecker));
+    availableCheckers.append(new Checker(*m_cppLicenseChecker));
+    availableCheckers.append(new Checker(*m_cppSpellingChecker));
+
+    analysisParametersFrom(view)->initializeCheckers(availableCheckers);
+
+    //Do not run license checker
+    queueRemoveCheckers(view, QStringList() << "0-1");
+
+    selectCheckersButton(view)->click();
+
+    analyzeButton(view)->click();
+
+    QCOMPARE(view->cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view->findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view->cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(view)->isEnabled());
+    QVERIFY(selectCheckersButton(view)->isEnabled());
+    QVERIFY(analyzeButton(view)->isEnabled());
+    QVERIFY(resultsTableView(view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 7);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 6));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 10));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 18));
+
+    //Ensure that the previous AnalysisJob was deleted before starting a new one
+    //to be able to find the new one easily.
+    QCoreApplication::processEvents(QEventLoop::DeferredDeletion);
+    QVERIFY(!view->findChild<AnalysisJob*>());
+}
+
+void Krazy2ViewTest::setUpToAnalyzeAgainFiles(const Krazy2View* view) {
+    QVERIFY(QFile::copy(m_workingDirectory + "examples/singleIssue.cpp",
+                        m_workingDirectory + "examples/singleIssueCopy.cpp"));
+    QVERIFY(QFile::copy(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp",
+                        m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp"));
+
+    //Add another spelling issue
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "//And even another spelling issue: occured\n");
+
+    //Add another doublequote_chars issue
+    //The code is added outside the main function... but it does not matter ;)
+    appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
+                     "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
+
+    //Add several paths
+    queueAddPaths(view, m_workingDirectory + "examples/",
+                  QStringList() << "severalIssuesSeveralCheckersCopy.cpp"
+                                << "singleIssueCopy.cpp"
+                                << "subdirectory");
+
+    selectPathsButton(view)->click();
+
+    QList<const Checker*> availableCheckers;
+    availableCheckers.append(new Checker(*m_cppDoubleQuoteCharsChecker));
+    availableCheckers.append(new Checker(*m_cppLicenseChecker));
+    availableCheckers.append(new Checker(*m_cppSpellingChecker));
+
+    analysisParametersFrom(view)->initializeCheckers(availableCheckers);
+
+    //Do not run license checker
+    queueRemoveCheckers(view, QStringList() << "0-1");
+
+    selectCheckersButton(view)->click();
+
+    analyzeButton(view)->click();
+
+    QCOMPARE(view->cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view->findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view->cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(view)->isEnabled());
+    QVERIFY(selectCheckersButton(view)->isEnabled());
+    QVERIFY(analyzeButton(view)->isEnabled());
+    QVERIFY(resultsTableView(view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 8);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 19));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "singleIssueCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 6));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 10));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
+    QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 18));
+
+    //Ensure that the previous AnalysisJob was deleted before starting a new one
+    //to be able to find the new one easily.
+    QCoreApplication::processEvents(QEventLoop::DeferredDeletion);
+    QVERIFY(!view->findChild<AnalysisJob*>());
+}
+
+//The context menu contains its own event loop, so it won't return to the test
+//code until it is closed. Thus, the commands to execute on the menu must be
+//"queued", as calling QTest::keyClick after showing the menu won't work.
+class QueuedContextMenuAction: public QObject {
+Q_OBJECT
+public:
+
+    QueuedContextMenuAction(QObject* parent = 0): QObject(parent) {
+    }
+
+public slots:
+
+    void activateAnalyzeAgainIssueContextMenuOption() {
+        if (!QApplication::activePopupWidget()) {
+            QTimer::singleShot(100, this, SLOT(activateAnalyzeAgainIssueContextMenuOption()));
+            return;
+        }
+
+        QTest::keyClick(QApplication::activePopupWidget(), Qt::Key_Down);
+        QTest::keyClick(QApplication::activePopupWidget(), Qt::Key_Right);
+        QTest::keyClick(QApplication::activePopupWidget(), Qt::Key_Enter);
+    }
+
+    void activateAnalyzeAgainFileContextMenuOption() {
+        if (!QApplication::activePopupWidget()) {
+            QTimer::singleShot(100, this, SLOT(activateAnalyzeAgainFileContextMenuOption()));
+            return;
+        }
+
+        QTest::keyClick(QApplication::activePopupWidget(), Qt::Key_Down);
+        QTest::keyClick(QApplication::activePopupWidget(), Qt::Key_Right);
+        QTest::keyClick(QApplication::activePopupWidget(), Qt::Key_Down);
+        QTest::keyClick(QApplication::activePopupWidget(), Qt::Key_Enter);
+    }
+
+};
+
+void Krazy2ViewTest::analyzeAgainIssues(const Krazy2View* view, const QList< int > issueRows) {
+    QAbstractItemModel* model = resultsTableView(view)->model();
+
+    QModelIndex issueIndex;
+    QPoint issueCenter;
+    foreach (int row, issueRows) {
+        issueIndex = model->index(row, 0);
+        issueCenter = resultsTableView(view)->visualRect(issueIndex).center();
+
+        //Select the item clicking on it
+        QTest::mouseClick(resultsTableView(view)->viewport(), Qt::LeftButton, Qt::ControlModifier, issueCenter);
+    }
+
+    //The context menu can't be triggered sending a right mouse button press
+    //event, as that is platform dependent (that event is not handled by
+    //QTableView or its parents, but by the QApplication for the platform that
+    //creates a context menu event when needed). An explicit QContextMenuEvent
+    //must be sent for it to work.
+    QContextMenuEvent event(QContextMenuEvent::Mouse, issueCenter,
+                            resultsTableView(view)->mapToGlobal(issueCenter));
+
+    QueuedContextMenuAction* helper = new QueuedContextMenuAction(this);
+    helper->activateAnalyzeAgainIssueContextMenuOption();
+
+    QApplication::sendEvent(resultsTableView(view)->viewport(), &event);
+}
+
+void Krazy2ViewTest::analyzeAgainFiles(const Krazy2View* view, const QList< int > issueRows) {
+    QAbstractItemModel* model = resultsTableView(view)->model();
+
+    QModelIndex issueIndex;
+    QPoint issueCenter;
+    foreach (int row, issueRows) {
+        issueIndex = model->index(row, 0);
+        issueCenter = resultsTableView(view)->visualRect(issueIndex).center();
+
+        //Select the item clicking on it
+        QTest::mouseClick(resultsTableView(view)->viewport(), Qt::LeftButton, Qt::ControlModifier, issueCenter);
+    }
+
+    //The context menu can't be triggered sending a right mouse button press
+    //event, as that is platform dependent (that event is not handled by
+    //QTableView or its parents, but by the QApplication for the platform that
+    //creates a context menu event when needed). An explicit QContextMenuEvent
+    //must be sent for it to work.
+    QContextMenuEvent event(QContextMenuEvent::Mouse, issueCenter,
+                            resultsTableView(view)->mapToGlobal(issueCenter));
+
+    QueuedContextMenuAction* helper = new QueuedContextMenuAction(this);
+    helper->activateAnalyzeAgainFileContextMenuOption();
+
+    QApplication::sendEvent(resultsTableView(view)->viewport(), &event);
 }
 
 //The dialogs are modal, so they won't return to the test code until they are

@@ -65,3 +65,26 @@ void SortedIssuesProxyModel::sort(int column, Qt::SortOrder order /*= Qt::Ascend
 
     emit layoutChanged();
 }
+
+void SortedIssuesProxyModel::setSourceModel(QAbstractItemModel* sourceModel) {
+    if (this->sourceModel()) {
+        disconnect(this->sourceModel(), SIGNAL(modelReset()),
+                   this, SLOT(sortByLastUsedValues()));
+    }
+
+    QSortFilterProxyModel::setSourceModel(sourceModel);
+
+    //The dynamicSortFilter can not be used to sort again the model when the
+    //source model changes, as it uses an internal private sort method instead
+    //of calling the one defined in this class.
+    //It is only needed to handle the modelReset signal, as it is the one
+    //emitted by IssueModel when an AnalylisisResults is set.
+    connect(this->sourceModel(), SIGNAL(modelReset()),
+            this, SLOT(sortByLastUsedValues()));
+}
+
+//private:
+
+void SortedIssuesProxyModel::sortByLastUsedValues() {
+    sort(sortColumn(), sortOrder());
+}

@@ -32,6 +32,9 @@
  * The vertical header data for the display role is the row number, as the issue
  * number provided by the IssueModel is of little help once the sorting changes.
  *
+ * The proxy model is sorted again automatically when the source model is reset,
+ * that is, when a different AnalysisResults is set in the IssueModel.
+ *
  * The source model for this proxy model must be an IssueModel.
  */
 class SortedIssuesProxyModel: public QSortFilterProxyModel {
@@ -76,7 +79,21 @@ public:
      */
     virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
 
+    /**
+     * Sets the given sourceModel to be processed by the proxy model.
+     *
+     * @param sourceModel The source model to set.
+     */
+    virtual void setSourceModel(QAbstractItemModel* sourceModel);
+
     //</QSortFilterProxyModel>
+
+private Q_SLOTS:
+
+    /**
+     * Sorts again after the source model has been reset.
+     */
+    void sortByLastUsedValues();
 
 };
 
