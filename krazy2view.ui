@@ -57,6 +57,11 @@
      </item>
      <item>
       <widget class="KPushButton" name="analyzeButton">
+       <property name="whatsThis">
+        <string comment="@info:whatsthis">&lt;para&gt;Analyzes all the selected paths with the checkers to run.&lt;/para&gt;
+
+&lt;para&gt;The results from the previous analysis, if any, are replaced with the new ones.&lt;/para&gt;</string>
+       </property>
        <property name="text">
         <string comment="@caption:button">Analyze</string>
        </property>
@@ -65,7 +70,13 @@
     </layout>
    </item>
    <item>
-    <widget class="IssueWidget" name="resultsTableView"/>
+    <widget class="IssueWidget" name="resultsTableView">
+     <property name="whatsThis">
+      <string comment="@info:whatsthis">&lt;para&gt;The analysis results.&lt;/para&gt;
+
+&lt;para&gt;When one or more issues are selected, they, or the files were they appear, can be analyzed again using the context menu of the issues. If the issues are analyzed again, the checker of each issue is run again on the file where that issue appears. If the files are analyzed again, every checker selected by the user is run again on the files selected in the analysis results. In both cases, the new analysis results are merged with the previous ones, instead of replacing them (like a normal analysis would do).&lt;/para&gt;</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
