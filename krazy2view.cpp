@@ -19,6 +19,8 @@
 
 #include "krazy2view.h"
 
+#include <QPointer>
+
 #include <kdevplatform/interfaces/icore.h>
 #include <kdevplatform/interfaces/iruncontroller.h>
 
@@ -140,26 +142,26 @@ void Krazy2View::restoreGuiAfterAnalysis() {
 //private slots:
 
 void Krazy2View::selectPaths() {
-    KDialog* dialog = new KDialog(this);
+    QPointer<KDialog> dialog = new KDialog(this);
     SelectPathsWidget* selectPathsWidget =
             new SelectPathsWidget(m_analysisParameters->filesAndDirectories(), dialog);
     dialog->setMainWidget(selectPathsWidget);
     dialog->setWindowTitle(selectPathsWidget->windowTitle());
 
     if (dialog->exec() == QDialog::Rejected) {
-        dialog->deleteLater();
+        delete dialog;
         return;
     }
 
     m_analysisParameters->setFilesAndDirectories(selectPathsWidget->selectedFilesAndDirectories());
 
-    dialog->deleteLater();
+    delete dialog;
 
     updateAnalyzeButtonStatus();
 }
 
 void Krazy2View::selectCheckers() {
-    KDialog* dialog = new KDialog(this);
+    QPointer<KDialog> dialog = new KDialog(this);
     SelectCheckersWidget* selectCheckersWidget = new SelectCheckersWidget(dialog);
     if (m_analysisParameters->wereCheckersInitialized()) {
         selectCheckersWidget->setCheckers(m_analysisParameters->availableCheckers(),
@@ -173,13 +175,13 @@ void Krazy2View::selectCheckers() {
     dialog->setWindowTitle(selectCheckersWidget->windowTitle());
 
     if (dialog->exec() == QDialog::Rejected) {
-        dialog->deleteLater();
+        delete dialog;
         return;
     }
 
     m_analysisParameters->setCheckersToRun(selectCheckersWidget->checkersToRun());
 
-    dialog->deleteLater();
+    delete dialog;
 
     updateAnalyzeButtonStatus();
 }

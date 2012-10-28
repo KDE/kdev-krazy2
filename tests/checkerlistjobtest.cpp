@@ -53,7 +53,7 @@ public:
                 m_timer.setSingleShot(true);
                 m_timer.start(timeout);
             }
-            m_loop.exec();
+            m_loop.exec(); //krazy:exclude=crashy
         }
 
         if (m_signalSpy.count() >= 0) {

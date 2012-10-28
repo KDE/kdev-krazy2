@@ -19,6 +19,7 @@
 
 #include "selectpathswidget.h"
 
+#include <QPointer>
 #include <QStringListModel>
 
 #include <KFileDialog>
@@ -90,7 +91,7 @@ void SelectPathsWidget::updatePaths() {
 //private slots:
 
 void SelectPathsWidget::add() {
-    KFileDialog* fileDialog = new KFileDialog(QUrl(), "", this);
+    QPointer<KFileDialog> fileDialog = new KFileDialog(QUrl(), "", this);
     fileDialog->setOperationMode(KFileDialog::Other);
     fileDialog->setMode(KFile::Files | KFile::Directory | KFile::ExistingOnly);
 
