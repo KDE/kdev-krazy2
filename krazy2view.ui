@@ -33,7 +33,7 @@
        <property name="whatsThis">
         <string comment="@info:whatsthis">&lt;para&gt;Sets the checkers that will be executed.&lt;/para&gt;
 
-&lt;para&gt;If the analysis is started before selecting the checkers the default checkers will be used (that is, all the normal checkers, but no extra checker).&lt;/para&gt;
+&lt;para&gt;If the analysis is started before selecting the checkers the default checkers will be used (that is, all the normal checkers, but no extra checkers).&lt;/para&gt;
 
 &lt;para&gt;The first time the dialog to select the checkers is shown the checker lists will be disabled (unless an analysis has already been performed). It will take some seconds until the available checkers are got from Krazy2 and the lists enabled.&lt;/para&gt;</string>
        </property>

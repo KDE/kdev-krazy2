@@ -85,7 +85,7 @@
         <string comment="@info:tooltip">Remove checkers</string>
        </property>
        <property name="whatsThis">
-        <string comment="@info:whatsthis">&lt;para&gt;Removes the checkers selected from the &lt;interface&gt;Checkers to run&lt;/interface&gt; list.&lt;/para&gt;
+        <string comment="@info:whatsthis">&lt;para&gt;Removes the selected checkers from the &lt;interface&gt;Checkers to run&lt;/interface&gt; list.&lt;/para&gt;
 
 &lt;para&gt;The checkers will be added to the &lt;interface&gt;Other available checkers&lt;/interface&gt; list.&lt;/para&gt;</string>
        </property>
