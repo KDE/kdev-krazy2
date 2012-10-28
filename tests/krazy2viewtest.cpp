@@ -841,7 +841,7 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
     const Issue* issue4 = findIssue(analysisResults, "spelling",
                                     "severalIssuesSeveralCheckers.cpp", 6);
     QVERIFY(issue4);
-    QCOMPARE(issue4->message(), QString("begining"));
+    QCOMPARE(issue4->message(), QString("begining")); //krazy:exclude=spelling
     QCOMPARE(issue4->checker()->description(),
              QString("Check for spelling errors"));
     QVERIFY(issue4->checker()->explanation().startsWith(
@@ -851,13 +851,13 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
     const Issue* issue5 = findIssue(analysisResults, "spelling",
                                     "severalIssuesSeveralCheckers.cpp", 10);
     QVERIFY(issue5);
-    QCOMPARE(issue5->message(), QString("commiting"));
+    QCOMPARE(issue5->message(), QString("commiting")); //krazy:exclude=spelling
     QCOMPARE(issue5->checker(), issue4->checker());
 
     const Issue* issue6 = findIssue(analysisResults, "spelling",
                                     "severalIssuesSeveralCheckers.cpp", 14);
     QVERIFY(issue6);
-    QCOMPARE(issue6->message(), QString("labelling"));
+    QCOMPARE(issue6->message(), QString("labelling")); //krazy:exclude=spelling
     QCOMPARE(issue6->checker(), issue4->checker());
 
     const Issue* issue7 = findIssue(analysisResults, "validate",
@@ -889,7 +889,7 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
     const Issue* issue10 = findIssue(analysisResults, "spelling",
                                     "subdirectory/severalIssuesSeveralCheckers.qml", 3);
     QVERIFY(issue10);
-    QCOMPARE(issue10->message(), QString("occured"));
+    QCOMPARE(issue10->message(), QString("occured")); //krazy:exclude=spelling
     QCOMPARE(issue10->checker()->description(),
              QString("Check for spelling errors"));
     QVERIFY(issue10->checker()->explanation().startsWith(
@@ -1183,7 +1183,7 @@ void Krazy2ViewTest::testAnalyzeAgainSingleIssue() {
 
     //Add another spelling issue, but on a different file
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
-                     "//A spelling issue: occured\n");
+                     "//A spelling issue: occured\n"); //krazy:exclude=spelling
 
     //Remove the issue to be checked again, but add another one for a different
     //checker
@@ -1232,7 +1232,7 @@ void Krazy2ViewTest::testAnalyzeAgainSingleIssueNoChanges() {
 
     //Add another spelling issue, but on a different file
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
-                     "//A spelling issue: occured\n");
+                     "//A spelling issue: occured\n"); //krazy:exclude=spelling
 
     //The code is added outside the main function... but it does not matter ;)
     appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
@@ -1339,7 +1339,7 @@ void Krazy2ViewTest::testAnalyzeAgainSingleIssueNewIssues() {
 
     //Add another spelling issue, but on a different file
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
-                     "//A spelling issue: occured\n");
+                     "//A spelling issue: occured\n"); //krazy:exclude=spelling
 
     //Remove the issue to be checked again, but add another one for a different
     //checker, and another one for the same checker
@@ -1351,7 +1351,7 @@ void Krazy2ViewTest::testAnalyzeAgainSingleIssueNewIssues() {
     appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
                      "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
     appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
-                     "//A new spelling issue: speling\n");
+                     "//A new spelling issue: speling\n"); //krazy:exclude=spelling
 
     //Analyze again the last issue
     analyzeAgainIssues(&view, QList<int>() << 6);
@@ -1394,7 +1394,7 @@ void Krazy2ViewTest::testAnalyzeAgainSeveralIssues() {
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
                      "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
-                     "//A spelling issue: occured\n");
+                     "//A spelling issue: occured\n"); //krazy:exclude=spelling
 
     //Remove the last spelling issue and add a doublequote_chars issue to the
     //file checked for spelling issues
@@ -1445,7 +1445,7 @@ void Krazy2ViewTest::testAnalyzeAgainSingleIssueCancellingAnalysis() {
 
     //Add another spelling issue, but on a different file
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
-                     "//A spelling issue: occured\n");
+                     "//A spelling issue: occured\n"); //krazy:exclude=spelling
 
     //Remove the issue to be checked again, but add another one for a different
     //checker
@@ -1499,7 +1499,7 @@ void Krazy2ViewTest::testAnalyzeAgainSingleFile() {
     //Add a doublequote_chars issue and a spelling issue, but on a different
     //file
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
-                     "//A spelling issue: occured\n");
+                     "//A spelling issue: occured\n"); //krazy:exclude=spelling
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
                      "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
 
@@ -1546,7 +1546,7 @@ void Krazy2ViewTest::testAnalyzeAgainSingleFileNoChanges() {
     //Add a doublequote_chars issue and a spelling issue, but on a different
     //file
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
-                     "//A spelling issue: occured\n");
+                     "//A spelling issue: occured\n"); //krazy:exclude=spelling
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
                      "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
 
@@ -1655,7 +1655,7 @@ void Krazy2ViewTest::testAnalyzeAgainSingleFileNewIssues() {
     //Add a doublequote_chars issue and a spelling issue, but on a different
     //file
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
-                     "//A spelling issue: occured\n");
+                     "//A spelling issue: occured\n"); //krazy:exclude=spelling
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
                      "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
 
@@ -1669,7 +1669,7 @@ void Krazy2ViewTest::testAnalyzeAgainSingleFileNewIssues() {
     appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
                      "std::cout << QString(\"Hello Again and Again World!\") + \"\\n\";\n");
     appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
-                     "//A new spelling issue: speling\n");
+                     "//A new spelling issue: speling\n"); //krazy:exclude=spelling
 
     //Analyze again the file of the last issue
     analyzeAgainFiles(&view, QList<int>() << 6);
@@ -1713,7 +1713,7 @@ void Krazy2ViewTest::testAnalyzeAgainSeveralFiles() {
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
                      "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
-                     "//A spelling issue: occured\n");
+                     "//A spelling issue: occured\n"); //krazy:exclude=spelling
 
     //Remove some of the issues from the file of the last issue, but add new
     //doublequote_chars issues and spelling issues
@@ -1725,7 +1725,7 @@ void Krazy2ViewTest::testAnalyzeAgainSeveralFiles() {
     appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
                      "std::cout << QString(\"Hello Again and Again World!\") + \"\\n\";\n");
     appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
-                     "//A new spelling issue: speling\n");
+                     "//A new spelling issue: speling\n"); //krazy:exclude=spelling
 
     //Analyze again the first doublequote_chars issue in
     //severalIssuesSeveralCheckersCopy.cpp, the doublequote_chars issue in
@@ -1772,7 +1772,7 @@ void Krazy2ViewTest::testAnalyzeAgainSingleFileCancellingAnalysis() {
     //Add a doublequote_chars issue and a spelling issue, but on a different
     //file
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
-                     "//A spelling issue: occured\n");
+                     "//A spelling issue: occured\n"); //krazy:exclude=spelling
     appendTextToFile(m_workingDirectory + "examples/singleIssueCopy.cpp",
                      "std::cout << QString(\"Hello Again World!\") + \"\\n\";\n");
 
@@ -1909,7 +1909,7 @@ void Krazy2ViewTest::setUpToAnalyzeAgainIssues(const Krazy2View* view) {
 
     //Add another spelling issue
     appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
-                     "//And even another spelling issue: occured\n");
+                     "//And even another spelling issue: occured\n"); //krazy:exclude=spelling
 
     //Add several paths
     queueAddPaths(view, m_workingDirectory + "examples/",
@@ -1974,7 +1974,7 @@ void Krazy2ViewTest::setUpToAnalyzeAgainFiles(const Krazy2View* view) {
 
     //Add another spelling issue
     appendTextToFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp",
-                     "//And even another spelling issue: occured\n");
+                     "//And even another spelling issue: occured\n"); //krazy:exclude=spelling
 
     //Add another doublequote_chars issue
     //The code is added outside the main function... but it does not matter ;)

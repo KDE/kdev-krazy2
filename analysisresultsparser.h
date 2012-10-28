@@ -87,7 +87,7 @@ private:
     QString m_checkerFileType;
 
     /**
-     * The name of the file where the issues being parsed occured.
+     * The name of the file where the issues being parsed occurred.
      */
     QString m_issueFileName;
 

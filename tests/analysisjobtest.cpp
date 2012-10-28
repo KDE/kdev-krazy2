@@ -417,7 +417,7 @@ void AnalysisJobTest::testRunExtraCheckers() {
     const Issue* issue7 = findIssue(&analysisResults, "spelling",
                                     "severalIssuesSeveralCheckers.cpp", 6);
     QVERIFY(issue7);
-    QCOMPARE(issue7->message(), QString("begining"));
+    QCOMPARE(issue7->message(), QString("begining")); //krazy:exclude=spelling
     QCOMPARE(issue7->checker()->description(),
              QString("Check for spelling errors"));
     QVERIFY(issue7->checker()->explanation().startsWith(
@@ -428,13 +428,13 @@ void AnalysisJobTest::testRunExtraCheckers() {
     const Issue* issue8 = findIssue(&analysisResults, "spelling",
                                     "severalIssuesSeveralCheckers.cpp", 10);
     QVERIFY(issue8);
-    QCOMPARE(issue8->message(), QString("commiting"));
+    QCOMPARE(issue8->message(), QString("commiting")); //krazy:exclude=spelling
     QCOMPARE(issue8->checker(), issue7->checker());
 
     const Issue* issue9 = findIssue(&analysisResults, "spelling",
                                     "severalIssuesSeveralCheckers.cpp", 14);
     QVERIFY(issue9);
-    QCOMPARE(issue9->message(), QString("labelling"));
+    QCOMPARE(issue9->message(), QString("labelling")); //krazy:exclude=spelling
     QCOMPARE(issue9->checker(), issue7->checker());
 
     const Issue* issue10 = findIssue(&analysisResults, "validate",
@@ -485,7 +485,7 @@ void AnalysisJobTest::testRunExtraCheckers() {
     const Issue* issue15 = findIssue(&analysisResults, "spelling",
                                     "subdirectory/severalIssuesSeveralCheckers.qml", 3);
     QVERIFY(issue15);
-    QCOMPARE(issue15->message(), QString("occured"));
+    QCOMPARE(issue15->message(), QString("occured")); //krazy:exclude=spelling
     QCOMPARE(issue15->checker()->description(),
              QString("Check for spelling errors"));
     QVERIFY(issue15->checker()->explanation().startsWith(
@@ -673,7 +673,7 @@ void AnalysisJobTest::testRunCheckerWithDuplicatedNamesAndSpecificFileTypes() {
     const Issue* issue2 = findIssue(&analysisResults, "spelling",
                                     "subdirectory/severalIssuesSeveralCheckers.qml", 3);
     QVERIFY(issue2);
-    QCOMPARE(issue2->message(), QString("occured"));
+    QCOMPARE(issue2->message(), QString("occured")); //krazy:exclude=spelling
     QCOMPARE(issue2->checker()->description(),
              QString("Check for spelling errors"));
     QVERIFY(issue2->checker()->explanation().startsWith(
@@ -805,7 +805,7 @@ void AnalysisJobTest::testRunSeveralAnalysisParameters() {
     const Issue* issue2 = findIssue(&analysisResults, "spelling",
                                     "subdirectory/severalIssuesSeveralCheckers.qml", 3);
     QVERIFY(issue2);
-    QCOMPARE(issue2->message(), QString("occured"));
+    QCOMPARE(issue2->message(), QString("occured")); //krazy:exclude=spelling
     QCOMPARE(issue2->checker()->description(),
              QString("Check for spelling errors"));
     QVERIFY(issue2->checker()->explanation().startsWith(

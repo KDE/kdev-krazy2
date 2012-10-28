@@ -197,7 +197,7 @@ private Q_SLOTS:
 
     /**
      * Updates the results when the analysis job finishes.
-     * If the job was killed or any error occured the results are not updated.
+     * If the job was killed or any error occurred the results are not updated.
      *
      * @param job The finished job.
      */
@@ -227,7 +227,7 @@ private Q_SLOTS:
      * appear, if it was not fixed it will be added again, and if new ones were
      * introduced they will also be added.
      *
-     * If the job was killed or any error occured the results are not updated.
+     * If the job was killed or any error occurred the results are not updated.
      *
      * @param job The finished job.
      */

@@ -178,7 +178,7 @@ private:
     void discardFilteredOutFileMessages();
 
     /**
-     * Discards a single "Cannot acces file" message.
+     * Discards a single "Cannot access file" message.
      */
     bool discardCannotAccessFileMessage();
 

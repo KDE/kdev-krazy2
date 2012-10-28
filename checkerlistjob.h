@@ -105,7 +105,7 @@ private Q_SLOTS:
      * Sets the error code and error text for this CheckerListJob and ends it
      * emitting the result.
      *
-     * @param processError The error occured in the underlying process.
+     * @param processError The error occurred in the underlying process.
      */
     void handleProcessError(QProcess::ProcessError processError);
 

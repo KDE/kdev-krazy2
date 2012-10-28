@@ -291,7 +291,7 @@ void AnalysisJob::handleProcessError(QProcess::ProcessError processError) {
     } else if (processError == QProcess::Crashed) {
         setErrorText(i18nc("@info", "<para><command>krazy2</command> crashed.</para>"));
     } else {
-        setErrorText(i18nc("@info", "<para>An error occured while executing "
+        setErrorText(i18nc("@info", "<para>An error occurred while executing "
                                     "<command>krazy2</command>.</para>"));
     }
 
