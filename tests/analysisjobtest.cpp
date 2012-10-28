@@ -210,7 +210,7 @@ void AnalysisJobTest::testRunCheckers() {
     checkersToRun.append(licenseChecker);
     checkersToRun.append(validateChecker);
     checkersToRun.append(qmlLicenseChecker);
-    
+
     AnalysisParameters analysisParameters;
     analysisParameters.initializeCheckers(availableCheckers);
     analysisParameters.setCheckersToRun(checkersToRun);
@@ -228,7 +228,7 @@ void AnalysisJobTest::testRunCheckers() {
     analysisJob.start();
 
     resultSpy.waitForSignal();
-    
+
     QCOMPARE(analysisJob.error(), (int)KJob::NoError);
     QCOMPARE(analysisResults.issues().count(), 10);
 
@@ -653,7 +653,7 @@ void AnalysisJobTest::testRunCheckerWithDuplicatedNamesAndSpecificFileTypes() {
     analysisJob.start();
 
     resultSpy.waitForSignal();
-    
+
     QCOMPARE(analysisJob.error(), (int)KJob::NoError);
     QCOMPARE(analysisResults.issues().count(), 2);
 

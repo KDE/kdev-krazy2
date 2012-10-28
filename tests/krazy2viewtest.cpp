@@ -2176,7 +2176,7 @@ public Q_SLOTS:
                                                 QItemSelectionModel::SelectCurrent);
             selectPathsDialog->findChild<KPushButton*>("removeButton")->click();
         }
-        
+
         selectPathsDialog->accept();
     }
 

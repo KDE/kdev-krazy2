@@ -23,7 +23,7 @@
 
 //public:
 
-AnalysisProgressParser::AnalysisProgressParser(QObject* parent /*= 0*/): QObject(parent), 
+AnalysisProgressParser::AnalysisProgressParser(QObject* parent /*= 0*/): QObject(parent),
         m_numberOfCheckers(0),
         m_numberOfCheckersRun(0),
         m_currentNumberOfDots(0) {

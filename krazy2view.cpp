@@ -100,7 +100,7 @@ void Krazy2View::initializeCheckers(const char* handlerName) {
 }
 
 void Krazy2View::updateAnalyzeButtonStatus() {
-    if (m_analysisParameters->filesToBeAnalyzed().isEmpty() || 
+    if (m_analysisParameters->filesToBeAnalyzed().isEmpty() ||
         (m_analysisParameters->wereCheckersInitialized() && m_analysisParameters->checkersToRun().isEmpty())) {
         m_ui->analyzeButton->setEnabled(false);
     } else {

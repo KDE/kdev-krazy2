@@ -129,7 +129,7 @@ void SelectPathsWidgetTest::testAddFile() {
     queueSelectPaths(&widget, QDir::currentPath() + "/examples",
                      QStringList() << "singleIssue.cpp");
     addButton(&widget)->click();
-    
+
     assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/singleIssue.cpp");
 }
 
@@ -140,7 +140,7 @@ void SelectPathsWidgetTest::testAddDirectory() {
     queueSelectPaths(&widget, QDir::currentPath() + "/examples",
                      QStringList() << "subdirectory");
     addButton(&widget)->click();
-    
+
     assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/subdirectory/");
 }
 

@@ -173,7 +173,7 @@ private:
     /**
      * Returns whether the given checker can analyze any of the files with the
      * given names or not.
-     * 
+     *
      * @param checker The checker.
      * @param fileNames The names of the files.
      * @return True if the checker can analyze any file, false otherwise.

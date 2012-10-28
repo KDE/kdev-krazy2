@@ -128,7 +128,7 @@ public:
      * Sets the analysis results to use.
      * Note that the model does not take ownership of the results (they must be
      * deleted by the caller when needed).
-     * 
+     *
      * @param analysisResults The analysis results to use.
      * @todo if merged in the constructor, remove the asserts throughout the code
      */

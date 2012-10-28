@@ -168,7 +168,7 @@ void IssueWidget::emitAnalyzeAgainIssues() {
     if (selectedRows.isEmpty()) {
         return;
     }
-    
+
     QList<const Issue*> issues;
     foreach (const QModelIndex& index, selectedRows) {
         const Issue* issue = issueForIndex(index);

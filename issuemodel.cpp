@@ -67,7 +67,7 @@ QVariant IssueModel::data(const QModelIndex& index, int role /*= Qt::DisplayRole
     if (index.column() == FileName) {
         return issue->fileName();
     }
-    
+
     if (index.column() == Line) {
         if (issue->line() < 0) {
             return QVariant();
@@ -119,15 +119,15 @@ QVariant IssueModel::headerData(int section, Qt::Orientation orientation, int ro
     if (section == Checker) {
         return i18nc("@title:column", "Checker");
     }
-    
+
     if (section == Problem) {
         return i18nc("@title:column", "Problem");
     }
-    
+
     if (section == FileName) {
         return i18nc("@title:column", "File name");
     }
-    
+
     if (section == Line) {
         return i18nc("@title:column Line number of a file", "Line");
     }

@@ -124,7 +124,7 @@ void IssueModelTest::testConstructor() {
 
 void IssueModelTest::testRowCount() {
     IssueModel issueModel;
-    AnalysisResults analysisresults; 
+    AnalysisResults analysisresults;
     issueModel.setAnalysisResults(&analysisresults);
 
     QCOMPARE(issueModel.rowCount(), 0);
@@ -169,7 +169,7 @@ void IssueModelTest::testRowCountWhenAnalysisResultsNotSet() {
 
 void IssueModelTest::testColumnCount() {
     IssueModel issueModel;
-    AnalysisResults analysisresults; 
+    AnalysisResults analysisresults;
     issueModel.setAnalysisResults(&analysisresults);
 
     QCOMPARE(issueModel.columnCount(), 4);
@@ -218,7 +218,7 @@ void IssueModelTest::testDisplayData() {
 
 void IssueModelTest::testDisplayDataForIssueWithoutMessage() {
     IssueModel issueModel;
-    AnalysisResults analysisResults; 
+    AnalysisResults analysisResults;
     issueModel.setAnalysisResults(&analysisResults);
 
     Checker* checker1 = new Checker();
@@ -246,7 +246,7 @@ void IssueModelTest::testDisplayDataForIssueWithoutMessage() {
 
 void IssueModelTest::testDisplayDataForCheckerWithoutDescription() {
     IssueModel issueModel;
-    AnalysisResults analysisResults; 
+    AnalysisResults analysisResults;
     issueModel.setAnalysisResults(&analysisResults);
 
     Checker* checker1 = new Checker();
@@ -274,7 +274,7 @@ void IssueModelTest::testDisplayDataForCheckerWithoutDescription() {
 
 void IssueModelTest::testDisplayDataForCheckerWithoutDescriptionAndIssueWithoutMessage() {
     IssueModel issueModel;
-    AnalysisResults analysisResults; 
+    AnalysisResults analysisResults;
     issueModel.setAnalysisResults(&analysisResults);
 
     Checker* checker1 = new Checker();
@@ -301,7 +301,7 @@ void IssueModelTest::testDisplayDataForCheckerWithoutDescriptionAndIssueWithoutM
 
 void IssueModelTest::testDisplayDataForIssueWithoutLine() {
     IssueModel issueModel;
-    AnalysisResults analysisResults; 
+    AnalysisResults analysisResults;
     issueModel.setAnalysisResults(&analysisResults);
 
     Checker* checker1 = new Checker();
@@ -386,7 +386,7 @@ void IssueModelTest::testToolTipData() {
 
 void IssueModelTest::testToolTipDataWithMultiLineExplanation() {
     IssueModel issueModel;
-    AnalysisResults analysisResults; 
+    AnalysisResults analysisResults;
     issueModel.setAnalysisResults(&analysisResults);
 
     Checker* checker1 = new Checker();
@@ -415,7 +415,7 @@ void IssueModelTest::testToolTipDataWithMultiLineExplanation() {
 
 void IssueModelTest::testToolTipDataWithoutExplanation() {
     IssueModel issueModel;
-    AnalysisResults analysisResults; 
+    AnalysisResults analysisResults;
     issueModel.setAnalysisResults(&analysisResults);
 
     Checker* checker1 = new Checker();
@@ -449,7 +449,7 @@ void IssueModelTest::testToolTipDataWhenAnalysisResultsNotSet() {
 
 void IssueModelTest::testDisplayHorizontalHeaderData() {
     IssueModel issueModel;
-    AnalysisResults analysisResults; 
+    AnalysisResults analysisResults;
     issueModel.setAnalysisResults(&analysisResults);
 
     QCOMPARE(issueModel.headerData(0, Qt::Horizontal, Qt::DisplayRole).toString(),
@@ -461,7 +461,7 @@ void IssueModelTest::testDisplayHorizontalHeaderData() {
     QCOMPARE(issueModel.headerData(3, Qt::Horizontal, Qt::DisplayRole).toString(),
              i18nc("@title:column Line number of a file", "Line"));
 
-    QVERIFY(issueModel.headerData(4, Qt::Horizontal, Qt::DisplayRole).isNull());    
+    QVERIFY(issueModel.headerData(4, Qt::Horizontal, Qt::DisplayRole).isNull());
 }
 
 void IssueModelTest::testDisplayVerticalHeaderData() {
@@ -508,7 +508,7 @@ void IssueModelTest::testIssueForIndexWhenAnalysisResultsNotSet() {
 void IssueModelTest::testSetAnalysisResults() {
     IssueModel issueModel;
     AnalysisResults analysisresults;
-    
+
     QSignalSpy modelAboutToBeResetSpy(&issueModel, SIGNAL(modelAboutToBeReset()));
     QSignalSpy modelResetSpy(&issueModel, SIGNAL(modelReset()));
 

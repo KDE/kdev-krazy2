@@ -382,7 +382,7 @@ void CheckerModelTest::testToolTipDataForCheckerWithoutDescription() {
     QModelIndex fileTypeIndex = checkerModel.index(0, 0);
     QModelIndex checkerIndex = checkerModel.index(0, 0, fileTypeIndex);
     assertItem(checkerIndex, "checkerName",
-               i18nc("@info:tooltip The underlying command did not provide a text output", 
+               i18nc("@info:tooltip The underlying command did not provide a text output",
                      "Sorry, no description given"), 0, fileTypeIndex);
 }
 

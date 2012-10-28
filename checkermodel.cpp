@@ -174,7 +174,7 @@ QVariant CheckerModel::data(const QModelIndex& index, int role /*= Qt::DisplayRo
         }
 
         if (item->checker()->description().isEmpty()) {
-            return i18nc("@info:tooltip The underlying command did not provide a text output", 
+            return i18nc("@info:tooltip The underlying command did not provide a text output",
                          "Sorry, no description given");
         }
 
