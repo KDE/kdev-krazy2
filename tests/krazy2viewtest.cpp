@@ -188,7 +188,7 @@ void Krazy2ViewTest::initTestCase() {
 void Krazy2ViewTest::init() {
     if (!examplesInSubdirectory()) {
         QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ")";
+                          "of the working directory (" + m_workingDirectory + ')';
         QSKIP(message.toAscii(), SkipAll);
     }
 

@@ -66,7 +66,7 @@ private:
 void SelectPathsWidgetTest::init() {
     if (!examplesInSubdirectory()) {
         QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + QDir::currentPath() + ")";
+                          "of the working directory (" + QDir::currentPath() + ')';
         QSKIP(message.toAscii(), SkipAll);
     }
 }

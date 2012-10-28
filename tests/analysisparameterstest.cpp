@@ -147,7 +147,7 @@ void AnalysisParametersTest::testSetCheckersToRunWithNotAvailableCheckers() {
 void AnalysisParametersTest::testSetFilesAndDirectories() {
     if (!examplesInSubdirectory()) {
         QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + QDir::currentPath() + ")";
+                          "of the working directory (" + QDir::currentPath() + ')';
         QSKIP(message.toAscii(), SkipAll);
     }
 
@@ -180,7 +180,7 @@ void AnalysisParametersTest::testSetFilesAndDirectories() {
 void AnalysisParametersTest::testSetFilesAndDirectoriesWithRepeatedEntries() {
     if (!examplesInSubdirectory()) {
         QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + QDir::currentPath() + ")";
+                          "of the working directory (" + QDir::currentPath() + ')';
         QSKIP(message.toAscii(), SkipAll);
     }
 
@@ -221,7 +221,7 @@ void AnalysisParametersTest::testSetFilesAndDirectoriesWithRepeatedEntries() {
 void AnalysisParametersTest::testSetFilesAndDirectoriesWithInvalidEntries() {
     if (!examplesInSubdirectory()) {
         QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + QDir::currentPath() + ")";
+                          "of the working directory (" + QDir::currentPath() + ')';
         QSKIP(message.toAscii(), SkipAll);
     }
 

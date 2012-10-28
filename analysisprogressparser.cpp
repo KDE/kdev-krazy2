@@ -121,7 +121,7 @@ bool AnalysisProgressParser::parseCheckerName() {
     int start = QString('/').length();
     QString checkerName = m_buffer.mid(start, m_buffer.indexOf(' ')-start);
 
-    m_buffer.remove(0, QString("/" + checkerName + " test in-progress").length());
+    m_buffer.remove(0, QString('/' + checkerName + " test in-progress").length());
 
     emit showMessage(this, i18nc("@info:progress", "Running %1/%2", m_currentFileType, checkerName));
 
