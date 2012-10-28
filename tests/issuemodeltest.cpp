@@ -459,7 +459,7 @@ void IssueModelTest::testDisplayHorizontalHeaderData() {
     QCOMPARE(issueModel.headerData(2, Qt::Horizontal, Qt::DisplayRole).toString(),
              i18nc("@title:column", "File name"));
     QCOMPARE(issueModel.headerData(3, Qt::Horizontal, Qt::DisplayRole).toString(),
-             i18nc("@title:column", "Line"));
+             i18nc("@title:column Line number of a file", "Line"));
 
     QVERIFY(issueModel.headerData(4, Qt::Horizontal, Qt::DisplayRole).isNull());    
 }

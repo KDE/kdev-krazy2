@@ -129,7 +129,7 @@ QVariant IssueModel::headerData(int section, Qt::Orientation orientation, int ro
     }
     
     if (section == Line) {
-        return i18nc("@title:column", "Line");
+        return i18nc("@title:column Line number of a file", "Line");
     }
 
     return QVariant();
