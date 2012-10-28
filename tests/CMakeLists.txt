@@ -21,6 +21,7 @@ endmacro(UNIT_TESTS)
 unit_tests(
     analysisjob
     analysisparameters
+    analysisprogressparser
     analysisresults
     checker
     checkerlistjob
@@ -30,7 +31,6 @@ unit_tests(
     issuemodel
     issuewidget
     krazy2view
-    progressparser
     resultparser
     selectcheckerswidget
     selectpathswidget
@@ -46,6 +46,7 @@ endmacro(MEM_TESTS)
 mem_tests(
     # analysisjob # Disabled by default, as it uses KDevelop::TestCore and thus needs a lot of memory to perform the test
     analysisparameters
+    analysisprogressparser
     analysisresults
     checker
     checkerlistjob
@@ -55,7 +56,6 @@ mem_tests(
     issuemodel
     #issuewidget # Disabled by default, as it uses KDevelop::TestCore and thus needs a lot of memory to perform the test
     #krazy2view # Disabled by default, as it uses KDevelop::TestCore and thus needs a lot of memory to perform the test
-    progressparser
     resultparser
     selectcheckerswidget
     selectpathswidget

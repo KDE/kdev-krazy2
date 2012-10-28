@@ -26,11 +26,11 @@
 
 #include "../analysisjob.h"
 #include "../analysisparameters.h"
+#include "../analysisprogressparser.h"
 #include "../analysisresults.h"
 #include "../checker.h"
 #include "../checkerlistjob.h"
 #include "../issue.h"
-#include "../progressparser.h"
 
 //Needed for qRegisterMetaType
 Q_DECLARE_METATYPE(KJob*)
@@ -220,7 +220,7 @@ void AnalysisJobTest::testRunCheckers() {
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);
 
-    QSignalSpy showProgressSpy(analysisJob.findChild<ProgressParser*>(),
+    QSignalSpy showProgressSpy(analysisJob.findChild<AnalysisProgressParser*>(),
                                SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
 
     SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
@@ -319,7 +319,7 @@ void AnalysisJobTest::testRunCheckers() {
     QCOMPARE(showProgressSpy.count(), 6);
 
     //First signal is the 0%
-    //First parameter is the ProgressParser itself
+    //First parameter is the AnalysisProgressParser itself
     QCOMPARE(showProgressSpy.at(0).at(1).toInt(), 0);
     QCOMPARE(showProgressSpy.at(0).at(2).toInt(), 100);
     QCOMPARE(showProgressSpy.at(0).at(3).toInt(), 0);
@@ -354,7 +354,7 @@ void AnalysisJobTest::testRunExtraCheckers() {
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);
 
-    QSignalSpy showProgressSpy(analysisJob.findChild<ProgressParser*>(),
+    QSignalSpy showProgressSpy(analysisJob.findChild<AnalysisProgressParser*>(),
                                SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
 
     SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
@@ -498,7 +498,7 @@ void AnalysisJobTest::testRunExtraCheckers() {
     QVERIFY(showProgressSpy.count() >= 9);
 
     //First signal is the 0%
-    //First parameter is the ProgressParser itself
+    //First parameter is the AnalysisProgressParser itself
     QCOMPARE(showProgressSpy.first().at(1).toInt(), 0);
     QCOMPARE(showProgressSpy.first().at(2).toInt(), 100);
     QCOMPARE(showProgressSpy.first().at(3).toInt(), 0);
@@ -542,7 +542,7 @@ void AnalysisJobTest::testRunExtraCheckersAndSubsetOfCheckers() {
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);
 
-    QSignalSpy showProgressSpy(analysisJob.findChild<ProgressParser*>(),
+    QSignalSpy showProgressSpy(analysisJob.findChild<AnalysisProgressParser*>(),
                                SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
 
     SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
@@ -594,7 +594,7 @@ void AnalysisJobTest::testRunExtraCheckersAndSubsetOfCheckers() {
     QCOMPARE(showProgressSpy.count(), 5);
 
     //First signal is the 0%
-    //First parameter is the ProgressParser itself
+    //First parameter is the AnalysisProgressParser itself
     QCOMPARE(showProgressSpy.at(0).at(1).toInt(), 0);
     QCOMPARE(showProgressSpy.at(0).at(2).toInt(), 100);
     QCOMPARE(showProgressSpy.at(0).at(3).toInt(), 0);
@@ -645,7 +645,7 @@ void AnalysisJobTest::testRunCheckerWithDuplicatedNamesAndSpecificFileTypes() {
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);
 
-    QSignalSpy showProgressSpy(analysisJob.findChild<ProgressParser*>(),
+    QSignalSpy showProgressSpy(analysisJob.findChild<AnalysisProgressParser*>(),
                                SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
 
     SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
@@ -686,7 +686,7 @@ void AnalysisJobTest::testRunCheckerWithDuplicatedNamesAndSpecificFileTypes() {
     QCOMPARE(showProgressSpy.count(), 4);
 
     //First signal is the 0%
-    //First parameter is the ProgressParser itself
+    //First parameter is the AnalysisProgressParser itself
     QCOMPARE(showProgressSpy.at(0).at(1).toInt(), 0);
     QCOMPARE(showProgressSpy.at(0).at(2).toInt(), 100);
     QCOMPARE(showProgressSpy.at(0).at(3).toInt(), 0);
@@ -777,7 +777,7 @@ void AnalysisJobTest::testRunSeveralAnalysisParameters() {
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);
 
-    QSignalSpy showProgressSpy(analysisJob.findChild<ProgressParser*>(),
+    QSignalSpy showProgressSpy(analysisJob.findChild<AnalysisProgressParser*>(),
                                SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
 
     SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
@@ -854,7 +854,7 @@ void AnalysisJobTest::testRunSeveralAnalysisParameters() {
     QCOMPARE(showProgressSpy.count(), 8);
 
     //First signal is the 0%
-    //First parameter is the ProgressParser itself
+    //First parameter is the AnalysisProgressParser itself
     QCOMPARE(showProgressSpy.at(0).at(1).toInt(), 0);
     QCOMPARE(showProgressSpy.at(0).at(2).toInt(), 100);
     QCOMPARE(showProgressSpy.at(0).at(3).toInt(), 0);

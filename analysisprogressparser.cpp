@@ -17,37 +17,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "progressparser.h"
+#include "analysisprogressparser.h"
 
 #include <KLocalizedString>
 
 //public:
 
-ProgressParser::ProgressParser(QObject* parent /*= 0*/): QObject(parent), 
+AnalysisProgressParser::AnalysisProgressParser(QObject* parent /*= 0*/): QObject(parent), 
         m_numberOfCheckers(0),
         m_numberOfCheckersRun(0),
         m_currentNumberOfDots(0) {
 }
 
-QString ProgressParser::statusName() const {
+QString AnalysisProgressParser::statusName() const {
     return i18nc("@info:progress", "Running <command>krazy2</command>");
 }
 
-void ProgressParser::setNumberOfCheckers(int numberOfCheckers) {
+void AnalysisProgressParser::setNumberOfCheckers(int numberOfCheckers) {
     m_numberOfCheckers = numberOfCheckers;
 }
 
-void ProgressParser::resetNumberOfFilesForEachFileType() {
+void AnalysisProgressParser::resetNumberOfFilesForEachFileType() {
     m_fileTypeToNumberOfDots.clear();
 }
 
 //public slots:
 
-void ProgressParser::start() {
+void AnalysisProgressParser::start() {
     emit showProgress(this, 0, 100, 0);
 }
 
-void ProgressParser::parse(const QByteArray& data) {
+void AnalysisProgressParser::parse(const QByteArray& data) {
     //fromAscii() conversion is good enough for progress output
     m_buffer += QString::fromAscii(data);
 
@@ -62,7 +62,7 @@ void ProgressParser::parse(const QByteArray& data) {
     } while (changed);
 }
 
-void ProgressParser::finish() {
+void AnalysisProgressParser::finish() {
     emit clearMessage(this);
     emit showProgress(this, 0, 100, 100);
     emit hideProgress(this);
@@ -70,7 +70,7 @@ void ProgressParser::finish() {
 
 //private:
 
-void ProgressParser::discardFilteredOutFileMessages() {
+void AnalysisProgressParser::discardFilteredOutFileMessages() {
     bool changed;
     do {
         changed = discardCannotAccessFileMessage();
@@ -78,7 +78,7 @@ void ProgressParser::discardFilteredOutFileMessages() {
     } while (changed);
 }
 
-bool ProgressParser::discardCannotAccessFileMessage() {
+bool AnalysisProgressParser::discardCannotAccessFileMessage() {
     if (!(m_buffer.startsWith("Cannot access file ") && m_buffer.contains('\n'))) {
         return false;
     }
@@ -89,7 +89,7 @@ bool ProgressParser::discardCannotAccessFileMessage() {
     return true;
 }
 
-bool ProgressParser::discardUnsupportedFileTypeMessage() {
+bool AnalysisProgressParser::discardUnsupportedFileTypeMessage() {
     if (!(m_buffer.startsWith("Unsupported file type ") && m_buffer.contains("skipping\n"))) {
         return false;
     }
@@ -100,7 +100,7 @@ bool ProgressParser::discardUnsupportedFileTypeMessage() {
     return true;
 }
 
-bool ProgressParser::parseFileType() {
+bool AnalysisProgressParser::parseFileType() {
     if (!(m_buffer.startsWith("=>") && m_buffer.contains('/'))) {
         return false;
     }
@@ -113,7 +113,7 @@ bool ProgressParser::parseFileType() {
     return true;
 }
 
-bool ProgressParser::parseCheckerName() {
+bool AnalysisProgressParser::parseCheckerName() {
     if (!(m_buffer.startsWith('/') && m_buffer.contains(" test in-progress"))) {
         return false;
     }
@@ -132,7 +132,7 @@ bool ProgressParser::parseCheckerName() {
     return true;
 }
 
-bool ProgressParser::parseDots() {
+bool AnalysisProgressParser::parseDots() {
     if (!m_buffer.startsWith('.')) {
         return false;
     }
@@ -154,7 +154,7 @@ bool ProgressParser::parseDots() {
     return true;
 }
 
-bool ProgressParser::parseDone() {
+bool AnalysisProgressParser::parseDone() {
     if (!m_buffer.startsWith("done\n")) {
         return false;
     }

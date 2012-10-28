@@ -18,6 +18,7 @@ add_subdirectory(tests)
 set(kdevkrazy2_library_SRCS
     analysisjob.cpp
     analysisparameters.cpp
+    analysisprogressparser.cpp
     analysisresults.cpp
     checker.cpp
     checkerlistjob.cpp
@@ -27,7 +28,6 @@ set(kdevkrazy2_library_SRCS
     issuemodel.cpp
     issuewidget.cpp
     krazy2view.cpp
-    progressparser.cpp
     resultparser.cpp
     selectcheckerswidget.cpp
     selectpathswidget.cpp

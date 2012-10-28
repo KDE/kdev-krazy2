@@ -29,9 +29,9 @@
 #include <kdevplatform/interfaces/iuicontroller.h>
 
 #include "analysisparameters.h"
+#include "analysisprogressparser.h"
 #include "analysisresults.h"
 #include "checker.h"
-#include "progressparser.h"
 #include "resultparser.h"
 
 //public:
@@ -39,7 +39,7 @@
 AnalysisJob::AnalysisJob(QObject* parent /*= 0*/): KJob(parent),
     m_currentAnalysisParameters(0),
     m_analysisResults(0),
-    m_progressParser(new ProgressParser(this)),
+    m_analysisProgressParser(new AnalysisProgressParser(this)),
     m_process(new KProcess(this)) {
 
     setObjectName(i18nc("@action:inmenu", "<command>krazy2</command> analysis"));
@@ -56,8 +56,8 @@ void AnalysisJob::start() {
     Q_ASSERT(!m_analysisParametersList.isEmpty());
     Q_ASSERT(m_analysisResults);
 
-    KDevelop::ICore::self()->uiController()->registerStatus(m_progressParser);
-    connect(this, SIGNAL(finished(KJob*)), m_progressParser, SLOT(finish()));
+    KDevelop::ICore::self()->uiController()->registerStatus(m_analysisProgressParser);
+    connect(this, SIGNAL(finished(KJob*)), m_analysisProgressParser, SLOT(finish()));
 
     int totalNumberOfCheckers = 0;
     foreach (const AnalysisParameters* analysisParameters, m_analysisParametersList) {
@@ -68,8 +68,8 @@ void AnalysisJob::start() {
                                                                        analysisParameters->checkersToRun());
     }
 
-    m_progressParser->setNumberOfCheckers(totalNumberOfCheckers);
-    m_progressParser->start();
+    m_analysisProgressParser->setNumberOfCheckers(totalNumberOfCheckers);
+    m_analysisProgressParser->start();
 
     prepareNextAnalysisParameters();
 
@@ -171,7 +171,7 @@ void AnalysisJob::prepareNextAnalysisParameters() {
     Q_ASSERT(m_pendingFileTypes.isEmpty());
     Q_ASSERT(!m_analysisParametersList.isEmpty());
 
-    m_progressParser->resetNumberOfFilesForEachFileType();
+    m_analysisProgressParser->resetNumberOfFilesForEachFileType();
 
     m_currentAnalysisParameters = m_analysisParametersList.takeFirst();
     m_currentNamesOfFilesToBeAnalyzed = m_namesOfFilesToBeAnalyzed.takeFirst();
@@ -249,7 +249,7 @@ void AnalysisJob::startAnalysis(const QString& fileType) {
 //private slots:
 
 void AnalysisJob::handleProcessReadyStandardError() {
-    m_progressParser->parse(m_process->readAllStandardError());
+    m_analysisProgressParser->parse(m_process->readAllStandardError());
 }
 
 void AnalysisJob::handleProcessFinished(int exitCode) {

@@ -27,9 +27,9 @@
 class KProcess;
 
 class AnalysisParameters;
+class AnalysisProgressParser;
 class AnalysisResults;
 class Checker;
-class ProgressParser;
 
 /**
  * Job to analyze a directory with krazy2.
@@ -148,7 +148,7 @@ private:
     /**
      * The KDevelop::IStatus to show the analysis progress.
      */
-    ProgressParser* m_progressParser;
+    AnalysisProgressParser* m_analysisProgressParser;
 
     /**
      * The krazy2 process to parse its output.
