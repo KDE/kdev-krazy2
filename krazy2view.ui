@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Krazy2</string>
+   <string comment="@title:window">Krazy2</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -63,7 +63,7 @@
 &lt;para&gt;The results from the previous analysis, if any, are replaced with the new ones.&lt;/para&gt;</string>
        </property>
        <property name="text">
-        <string comment="@caption:button">Analyze</string>
+        <string comment="@action:button">Analyze</string>
        </property>
       </widget>
      </item>
