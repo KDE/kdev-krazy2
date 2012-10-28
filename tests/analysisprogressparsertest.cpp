@@ -85,13 +85,13 @@ void AnalysisProgressParserTest::init() {
     m_clearMessageSpy = new QSignalSpy(m_analysisProgressParser,
                                        SIGNAL(clearMessage(KDevelop::IStatus*)));
     m_showMessageSpy = new QSignalSpy(m_analysisProgressParser,
-                                      SIGNAL(showMessage(KDevelop::IStatus*, const QString&, int)));
+                                      SIGNAL(showMessage(KDevelop::IStatus*,QString,int)));
     m_showErrorMessageSpy = new QSignalSpy(m_analysisProgressParser,
-                                           SIGNAL(showErrorMessage(const QString&, int)));
+                                           SIGNAL(showErrorMessage(QString,int)));
     m_hideProgressSpy = new QSignalSpy(m_analysisProgressParser,
                                        SIGNAL(hideProgress(KDevelop::IStatus*)));
     m_showProgressSpy = new QSignalSpy(m_analysisProgressParser,
-                                       SIGNAL(showProgress(KDevelop::IStatus*, int, int, int)));
+                                       SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
 }
 
 void AnalysisProgressParserTest::cleanup() {
