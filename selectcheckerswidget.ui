@@ -59,7 +59,7 @@
         <string comment="@info:whatsthis">&lt;para&gt;Adds the checkers selected in the &lt;interface&gt;Other available checkers&lt;/interface&gt; list to the &lt;interface&gt;Checkers to run&lt;/interface&gt; list.&lt;/para&gt;</string>
        </property>
        <property name="text">
-        <string comment="@action:button">&gt;</string>
+        <string comment="@action:button Move items from the left list to the right list">&gt;</string>
        </property>
       </widget>
      </item>
@@ -90,7 +90,7 @@
 &lt;para&gt;The checkers will be added to the &lt;interface&gt;Other available checkers&lt;/interface&gt; list.&lt;/para&gt;</string>
        </property>
        <property name="text">
-        <string comment="@action:button">&lt;</string>
+        <string comment="@action:button Move items from the right list to the left list">&lt;</string>
        </property>
       </widget>
      </item>
