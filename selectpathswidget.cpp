@@ -63,7 +63,7 @@ QStringList SelectPathsWidget::selectedFilesAndDirectories() const {
 //private:
 
 void SelectPathsWidget::addPaths(const QStringList& paths) {
-    foreach (QString path, paths) {
+    foreach (QString path, paths) { //krazy:exclude=foreach
         QFileInfo pathInfo(path);
         if (pathInfo.isDir() && !path.endsWith('/')) {
             path = path + '/';
