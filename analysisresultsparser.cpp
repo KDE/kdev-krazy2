@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "resultparser.h"
+#include "analysisresultsparser.h"
 
 #include <QRegExp>
 
@@ -29,17 +29,17 @@
 
 //public:
 
-ResultParser::ResultParser():
+AnalysisResultsParser::AnalysisResultsParser():
     m_analysisResults(0),
     m_checker(0),
     m_checkerBeingInitialized(0) {
 }
 
-void ResultParser::setAnalysisResults(AnalysisResults* analysisResults) {
+void AnalysisResultsParser::setAnalysisResults(AnalysisResults* analysisResults) {
     m_analysisResults = analysisResults;
 }
 
-void ResultParser::parse(const QByteArray& data) {
+void AnalysisResultsParser::parse(const QByteArray& data) {
     m_xmlStreamReader.addData(data);
 
     while (!m_xmlStreamReader.atEnd()) {
@@ -77,21 +77,21 @@ void ResultParser::parse(const QByteArray& data) {
 
 //private:
 
-bool ResultParser::isStartElement(const QString& elementName) {
+bool AnalysisResultsParser::isStartElement(const QString& elementName) {
     return m_xmlStreamReader.isStartElement() &&
            m_xmlStreamReader.name() == elementName;
 }
 
-bool ResultParser::isEndElement(const QString& elementName) {
+bool AnalysisResultsParser::isEndElement(const QString& elementName) {
     return m_xmlStreamReader.isEndElement() &&
            m_xmlStreamReader.name() == elementName;
 }
 
-void ResultParser::processFileTypeStart() {
+void AnalysisResultsParser::processFileTypeStart() {
     m_checkerFileType = m_xmlStreamReader.attributes().value("value").toString();
 }
 
-void ResultParser::processCheckStart() {
+void AnalysisResultsParser::processCheckStart() {
     QRegExp regExp("(.*) \\[(.*)\\]\\.\\.\\.");
     regExp.indexIn(m_xmlStreamReader.attributes().value("desc").toString());
     QString checkerDescription = regExp.cap(1);
@@ -116,25 +116,25 @@ void ResultParser::processCheckStart() {
     }
 }
 
-void ResultParser::processExplanationEnd() {
+void AnalysisResultsParser::processExplanationEnd() {
     if (m_checkerBeingInitialized && m_text != "(no explanation available)") {
         m_checkerBeingInitialized->setExplanation(m_text);
     }
 }
 
-void ResultParser::processFileStart() {
+void AnalysisResultsParser::processFileStart() {
     m_issueFileName = m_xmlStreamReader.attributes().value("name").toString();
 }
 
-void ResultParser::processFileEnd() {
+void AnalysisResultsParser::processFileEnd() {
     m_issueMessage.clear();
 }
 
-void ResultParser::processMessageEnd() {
+void AnalysisResultsParser::processMessageEnd() {
     m_issueMessage = m_text;
 }
 
-void ResultParser::processLineStart() {
+void AnalysisResultsParser::processLineStart() {
     if (!m_xmlStreamReader.attributes().hasAttribute("issue")) {
         return;
     }
@@ -149,7 +149,7 @@ void ResultParser::processLineStart() {
     m_issueDetails = details;
 }
 
-void ResultParser::processLineEnd() {
+void AnalysisResultsParser::processLineEnd() {
     QString message = m_issueMessage;
     if (!m_issueDetails.isEmpty()) {
         message = m_issueDetails;

@@ -31,8 +31,8 @@
 #include "analysisparameters.h"
 #include "analysisprogressparser.h"
 #include "analysisresults.h"
+#include "analysisresultsparser.h"
 #include "checker.h"
-#include "resultparser.h"
 
 //public:
 
@@ -260,9 +260,9 @@ void AnalysisJob::handleProcessFinished(int exitCode) {
         currentFileTypeResults.addChecker(new Checker(*checker));
     }
 
-    ResultParser resultParser;
-    resultParser.setAnalysisResults(&currentFileTypeResults);
-    resultParser.parse(m_process->readAllStandardOutput());
+    AnalysisResultsParser analysisResultsParser;
+    analysisResultsParser.setAnalysisResults(&currentFileTypeResults);
+    analysisResultsParser.parse(m_process->readAllStandardOutput());
 
     m_analysisResults->addAnalysisResults(&currentFileTypeResults);
 

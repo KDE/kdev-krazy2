@@ -20,6 +20,7 @@ set(kdevkrazy2_library_SRCS
     analysisparameters.cpp
     analysisprogressparser.cpp
     analysisresults.cpp
+    analysisresultsparser.cpp
     checker.cpp
     checkerlistjob.cpp
     checkerlistparser.cpp
@@ -28,7 +29,6 @@ set(kdevkrazy2_library_SRCS
     issuemodel.cpp
     issuewidget.cpp
     krazy2view.cpp
-    resultparser.cpp
     selectcheckerswidget.cpp
     selectpathswidget.cpp
     sortedissuesproxymodel.cpp

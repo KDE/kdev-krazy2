@@ -17,8 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RESULTPARSER_H
-#define RESULTPARSER_H
+#ifndef ANALYSISRESULTSPARSER_H
+#define ANALYSISRESULTSPARSER_H
 
 #include <QXmlStreamReader>
 
@@ -31,13 +31,13 @@ class Checker;
  * The data can be parsed all at once or by calling parse(QString) repeteadly
  * with new data chunks each time.
  */
-class ResultParser {
+class AnalysisResultsParser {
 public:
 
     /**
-     * Creates a new ResultParser.
+     * Creates a new AnalysisResultsParser.
      */
-    ResultParser();
+    AnalysisResultsParser();
 
     /**
      * Sets the AnalysisResults to populate when parsing the data.

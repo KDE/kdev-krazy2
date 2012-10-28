@@ -23,6 +23,7 @@ unit_tests(
     analysisparameters
     analysisprogressparser
     analysisresults
+    analysisresultsparser
     checker
     checkerlistjob
     checkerlistparser
@@ -31,7 +32,6 @@ unit_tests(
     issuemodel
     issuewidget
     krazy2view
-    resultparser
     selectcheckerswidget
     selectpathswidget
     sortedissuesproxymodel
@@ -48,6 +48,7 @@ mem_tests(
     analysisparameters
     analysisprogressparser
     analysisresults
+    analysisresultsparser
     checker
     checkerlistjob
     checkerlistparser
@@ -56,7 +57,6 @@ mem_tests(
     issuemodel
     #issuewidget # Disabled by default, as it uses KDevelop::TestCore and thus needs a lot of memory to perform the test
     #krazy2view # Disabled by default, as it uses KDevelop::TestCore and thus needs a lot of memory to perform the test
-    resultparser
     selectcheckerswidget
     selectpathswidget
     sortedissuesproxymodel
