@@ -79,7 +79,7 @@ void AnalysisProgressParser::discardFilteredOutFileMessages() {
 }
 
 bool AnalysisProgressParser::discardCannotAccessFileMessage() {
-    if (!(m_buffer.startsWith("Cannot access file ") && m_buffer.contains('\n'))) {
+    if (!(m_buffer.startsWith(QLatin1String("Cannot access file ")) && m_buffer.contains('\n'))) {
         return false;
     }
 
@@ -90,7 +90,7 @@ bool AnalysisProgressParser::discardCannotAccessFileMessage() {
 }
 
 bool AnalysisProgressParser::discardUnsupportedFileTypeMessage() {
-    if (!(m_buffer.startsWith("Unsupported file type ") && m_buffer.contains("skipping\n"))) {
+    if (!(m_buffer.startsWith(QLatin1String("Unsupported file type ")) && m_buffer.contains("skipping\n"))) {
         return false;
     }
 
@@ -101,7 +101,7 @@ bool AnalysisProgressParser::discardUnsupportedFileTypeMessage() {
 }
 
 bool AnalysisProgressParser::parseFileType() {
-    if (!(m_buffer.startsWith("=>") && m_buffer.contains('/'))) {
+    if (!(m_buffer.startsWith(QLatin1String("=>")) && m_buffer.contains('/'))) {
         return false;
     }
 
@@ -155,7 +155,7 @@ bool AnalysisProgressParser::parseDots() {
 }
 
 bool AnalysisProgressParser::parseDone() {
-    if (!m_buffer.startsWith("done\n")) {
+    if (!m_buffer.startsWith(QLatin1String("done\n"))) {
         return false;
     }
 
