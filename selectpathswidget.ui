@@ -26,7 +26,7 @@
      <item>
       <widget class="KPushButton" name="addButton">
        <property name="toolTip">
-        <string/>
+        <string comment="@info:tooltip">Add files and directories.</string>
        </property>
        <property name="whatsThis">
         <string comment="@info:whatsthis">&lt;para&gt;Adds files and directories to the list.&lt;/para&gt;
@@ -42,6 +42,9 @@
       <widget class="KPushButton" name="removeButton">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string comment="@info:tooltip">Remove the selected files or directories.</string>
        </property>
        <property name="whatsThis">
         <string comment="@info:whatsthis">&lt;para&gt;Removes files or directories from the list.&lt;/para&gt;</string>
