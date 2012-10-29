@@ -28,6 +28,9 @@
        <property name="enabled">
         <bool>false</bool>
        </property>
+       <property name="whatsThis">
+        <string comment="@info:whatsthis">&lt;para&gt;Other available checkers that will not be run in the analysis.&lt;/para&gt;</string>
+       </property>
       </widget>
      </item>
     </layout>
@@ -122,6 +125,9 @@
       <widget class="QTreeView" name="checkersToRunView">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="whatsThis">
+        <string comment="@info:whatsthis">&lt;para&gt;The checkers that will be run in the analysis.&lt;/para&gt;</string>
        </property>
       </widget>
      </item>

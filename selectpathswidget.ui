@@ -16,6 +16,9 @@
   <layout class="QHBoxLayout" name="mainHorizontalLayout">
    <item>
     <widget class="QListView" name="pathsView">
+     <property name="whatsThis">
+      <string comment="@info:whatsthis">&lt;para&gt;The files and directories to analyze.&lt;/para&gt;</string>
+     </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
