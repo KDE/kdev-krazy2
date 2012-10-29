@@ -1,0 +1,52 @@
+Design
+------
+The file Design.xmi, created using Umbrello, contains the design of the plugin
+in UML notation. There are several UML diagrams; one for the general design and
+others focused on specific areas of the plugin (like the analysis or the UI).
+Note that they do not contain every method and attribute of every class, but
+just the key elements needed to describe and understand the design.
+
+
+
+Documentation 
+-------------
+Every class, attribute and method (even private ones) should provide API
+documentation in Doxygen format. The API documentation should explain what it
+does and, maybe, why it does that, although how it does that should be
+explained, if needed, in C++ comments in the code itself.
+
+However, those are "guidelines" more than actual rules. A trivial element may
+not need to be documented (like a "setX" method), or the documentation of some
+element may contain implementation details.
+
+
+
+Unit tests
+----------
+Unit tests should be provided for every new feature. When fixing a bug, a unit
+test exposing the bug should also be provided.
+
+Again, these are "guidelines". Sometimes it is just too complex to write an
+automated test for something, or something just does not need a unit test.
+
+The unit tests are written using QTest. For each unit test a memory test can be
+run using CTest, although some memory tests (those that create a KDevelop
+instance) are disabled by default, as they need too many resources to be run.
+They can be enabled uncommenting them in the tests/CMakeLists.txt and then
+running make again.
+
+Finally note that, although listed as unit tests, there are some automated tests
+that are far from being unit tests. For example, Krazy2ViewTest is more akin to
+an acceptance test, and takes a lot of time to run (in my system, at the moment
+of this writing, 150 seconds).
+
+
+
+Commit policies
+---------------
+Please, if you change the design, update Design.xmi. If needed, document your
+changes. And if applicable, add unit tests for them (or update the ones that
+already exist).
+
+Again, those are guidelines. At the very least, try to not commit changes that
+do not compile or do not pass the existing tests ;)
