@@ -72,7 +72,7 @@ public:
 
     /**
      * Adds analysis parameters.
-     * The checkers and paths have to have been initialized.
+     * The checkers have to have been initialized.
      *
      * The checkers from the list of available checkers will be copied to the
      * AnalysisResults object, so they must be fully initialized. The reason is

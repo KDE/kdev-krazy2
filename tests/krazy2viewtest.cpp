@@ -78,6 +78,7 @@ private slots:
     void testAnalyzeAgainSingleIssueNoChangesCheckingOrder();
     void testAnalyzeAgainSingleIssueNewIssues();
     void testAnalyzeAgainSeveralIssues();
+    void testAnalyzeAgainSeveralIssuesOnDeletedFiles();
     void testAnalyzeAgainSingleIssueCancellingAnalysis();
 
     void testAnalyzeAgainSingleFile();
@@ -85,6 +86,7 @@ private slots:
     void testAnalyzeAgainSingleFileNoChangesCheckingOrder();
     void testAnalyzeAgainSingleFileNewIssues();
     void testAnalyzeAgainSeveralFiles();
+    void testAnalyzeAgainSeveralDeletedFiles();
     void testAnalyzeAgainSingleFileCancellingAnalysis();
 
 private:
@@ -1438,6 +1440,45 @@ void Krazy2ViewTest::testAnalyzeAgainSeveralIssues() {
     QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
 }
 
+void Krazy2ViewTest::testAnalyzeAgainSeveralIssuesOnDeletedFiles() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainIssues(&view);
+
+    //Remove the files with the issues to analyze again
+    QFile::remove(m_workingDirectory + "examples/singleIssueCopy.cpp");
+    QFile::remove(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+
+    //Analyze again the doublequote_chars issue in singleIssueCopy.cpp and the
+    //second and the last spelling issue in severalIssuesSeveralCheckersCopy.cpp
+    analyzeAgainIssues(&view, QList<int>() << 2 << 4 << 6);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    //The results will still contain the doublequote_chars issues for the
+    //severalIssuesSeveralCheckersCopy.cpp file, as although the file was
+    //removed those issues were not checked again.
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 2);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 8));
+    QVERIFY(findIssue(analysisResults, "doublequote_chars", "severalIssuesSeveralCheckersCopy.cpp", 12));
+}
+
 void Krazy2ViewTest::testAnalyzeAgainSingleIssueCancellingAnalysis() {
     Krazy2View view;
 
@@ -1762,6 +1803,39 @@ void Krazy2ViewTest::testAnalyzeAgainSeveralFiles() {
     QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 14));
     QVERIFY(findIssue(analysisResults, "spelling", "severalIssuesSeveralCheckersCopy.cpp", 19));
     QVERIFY(findIssue(analysisResults, "spelling", "singleIssueCopy.cpp", 13));
+}
+
+void Krazy2ViewTest::testAnalyzeAgainSeveralDeletedFiles() {
+    Krazy2View view;
+
+    setUpToAnalyzeAgainFiles(&view);
+
+    //Remove the files with the issues to analyze again
+    QFile::remove(m_workingDirectory + "examples/singleIssueCopy.cpp");
+    QFile::remove(m_workingDirectory + "examples/severalIssuesSeveralCheckersCopy.cpp");
+
+    //Analyze again the first doublequote_chars issue in
+    //severalIssuesSeveralCheckersCopy.cpp, the doublequote_chars issue in
+    //singleIssueCopy.cpp and the last spelling issue in
+    //severalIssuesSeveralCheckersCopy.cpp
+    analyzeAgainFiles(&view, QList<int>() << 0 << 3 << 7);
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
+    QVERIFY(analysisJob);
+    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+
+    QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
+
+    QVERIFY(selectPathsButton(&view)->isEnabled());
+    QVERIFY(selectCheckersButton(&view)->isEnabled());
+    QVERIFY(analyzeButton(&view)->isEnabled());
+    QVERIFY(resultsTableView(&view)->isEnabled());
+
+    const AnalysisResults* analysisResults = analysisResultsFrom(&view);
+    QVERIFY(analysisResults);
+    QCOMPARE(analysisResults->issues().count(), 0);
 }
 
 void Krazy2ViewTest::testAnalyzeAgainSingleFileCancellingAnalysis() {

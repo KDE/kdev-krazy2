@@ -95,7 +95,9 @@ private slots:
     void testRunExtraCheckers();
     void testRunExtraCheckersAndSubsetOfCheckers();
     void testRunCheckerWithDuplicatedNamesAndSpecificFileTypes();
+    void testRunCheckersWithNoFiles();
     void testRunSeveralAnalysisParameters();
+    void testRunSeveralAnalysisParametersSomeOfThemWithoutFiles();
     void testRunWithEmptyKrazy2ExecutablePath();
     void testRunWithInvalidKrazy2ExecutablePath();
 
@@ -696,6 +698,92 @@ void AnalysisJobTest::testRunCheckerWithDuplicatedNamesAndSpecificFileTypes() {
     QCOMPARE(showProgressSpy.at(3).at(3).toInt(), 100);
 }
 
+void AnalysisJobTest::testRunCheckersWithNoFiles() {
+    AnalysisJob analysisJob;
+    analysisJob.setAutoDelete(false);
+
+    QList<const Checker*> availableCheckers;
+
+    Checker* doubleQuoteCharsChecker = new Checker();
+    doubleQuoteCharsChecker->setFileType("c++");
+    doubleQuoteCharsChecker->setName("doublequote_chars");
+    doubleQuoteCharsChecker->setDescription("Check single-char QString operations for efficiency");
+    doubleQuoteCharsChecker->setExplanation("Adding single characters to a QString "
+                                            "is faster if the characters are QChars...");
+    availableCheckers.append(doubleQuoteCharsChecker);
+
+    Checker* licenseChecker = new Checker();
+    licenseChecker->setFileType("c++");
+    licenseChecker->setName("license");
+    licenseChecker->setDescription("Check for an acceptable license");
+    licenseChecker->setExplanation("Each source file must contain a license "
+                                   "or a reference to a license which states...");
+    availableCheckers.append(licenseChecker);
+
+    Checker* spellingChecker = new Checker();
+    spellingChecker->setFileType("c++");
+    spellingChecker->setName("spelling");
+    spellingChecker->setDescription("Check for spelling errors");
+    spellingChecker->setExplanation("Spelling errors in comments and strings "
+                                    "should be fixed as they may show up later...");
+    availableCheckers.append(spellingChecker);
+
+    Checker* validateChecker = new Checker();
+    validateChecker->setFileType("desktop");
+    validateChecker->setName("validate");
+    validateChecker->setDescription("Validates desktop files using 'desktop-file-validate'");
+    validateChecker->setExplanation("Please make sure your .desktop files conform "
+                                    "to the freedesktop.org standard. See the spec...");
+    availableCheckers.append(validateChecker);
+
+    Checker* qmlLicenseChecker = new Checker();
+    qmlLicenseChecker->setFileType("qml");
+    qmlLicenseChecker->setName("license");
+    qmlLicenseChecker->setDescription("Check for an acceptable license");
+    qmlLicenseChecker->setExplanation("Each source file must contain a license "
+                                      "or a reference to a license which states...");
+    availableCheckers.append(qmlLicenseChecker);
+
+    //Do not set spelling checker
+    QList<const Checker*> checkersToRun;
+    checkersToRun.append(doubleQuoteCharsChecker);
+    checkersToRun.append(licenseChecker);
+    checkersToRun.append(validateChecker);
+    checkersToRun.append(qmlLicenseChecker);
+
+    AnalysisParameters analysisParameters;
+    analysisParameters.initializeCheckers(availableCheckers);
+    analysisParameters.setCheckersToRun(checkersToRun);
+    analysisJob.addAnalysisParameters(&analysisParameters);
+
+    AnalysisResults analysisResults;
+    analysisJob.setAnalysisResults(&analysisResults);
+
+    QSignalSpy showProgressSpy(analysisJob.findChild<AnalysisProgressParser*>(),
+                               SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
+
+    SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
+
+    analysisJob.start();
+
+    resultSpy.waitForSignal();
+
+    QCOMPARE(analysisJob.error(), (int)KJob::NoError);
+    QCOMPARE(analysisResults.issues().count(), 0);
+
+    //Two signals should have been emitted: one for the start and one for the
+    //finish.
+    QCOMPARE(showProgressSpy.count(), 2);
+
+    //First signal is the 0%
+    //First parameter is the AnalysisProgressParser itself
+    QCOMPARE(showProgressSpy.at(0).at(1).toInt(), 0);
+    QCOMPARE(showProgressSpy.at(0).at(2).toInt(), 100);
+    QCOMPARE(showProgressSpy.at(0).at(3).toInt(), 0);
+
+    QCOMPARE(showProgressSpy.at(1).at(3).toInt(), 100);
+}
+
 void AnalysisJobTest::testRunSeveralAnalysisParameters() {
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
@@ -773,6 +861,242 @@ void AnalysisJobTest::testRunSeveralAnalysisParameters() {
     analysisParameters3.setCheckersToRun(checkersToRun);
     analysisParameters3.setFilesAndDirectories(fileNames);
     analysisJob.addAnalysisParameters(&analysisParameters3);
+
+    AnalysisResults analysisResults;
+    analysisJob.setAnalysisResults(&analysisResults);
+
+    QSignalSpy showProgressSpy(analysisJob.findChild<AnalysisProgressParser*>(),
+                               SIGNAL(showProgress(KDevelop::IStatus*,int,int,int)));
+
+    SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
+
+    analysisJob.start();
+
+    resultSpy.waitForSignal();
+
+    QCOMPARE(analysisJob.error(), (int)KJob::NoError);
+    QCOMPARE(analysisResults.issues().count(), 6);
+
+    //To prevent test failures due to the order of the issues, each issue is
+    //searched in the results instead of using a specific index
+    const Issue* issue1 = findIssue(&analysisResults, "license",
+                                    "severalIssuesSeveralCheckers.cpp", -1);
+    QVERIFY(issue1);
+    QCOMPARE(issue1->message(), QString("missing license"));
+    QCOMPARE(issue1->checker()->description(),
+             QString("Check for an acceptable license"));
+    QVERIFY(issue1->checker()->explanation().startsWith(
+                "Each source file must contain a license"));
+    QCOMPARE(issue1->checker()->fileType(), QString("c++"));
+    QVERIFY(!issue1->checker()->isExtra());
+
+    const Issue* issue2 = findIssue(&analysisResults, "spelling",
+                                    "subdirectory/severalIssuesSeveralCheckers.qml", 3);
+    QVERIFY(issue2);
+    QCOMPARE(issue2->message(), QString("occured")); //krazy:exclude=spelling
+    QCOMPARE(issue2->checker()->description(),
+             QString("Check for spelling errors"));
+    QVERIFY(issue2->checker()->explanation().startsWith(
+                "Spelling errors in comments and strings should be fixed"));
+    QCOMPARE(issue2->checker()->fileType(), QString("qml"));
+    QVERIFY(!issue2->checker()->isExtra());
+
+    const Issue* issue3 = findIssue(&analysisResults, "style",
+                                    "singleExtraIssue.cpp", 7);
+    QVERIFY(issue3);
+    QCOMPARE(issue3->message(), QString("Put 1 space before an asterisk or ampersand"));
+    QCOMPARE(issue3->checker()->description(),
+             QString("Check for adherence to a coding style"));
+    QVERIFY(issue3->checker()->explanation().startsWith(
+                "Please follow the coding style guidelines"));
+    QCOMPARE(issue3->checker()->fileType(), QString("c++"));
+    QVERIFY(issue3->checker()->isExtra());
+
+    const Issue* issue4 = findIssue(&analysisResults, "doublequote_chars",
+                                   "singleIssue.cpp", 8);
+    QVERIFY(issue4);
+    QCOMPARE(issue4->message(), QString(""));
+    QCOMPARE(issue4->checker()->description(),
+             QString("Check single-char QString operations for efficiency"));
+    QVERIFY(issue4->checker()->explanation().startsWith(
+                "Adding single characters to a QString is faster"));
+    QCOMPARE(issue4->checker()->fileType(), QString("c++"));
+    QVERIFY(!issue4->checker()->isExtra());
+
+    const Issue* issue5 = findIssue(&analysisResults, "doublequote_chars",
+                                    "severalIssuesSingleChecker.cpp", 8);
+    QVERIFY(issue5);
+    QCOMPARE(issue5->message(), QString(""));
+    QCOMPARE(issue5->checker(), issue4->checker());
+
+    const Issue* issue6 = findIssue(&analysisResults, "doublequote_chars",
+                                    "severalIssuesSingleChecker.cpp", 10);
+    QVERIFY(issue6);
+    QCOMPARE(issue6->message(), QString(""));
+    QCOMPARE(issue6->checker(), issue4->checker());
+
+    //Eight signals should have been emitted: one for the start, one for the
+    //finish, and one for each checker run (desktop/validate was not run as it
+    //was not compatible with the given files, and c++/doublequote_chars and
+    //c++/license were both executed twice).
+    QCOMPARE(showProgressSpy.count(), 8);
+
+    //First signal is the 0%
+    //First parameter is the AnalysisProgressParser itself
+    QCOMPARE(showProgressSpy.at(0).at(1).toInt(), 0);
+    QCOMPARE(showProgressSpy.at(0).at(2).toInt(), 100);
+    QCOMPARE(showProgressSpy.at(0).at(3).toInt(), 0);
+
+    QCOMPARE(showProgressSpy.at(1).at(3).toInt(), 16);
+    QCOMPARE(showProgressSpy.at(2).at(3).toInt(), 33);
+    QCOMPARE(showProgressSpy.at(3).at(3).toInt(), 50);
+    QCOMPARE(showProgressSpy.at(4).at(3).toInt(), 66);
+    QCOMPARE(showProgressSpy.at(5).at(3).toInt(), 83);
+    QCOMPARE(showProgressSpy.at(6).at(3).toInt(), 99);
+    QCOMPARE(showProgressSpy.at(7).at(3).toInt(), 100);
+}
+
+void AnalysisJobTest::testRunSeveralAnalysisParametersSomeOfThemWithoutFiles() {
+    AnalysisJob analysisJob;
+    analysisJob.setAutoDelete(false);
+
+    //First analysis parameters should give no issues (as there are no files)
+    QList<const Checker*> availableCheckers = getAvailableCheckers();
+
+    QList<const Checker*> checkersToRun;
+    foreach (const Checker* checker, availableCheckers) {
+        checkersToRun.append(checker);
+    }
+
+    AnalysisParameters analysisParameters1;
+    analysisParameters1.initializeCheckers(availableCheckers);
+    analysisParameters1.setCheckersToRun(checkersToRun);
+    analysisJob.addAnalysisParameters(&analysisParameters1);
+
+    //Second analysis parameters should give one issue for each checker (the
+    //first and second checker are named like other checkers with issues,
+    //although they should not be run)
+    QMutableListIterator<const Checker*> it(availableCheckers);
+    while (it.hasNext()) {
+        it.setValue(new Checker(*it.next()));
+    }
+
+    checkersToRun.clear();
+    foreach (const Checker* checker, availableCheckers) {
+        if ((checker->fileType() == "c++" && checker->name() == "license" && !checker->isExtra()) ||
+            (checker->fileType() == "qml" && checker->name() == "spelling" && !checker->isExtra()) ||
+            (checker->fileType() == "c++" && checker->name() == "style" && checker->isExtra())) {
+            checkersToRun.append(checker);
+        }
+    }
+
+    QStringList fileNames;
+    fileNames << m_workingDirectory + "examples";
+
+    AnalysisParameters analysisParameters2;
+    analysisParameters2.initializeCheckers(availableCheckers);
+    analysisParameters2.setCheckersToRun(checkersToRun);
+    analysisParameters2.setFilesAndDirectories(fileNames);
+    analysisJob.addAnalysisParameters(&analysisParameters2);
+
+    //Third analysis parameters should give one issue for the checker
+    it = QMutableListIterator<const Checker*>(availableCheckers);
+    while (it.hasNext()) {
+        it.setValue(new Checker(*it.next()));
+    }
+
+    checkersToRun.clear();
+    foreach (const Checker* checker, availableCheckers) {
+        if ((checker->fileType() == "c++" && checker->name() == "doublequote_chars" && !checker->isExtra())) {
+            checkersToRun.append(checker);
+        }
+    }
+
+    fileNames.clear();
+    fileNames << m_workingDirectory + "examples/singleIssue.cpp";
+
+    AnalysisParameters analysisParameters3;
+    analysisParameters3.initializeCheckers(availableCheckers);
+    analysisParameters3.setCheckersToRun(checkersToRun);
+    analysisParameters3.setFilesAndDirectories(fileNames);
+    analysisJob.addAnalysisParameters(&analysisParameters3);
+
+    //Fourth analysis parameters should give no issues (as there are no files)
+    it = QMutableListIterator<const Checker*>(availableCheckers);
+    while (it.hasNext()) {
+        it.setValue(new Checker(*it.next()));
+    }
+
+    checkersToRun.clear();
+    foreach (const Checker* checker, availableCheckers) {
+        checkersToRun.append(checker);
+    }
+
+    AnalysisParameters analysisParameters4;
+    analysisParameters4.initializeCheckers(availableCheckers);
+    analysisParameters4.setCheckersToRun(checkersToRun);
+    analysisJob.addAnalysisParameters(&analysisParameters4);
+
+    //Fifth analysis parameters should give no issues (as there are no files)
+    it = QMutableListIterator<const Checker*>(availableCheckers);
+    while (it.hasNext()) {
+        it.setValue(new Checker(*it.next()));
+    }
+
+    checkersToRun.clear();
+    foreach (const Checker* checker, availableCheckers) {
+        checkersToRun.append(checker);
+    }
+
+    AnalysisParameters analysisParameters5;
+    analysisParameters5.initializeCheckers(availableCheckers);
+    analysisParameters5.setCheckersToRun(checkersToRun);
+    analysisJob.addAnalysisParameters(&analysisParameters5);
+
+    //Sixth analysis parameters should give three issues for the first checker
+    //(although one is repeated), no issues for the second checker, and the
+    //third one should not be run, as it is not compatible with any analyzed
+    //file
+    it = QMutableListIterator<const Checker*>(availableCheckers);
+    while (it.hasNext()) {
+        it.setValue(new Checker(*it.next()));
+    }
+
+    checkersToRun.clear();
+    foreach (const Checker* checker, availableCheckers) {
+        if ((checker->fileType() == "c++" && checker->name() == "doublequote_chars" && !checker->isExtra()) ||
+            (checker->fileType() == "c++" && checker->name() == "license" && !checker->isExtra()) ||
+            (checker->fileType() == "desktop" && checker->name() == "validate" && !checker->isExtra())) {
+            checkersToRun.append(checker);
+        }
+    }
+
+    fileNames.clear();
+    fileNames << m_workingDirectory + "examples/singleIssue.cpp";
+    fileNames << m_workingDirectory + "examples/severalIssuesSingleChecker.cpp";
+    fileNames << m_workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml";
+
+    AnalysisParameters analysisParameters6;
+    analysisParameters6.initializeCheckers(availableCheckers);
+    analysisParameters6.setCheckersToRun(checkersToRun);
+    analysisParameters6.setFilesAndDirectories(fileNames);
+    analysisJob.addAnalysisParameters(&analysisParameters6);
+
+    //Seventh analysis parameters should give no issues (as there are no files)
+    it = QMutableListIterator<const Checker*>(availableCheckers);
+    while (it.hasNext()) {
+        it.setValue(new Checker(*it.next()));
+    }
+
+    checkersToRun.clear();
+    foreach (const Checker* checker, availableCheckers) {
+        checkersToRun.append(checker);
+    }
+
+    AnalysisParameters analysisParameters7;
+    analysisParameters7.initializeCheckers(availableCheckers);
+    analysisParameters7.setCheckersToRun(checkersToRun);
+    analysisJob.addAnalysisParameters(&analysisParameters7);
 
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);

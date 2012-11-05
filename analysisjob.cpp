@@ -79,7 +79,6 @@ void AnalysisJob::start() {
 void AnalysisJob::addAnalysisParameters(const AnalysisParameters* analysisParameters) {
     Q_ASSERT(analysisParameters);
     Q_ASSERT(analysisParameters->wereCheckersInitialized());
-    Q_ASSERT(!analysisParameters->filesToBeAnalyzed().isEmpty());
     Q_ASSERT(!analysisParameters->checkersToRun().isEmpty());
 
     m_analysisParametersList.append(analysisParameters);
