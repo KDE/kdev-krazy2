@@ -1,7 +1,0 @@
-#krazy:skip
-[Desktop Entry]
-Name=An invalid desktop file (missing "Type" key)
-Name[pt]=O ficheiro 'desktop' é inválido (falta a chave "Type")
-Name[pt_BR]=O arquivo 'desktop' é inválido (falta a chave "Type")
-Name[uk]=Некоректний файл desktop (не вистачає ключа «Type»)
-Name[x-test]=xxAn invalid desktop file (missing "Type" key)xx

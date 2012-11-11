@@ -74,7 +74,7 @@ set(examples
     examples/severalIssuesSingleChecker.cpp
     examples/severalIssuesSeveralCheckers.cpp
     examples/severalIssuesSeveralCheckersUnknownFileType.dqq
-    examples/subdirectory/singleIssue.desktop
+    examples/subdirectory/singleIssue.desktop.example.do-not-translate
     examples/subdirectory/severalIssuesSeveralCheckers.qml
 )
 
@@ -84,3 +84,14 @@ foreach(example ${examples})
     string(REPLACE "#krazy:skip\n" "" exampleContents "${exampleContents}")
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${example} "${exampleContents}")
 endforeach(example)
+
+# Translatable string extraction from desktop files is not handled by
+# Messages.sh; it is done automatically instead. So, as far as I know, there is
+# no way to prevent the extraction from a specific .desktop file. However,
+# singleIssue.desktop is just an example file used for the tests, and it should
+# not be translated, as it would be a waste of the translators' time. Thus, the
+# file in the source directory has an extension that will not be used for the
+# automatic string extraction, and it is renamed to the .desktop extension in
+# the build directory, where the tests are run.
+file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/examples/subdirectory/singleIssue.desktop.example.do-not-translate
+            ${CMAKE_CURRENT_BINARY_DIR}/examples/subdirectory/singleIssue.desktop)
