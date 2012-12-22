@@ -23,8 +23,8 @@
 #include <KLocalizedString>
 #include <KPluginFactory>
 
-#include <kdevplatform/interfaces/icore.h>
-#include <kdevplatform/interfaces/iuicontroller.h>
+#include <interfaces/icore.h>
+#include <interfaces/iuicontroller.h>
 
 #include "krazy2view.h"
 

@@ -29,9 +29,9 @@
 #include <KPushButton>
 #include <KUrlRequester>
 
-#include <kdevplatform/interfaces/iruncontroller.h>
-#include <kdevplatform/tests/autotestshell.h>
-#include <kdevplatform/tests/testcore.h>
+#include <interfaces/iruncontroller.h>
+#include <tests/autotestshell.h>
+#include <tests/testcore.h>
 
 #define protected public
 #define private public

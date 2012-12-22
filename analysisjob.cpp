@@ -25,8 +25,8 @@
 #include <KProcess>
 #include <KSharedConfig>
 
-#include <kdevplatform/interfaces/icore.h>
-#include <kdevplatform/interfaces/iuicontroller.h>
+#include <interfaces/icore.h>
+#include <interfaces/iuicontroller.h>
 
 #include "analysisparameters.h"
 #include "analysisprogressparser.h"

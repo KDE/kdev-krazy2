@@ -23,7 +23,7 @@
 #include <QPointer>
 #include <QTableView>
 
-#include <kdevplatform/util/activetooltip.h>
+#include <util/activetooltip.h>
 
 class Issue;
 

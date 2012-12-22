@@ -21,10 +21,10 @@
 
 #include <QSortFilterProxyModel>
 
-#include <kdevplatform/interfaces/idocument.h>
-#include <kdevplatform/interfaces/idocumentcontroller.h>
-#include <kdevplatform/tests/autotestshell.h>
-#include <kdevplatform/tests/testcore.h>
+#include <interfaces/idocument.h>
+#include <interfaces/idocumentcontroller.h>
+#include <tests/autotestshell.h>
+#include <tests/testcore.h>
 
 #include "../issuewidget.h"
 #include "../analysisresults.h"

@@ -21,8 +21,8 @@
 
 #include <QPointer>
 
-#include <kdevplatform/interfaces/icore.h>
-#include <kdevplatform/interfaces/iruncontroller.h>
+#include <interfaces/icore.h>
+#include <interfaces/iruncontroller.h>
 
 #include "analysisjob.h"
 #include "analysisparameters.h"

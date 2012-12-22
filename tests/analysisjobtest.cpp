@@ -21,8 +21,8 @@
 
 #include <KConfigGroup>
 
-#include <kdevplatform/tests/autotestshell.h>
-#include <kdevplatform/tests/testcore.h>
+#include <tests/autotestshell.h>
+#include <tests/testcore.h>
 
 #include "../analysisjob.h"
 #include "../analysisparameters.h"

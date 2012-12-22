@@ -28,8 +28,8 @@
 
 #include <KLocalizedString>
 
-#include <kdevplatform/interfaces/icore.h>
-#include <kdevplatform/interfaces/idocumentcontroller.h>
+#include <interfaces/icore.h>
+#include <interfaces/idocumentcontroller.h>
 
 #include "issue.h"
 #include "issuemodel.h"
