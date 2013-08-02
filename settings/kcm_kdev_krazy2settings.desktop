@@ -10,6 +10,7 @@ X-KDE-ParentApp=kdevplatform
 X-KDE-ParentComponents=kdevplatform
 
 Name=Krazy2 settings
+Name[bs]=Krazy2 postavke
 Name[cs]=Nastavení Krazy2
 Name[de]=Krazy2-Einstellungen
 Name[es]=Preferencias de Krazy2
@@ -28,6 +29,7 @@ Name[tr]=Krazy2 ayarları
 Name[uk]=Параметри Krazy2
 Name[x-test]=xxKrazy2 settingsxx
 Comment=Configure Krazy2 settings
+Comment[bs]=Konfiguriši Krazy2 postavke
 Comment[de]=Krazy2-Einstellungen festlegen
 Comment[es]=Configurar las preferencias de Krazy2
 Comment[et]=Krazy2 seadistamine
