@@ -37,6 +37,8 @@
 
 #include "ui_krazy2view.h"
 
+#include "./krazy2dialog.h"
+
 //public:
 
 Krazy2View::Krazy2View(QWidget* parent /*= 0*/):
@@ -142,10 +144,12 @@ void Krazy2View::restoreGuiAfterAnalysis() {
 //private slots:
 
 void Krazy2View::selectPaths() {
-    QPointer<KDialog> dialog = new KDialog(this);
+    QPointer<Krazy2Dialog> dialog = new Krazy2Dialog(this);
     SelectPathsWidget* selectPathsWidget =
             new SelectPathsWidget(m_analysisParameters->filesAndDirectories(), dialog);
+
     dialog->setMainWidget(selectPathsWidget);
+
     dialog->setWindowTitle(selectPathsWidget->windowTitle());
 
     if (dialog->exec() == QDialog::Rejected) {
@@ -161,16 +165,18 @@ void Krazy2View::selectPaths() {
 }
 
 void Krazy2View::selectCheckers() {
-    QPointer<KDialog> dialog = new KDialog(this);
+    QPointer<Krazy2Dialog> dialog = new Krazy2Dialog(this);
     SelectCheckersWidget* selectCheckersWidget = new SelectCheckersWidget(dialog);
     if (m_analysisParameters->wereCheckersInitialized()) {
         selectCheckersWidget->setCheckers(m_analysisParameters->availableCheckers(),
                                           m_analysisParameters->checkersToRun());
     } else {
         initializeCheckers(SLOT(handleCheckerInitializationBeforeSelectingCheckers(KJob*)));
-        dialog->button(KDialog::Ok)->setEnabled(false);
+
+        dialog->button(Krazy2Dialog::Ok)->setEnabled(false);
         dialog->setCursor(Qt::BusyCursor);
     }
+
     dialog->setMainWidget(selectCheckersWidget);
     dialog->setWindowTitle(selectCheckersWidget->windowTitle());
 
@@ -200,7 +206,7 @@ void Krazy2View::handleCheckerInitializationBeforeSelectingCheckers(KJob* job) {
 
     updateAnalyzeButtonStatus();
 
-    KDialog* dialog = findChild<KDialog*>();
+    Krazy2Dialog* dialog = findChild<Krazy2Dialog*>();
     SelectCheckersWidget* selectCheckersWidget = dialog->findChild<SelectCheckersWidget*>();
     if (!dialog || !selectCheckersWidget) {
         return;
@@ -208,7 +214,8 @@ void Krazy2View::handleCheckerInitializationBeforeSelectingCheckers(KJob* job) {
 
     selectCheckersWidget->setCheckers(m_analysisParameters->availableCheckers(),
                                       m_analysisParameters->checkersToRun());
-    dialog->button(KDialog::Ok)->setEnabled(true);
+
+    dialog->button(Krazy2Dialog::Ok)->setEnabled(true);
     dialog->unsetCursor();
 }
 

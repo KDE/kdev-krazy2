@@ -21,8 +21,6 @@
 
 #include <QRegExp>
 
-#include <KUrl>
-
 #include "analysisresults.h"
 #include "checker.h"
 #include "issue.h"

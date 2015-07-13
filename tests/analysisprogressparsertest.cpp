@@ -17,7 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QtTest>
+#include <KLocalizedString>
 
 #include "../analysisprogressparser.h"
 
@@ -612,6 +613,6 @@ void AnalysisProgressParserTest::assertShowProgress(int index, int minimum, int 
     QCOMPARE(m_showProgressSpy->at(index).at(3).toInt(), value);
 }
 
-QTEST_KDEMAIN(AnalysisProgressParserTest, NoGUI)
+QTEST_GUILESS_MAIN(AnalysisProgressParserTest)
 
 #include "analysisprogressparsertest.moc"

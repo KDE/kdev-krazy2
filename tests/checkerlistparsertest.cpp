@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
 
 #include "../checkerlistparser.h"
 #include "../checker.h"
@@ -382,6 +382,6 @@ void CheckerListParserTest::assertChecker(int index, const QString& name, const 
     QCOMPARE(checker->isExtra(), extra);
 }
 
-QTEST_KDEMAIN(CheckerListParserTest, NoGUI)
+QTEST_GUILESS_MAIN(CheckerListParserTest)
 
 #include "checkerlistparsertest.moc"

@@ -17,9 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
 
 #include <QSortFilterProxyModel>
+#include <QSignalSpy>
+#include <QDir>
+#include <QTimer>
 
 #include <interfaces/idocument.h>
 #include <interfaces/idocumentcontroller.h>
@@ -599,6 +602,6 @@ void IssueWidgetTest::analyzeAgainFiles(const IssueWidget* widget, const QList< 
     QApplication::sendEvent(widget->viewport(), &event);
 }
 
-QTEST_KDEMAIN(IssueWidgetTest, GUI)
+QTEST_MAIN(IssueWidgetTest)
 
 #include "issuewidgettest.moc"

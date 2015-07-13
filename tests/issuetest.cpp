@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
 
 #include "../issue.h"
 #include "../checker.h"
@@ -76,6 +76,6 @@ void IssueTest::testSetChecker() {
     QCOMPARE(issue.checker(), &checker);
 }
 
-QTEST_KDEMAIN(IssueTest, NoGUI)
+QTEST_GUILESS_MAIN(IssueTest)
 
 #include "issuetest.moc"

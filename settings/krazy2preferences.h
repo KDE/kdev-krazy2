@@ -20,7 +20,9 @@
 #ifndef KRAZY2PREFERENCES_H
 #define KRAZY2PREFERENCES_H
 
-#include <KCModule>
+#include <kdevplatform/interfaces/configpage.h>
+
+class Krazy2Settings;
 
 /**
  * Krazy2 plugin configuration module.
@@ -36,19 +38,14 @@
  * For further information, see KConfig XT tutorial at:
  * http://techbase.kde.org/Development/Tutorials/Using_KConfig_XT
  */
-class Krazy2Preferences: public KCModule {
+class Krazy2Preferences: public KDevelop::ConfigPage {
 Q_OBJECT
 public:
-
-    /**
-     * Creates a new Krazy2Preferences.
-     * A new Krazy2Settings widget is set for this module, loading its values
-     * from the configuration.
-     *
-     * @param parent Parent QWidget of this module.
-     * @param args The arguments to provide to this module.
-     */
-    Krazy2Preferences(QWidget* parent, const QVariantList& args);
+    explicit Krazy2Preferences(KDevelop::IPlugin *plugin = nullptr, QWidget* parent = nullptr);
+    virtual ~Krazy2Preferences();
+    virtual QString name() const override;
+    virtual QString fullName() const override;
+    virtual QIcon icon() const override;
 
 };
 

@@ -17,7 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
+#include <QSignalSpy>
 
 #include "../sortedissuesproxymodel.h"
 #include "../analysisresults.h"
@@ -718,6 +719,6 @@ void SortedIssuesProxyModelTest::compareIssues(const Issue* actual, const Issue*
              expectedChecker + ' ' + expected->fileName() + ' ' + QString::number(expected->line()));
 }
 
-QTEST_KDEMAIN(SortedIssuesProxyModelTest, NoGUI)
+QTEST_GUILESS_MAIN(SortedIssuesProxyModelTest)
 
 #include "sortedissuesproxymodeltest.moc"

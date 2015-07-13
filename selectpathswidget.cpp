@@ -22,9 +22,10 @@
 #include <QPointer>
 #include <QStringListModel>
 
-#include <KFileDialog>
-
 #include "ui_selectpathswidget.h"
+
+#include <QIcon>
+#include <QFileDialog>
 
 //public:
 
@@ -42,8 +43,8 @@ SelectPathsWidget::SelectPathsWidget(const QStringList& paths, QWidget* parent /
     connect(m_ui->pathsView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(handleSelectionChanged()));
 
-    m_ui->addButton->setIcon(KIcon("list-add"));
-    m_ui->removeButton->setIcon(KIcon("list-remove"));
+    m_ui->addButton->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
+    m_ui->removeButton->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
 
     connect(m_ui->addButton, SIGNAL(clicked()),
             this, SLOT(add()));
@@ -91,9 +92,7 @@ void SelectPathsWidget::updatePaths() {
 //private slots:
 
 void SelectPathsWidget::add() {
-    QPointer<KFileDialog> fileDialog = new KFileDialog(QUrl(), "", this);
-    fileDialog->setOperationMode(KFileDialog::Other);
-    fileDialog->setMode(KFile::Files | KFile::Directory | KFile::ExistingOnly);
+    QPointer<QFileDialog> fileDialog = new QFileDialog(this);
 
     if (fileDialog->exec() == QDialog::Rejected) {
         return;

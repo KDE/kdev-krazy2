@@ -21,28 +21,37 @@
 
 #include <QVBoxLayout>
 
-#include <KAboutData>
-#include <KPluginFactory>
-
 #include "krazy2config.h"
 
 #include "ui_krazy2settings.h"
 
-K_PLUGIN_FACTORY(Krazy2PreferencesFactory, registerPlugin<Krazy2Preferences>();)
-K_EXPORT_PLUGIN(Krazy2PreferencesFactory(KAboutData("kcm_kdev_krazy2settings", "kdevkrazy2",
-                                                    ki18n("Krazy2 Settings"), "0.1")))
+using namespace KDevelop;
 
-//public:
-
-Krazy2Preferences::Krazy2Preferences(QWidget* parent, const QVariantList& args):
-        KCModule(Krazy2PreferencesFactory::componentData(), parent, args) {
+Krazy2Preferences::Krazy2Preferences(IPlugin *plugin, QWidget* parent)
+    : ConfigPage(plugin, Krazy2Settings::self(), parent)
+{
     QVBoxLayout* layout = new QVBoxLayout(this);
     QWidget* widget = new QWidget(this);
     Ui::Krazy2Settings ui;
     ui.setupUi(widget);
     layout->addWidget(widget);
+}
 
-    addConfig(Krazy2Settings::self(), widget);
+Krazy2Preferences::~Krazy2Preferences()
+{
+}
 
-    load();
+QString Krazy2Preferences::name() const
+{
+    return i18n("Krazy2");
+}
+
+QString Krazy2Preferences::fullName() const
+{
+   return i18n("Configure Krazy2 settings");
+}
+
+QIcon Krazy2Preferences::icon() const
+{
+   return QIcon::fromTheme(QStringLiteral("kdevelop"));
 }

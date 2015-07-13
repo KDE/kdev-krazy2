@@ -17,16 +17,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
+#include <QTimer>
+#include <QSignalSpy>
 
 #include <QHeaderView>
 #include <QSortFilterProxyModel>
 #include <QTableView>
 #include <QTreeView>
+#include <QFileDialog>
 
 #include <KConfigGroup>
-#include <KFileDialog>
-#include <KPushButton>
+#include <KSharedConfig>
+#include <QPushButton>
 #include <KUrlRequester>
 
 #include <interfaces/iruncontroller.h>
@@ -45,6 +48,11 @@
 #include "../checkerlistjob.h"
 #include "../issue.h"
 #include "../issuemodel.h"
+
+#include <QDialogButtonBox>
+#include <QPushButton>
+
+#include "../krazy2dialog.h"
 
 class Krazy2ViewTest: public QObject {
 Q_OBJECT
@@ -106,9 +114,9 @@ private:
     AnalysisParameters* analysisParametersFrom(const Krazy2View* view) const;
     const AnalysisResults* analysisResultsFrom(const Krazy2View* view) const;
 
-    KPushButton* selectPathsButton(const Krazy2View* view) const;
-    KPushButton* selectCheckersButton(const Krazy2View* view) const;
-    KPushButton* analyzeButton(const Krazy2View* view) const;
+    QPushButton* selectPathsButton(const Krazy2View* view) const;
+    QPushButton* selectCheckersButton(const Krazy2View* view) const;
+    QPushButton* analyzeButton(const Krazy2View* view) const;
     QTableView* resultsTableView(const Krazy2View* view) const;
 
     const Issue* findIssue(const AnalysisResults* analysisResults,
@@ -198,7 +206,7 @@ void Krazy2ViewTest::init() {
         QSKIP("krazy2 is not in the execution path", SkipAll);
     }
 
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 }
 
@@ -502,7 +510,8 @@ void Krazy2ViewTest::testSetCheckersClosingWidgetBeforeInitializing() {
 
     //Wait until the checkers are initialized to ensure that the test does not
     //crash when setting the checkers in a deleted SelectCheckersWidget.
-    QTest::kWaitForSignal(view.findChild<CheckerListJob*>(), SIGNAL(finished(KJob*)));
+    QSignalSpy spy(view.findChild<CheckerListJob*>(), SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -560,7 +569,8 @@ void Krazy2ViewTest::testSetCheckersCancellingInitialization() {
     //the finished signal when it is emitted.
     CheckerListJob* checkerListJob = view.findChild<CheckerListJob*>();
     QTimer::singleShot(100, checkerListJob, SLOT(kill()));
-    QTest::kWaitForSignal(checkerListJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(checkerListJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -587,7 +597,8 @@ void Krazy2ViewTest::testSetCheckersWithoutPaths() {
     //the finished signal when it is emitted.
     CheckerListJob* checkerListJob = view.findChild<CheckerListJob*>();
     QTimer::singleShot(100, checkerListJob, SLOT(kill()));
-    QTest::kWaitForSignal(checkerListJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(checkerListJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -609,7 +620,8 @@ void Krazy2ViewTest::testSetCheckersWithoutPaths() {
     QCOMPARE(view.cursor().shape(), Qt::BusyCursor);
 
     //Wait until the checkers are initialized.
-    QTest::kWaitForSignal(view.findChild<CheckerListJob*>(), SIGNAL(finished(KJob*)));
+    QSignalSpy spy2(view.findChild<CheckerListJob*>(), SIGNAL(finished(KJob*)));
+    spy2.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -684,7 +696,8 @@ void Krazy2ViewTest::testAnalyze() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -781,7 +794,8 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
 
     CheckerListJob* checkerListJob = view.findChild<CheckerListJob*>();
     QVERIFY(checkerListJob);
-    QTest::kWaitForSignal(checkerListJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(checkerListJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     //If QCOMPARE fails this test method will end and the view and the
     //AnalysisJob started when the CheckerListJob finished will be destroyed (as
@@ -799,7 +813,8 @@ void Krazy2ViewTest::testAnalyzeWithCheckersNotInitialized() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy2(analysisJob, SIGNAL(finished(KJob*)));
+    spy2.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -940,7 +955,8 @@ void Krazy2ViewTest::testAnalyzeAfterSorting() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1016,7 +1032,8 @@ void Krazy2ViewTest::testAnalyzeAfterSorting() {
 
     //Ensure that the previous AnalysisJob was deleted before starting a new one
     //to be able to find the new one easily.
-    QCoreApplication::processEvents(QEventLoop::DeferredDeletion);
+    QCoreApplication::processEvents();
+
     QVERIFY(!view.findChild<AnalysisJob*>());
 
     //Analyze again after sorting by file name and check that the new results
@@ -1027,7 +1044,8 @@ void Krazy2ViewTest::testAnalyzeAfterSorting() {
 
     analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy2(analysisJob, SIGNAL(finished(KJob*)));
+    spy2.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1134,7 +1152,8 @@ void Krazy2ViewTest::testCancelAnalyze() {
     //Queue stopping the job to ensure that kWaitForSignal is already waiting
     //for the signal when it is emitted.
     QTimer::singleShot(100, KDevelop::ICore::self()->runController(), SLOT(stopAllProcesses()));
-    QTest::kWaitForSignal(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+    QSignalSpy spy(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1166,7 +1185,8 @@ void Krazy2ViewTest::testCancelAnalyzeWithCheckersNotInitialized() {
     //Queue stopping the job to ensure that kWaitForSignal is already waiting
     //for the signal when it is emitted.
     QTimer::singleShot(100, KDevelop::ICore::self()->runController(), SLOT(stopAllProcesses()));
-    QTest::kWaitForSignal(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+    QSignalSpy spy(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1204,7 +1224,8 @@ void Krazy2ViewTest::testAnalyzeAgainSingleIssue() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1247,7 +1268,8 @@ void Krazy2ViewTest::testAnalyzeAgainSingleIssueNoChanges() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1289,7 +1311,8 @@ void Krazy2ViewTest::testAnalyzeAgainSingleIssueNoChangesCheckingOrder() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1362,7 +1385,8 @@ void Krazy2ViewTest::testAnalyzeAgainSingleIssueNewIssues() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1416,7 +1440,8 @@ void Krazy2ViewTest::testAnalyzeAgainSeveralIssues() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1457,7 +1482,8 @@ void Krazy2ViewTest::testAnalyzeAgainSeveralIssuesOnDeletedFiles() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1508,7 +1534,8 @@ void Krazy2ViewTest::testAnalyzeAgainSingleIssueCancellingAnalysis() {
     //Queue stopping the job to ensure that kWaitForSignal is already waiting
     //for the signal when it is emitted.
     QTimer::singleShot(100, KDevelop::ICore::self()->runController(), SLOT(stopAllProcesses()));
-    QTest::kWaitForSignal(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+    QSignalSpy spy(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1556,7 +1583,8 @@ void Krazy2ViewTest::testAnalyzeAgainSingleFile() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1598,7 +1626,8 @@ void Krazy2ViewTest::testAnalyzeAgainSingleFileNoChanges() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1643,7 +1672,8 @@ void Krazy2ViewTest::testAnalyzeAgainSingleFileNoChangesCheckingOrder() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1719,7 +1749,8 @@ void Krazy2ViewTest::testAnalyzeAgainSingleFileNewIssues() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1778,7 +1809,8 @@ void Krazy2ViewTest::testAnalyzeAgainSeveralFiles() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1824,7 +1856,8 @@ void Krazy2ViewTest::testAnalyzeAgainSeveralDeletedFiles() {
 
     AnalysisJob* analysisJob = view.findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1865,7 +1898,8 @@ void Krazy2ViewTest::testAnalyzeAgainSingleFileCancellingAnalysis() {
     //Queue stopping the job to ensure that kWaitForSignal is already waiting
     //for the signal when it is emitted.
     QTimer::singleShot(100, KDevelop::ICore::self()->runController(), SLOT(stopAllProcesses()));
-    QTest::kWaitForSignal(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+    QSignalSpy spy(KDevelop::ICore::self()->runController(), SIGNAL(jobUnregistered(KJob*)));
+    spy.wait();
 
     QCOMPARE(view.cursor().shape(), Qt::ArrowCursor);
 
@@ -1931,16 +1965,16 @@ const AnalysisResults* Krazy2ViewTest::analysisResultsFrom(const Krazy2View* vie
     return issueModel->analysisResults();
 }
 
-KPushButton* Krazy2ViewTest::selectPathsButton(const Krazy2View* view) const {
-    return view->findChild<KPushButton*>("selectPathsButton");
+QPushButton* Krazy2ViewTest::selectPathsButton(const Krazy2View* view) const {
+    return view->findChild<QPushButton*>("selectPathsButton");
 }
 
-KPushButton* Krazy2ViewTest::selectCheckersButton(const Krazy2View* view) const {
-    return view->findChild<KPushButton*>("selectCheckersButton");
+QPushButton* Krazy2ViewTest::selectCheckersButton(const Krazy2View* view) const {
+    return view->findChild<QPushButton*>("selectCheckersButton");
 }
 
-KPushButton* Krazy2ViewTest::analyzeButton(const Krazy2View* view) const {
-    return view->findChild<KPushButton*>("analyzeButton");
+QPushButton* Krazy2ViewTest::analyzeButton(const Krazy2View* view) const {
+    return view->findChild<QPushButton*>("analyzeButton");
 }
 
 QTableView* Krazy2ViewTest::resultsTableView(const Krazy2View* view) const {
@@ -2011,7 +2045,8 @@ void Krazy2ViewTest::setUpToAnalyzeAgainIssues(const Krazy2View* view) {
 
     AnalysisJob* analysisJob = view->findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view->cursor().shape(), Qt::ArrowCursor);
 
@@ -2036,7 +2071,9 @@ void Krazy2ViewTest::setUpToAnalyzeAgainIssues(const Krazy2View* view) {
 
     //Ensure that the previous AnalysisJob was deleted before starting a new one
     //to be able to find the new one easily.
-    QCoreApplication::processEvents(QEventLoop::DeferredDeletion);
+    QCoreApplication::processEvents();
+
+
     QVERIFY(!view->findChild<AnalysisJob*>());
 }
 
@@ -2081,7 +2118,8 @@ void Krazy2ViewTest::setUpToAnalyzeAgainFiles(const Krazy2View* view) {
 
     AnalysisJob* analysisJob = view->findChild<AnalysisJob*>();
     QVERIFY(analysisJob);
-    QTest::kWaitForSignal(analysisJob, SIGNAL(finished(KJob*)));
+    QSignalSpy spy(analysisJob, SIGNAL(finished(KJob*)));
+    spy.wait();
 
     QCOMPARE(view->cursor().shape(), Qt::ArrowCursor);
 
@@ -2107,7 +2145,9 @@ void Krazy2ViewTest::setUpToAnalyzeAgainFiles(const Krazy2View* view) {
 
     //Ensure that the previous AnalysisJob was deleted before starting a new one
     //to be able to find the new one easily.
-    QCoreApplication::processEvents(QEventLoop::DeferredDeletion);
+    QCoreApplication::processEvents();
+
+
     QVERIFY(!view->findChild<AnalysisJob*>());
 }
 
@@ -2223,22 +2263,23 @@ public:
 public Q_SLOTS:
 
     void addPaths() {
-        KDialog* selectPathsDialog = m_view->findChild<KDialog*>();
+        QDialog* selectPathsDialog = m_view->findChild<QDialog*>();
         if (!selectPathsDialog || !selectPathsDialog->isVisible()) {
             QTimer::singleShot(100, this, SLOT(addPaths()));
             return;
         }
 
         selectPathsInFileDialog();
-        selectPathsDialog->findChild<KPushButton*>("addButton")->click();
+        QDialogButtonBox *box = selectPathsDialog->findChild<QDialogButtonBox*>();
+        box->button(QDialogButtonBox::Ok)->click();
 
-        //The KFileDialog is modal, so this will not be executed until it is
+        //The QFileDialog is modal, so this will not be executed until it is
         //closed
         selectPathsDialog->accept();
     }
 
     void removePaths() {
-        KDialog* selectPathsDialog = m_view->findChild<KDialog*>();
+        Krazy2Dialog* selectPathsDialog = m_view->findChild<Krazy2Dialog*>();
         if (!selectPathsDialog || !selectPathsDialog->isVisible()) {
             QTimer::singleShot(100, this, SLOT(removePaths()));
             return;
@@ -2248,7 +2289,7 @@ public Q_SLOTS:
         for (int i=0; i<m_numberOfPathsToRemove; ++i) {
             pathsView->selectionModel()->select(pathsView->model()->index(0, 0),
                                                 QItemSelectionModel::SelectCurrent);
-            selectPathsDialog->findChild<KPushButton*>("removeButton")->click();
+            selectPathsDialog->findChild<QPushButton*>("removeButton")->click();
         }
 
         selectPathsDialog->accept();
@@ -2257,21 +2298,20 @@ public Q_SLOTS:
 private Q_SLOTS:
 
     void selectPathsInFileDialog() {
-        KFileDialog* fileDialog = m_view->findChild<KFileDialog*>();
+        QFileDialog* fileDialog = m_view->findChild<QFileDialog*>();
         if (!fileDialog || !fileDialog->isVisible()) {
             QTimer::singleShot(100, this, SLOT(selectPathsInFileDialog()));
             return;
         }
 
-        fileDialog->setUrl(m_directory);
+        fileDialog->setDirectory(m_directory);
 
-        QString selection;
         foreach (const QString& path, m_paths) {
-            selection += '"' + path + '"' + ' ';
+            fileDialog->selectFile(path);
         }
-        fileDialog->setSelection(selection);
 
-        fileDialog->okButton()->click();
+        QDialogButtonBox *buttonBox = fileDialog->findChild<QDialogButtonBox*>();
+        buttonBox->button(QDialogButtonBox::Ok)->click();
     }
 
 };
@@ -2306,7 +2346,7 @@ public:
 public Q_SLOTS:
 
     void addCheckers() {
-        KDialog* selectCheckersDialog = m_view->findChild<KDialog*>();
+        Krazy2Dialog* selectCheckersDialog = m_view->findChild<Krazy2Dialog*>();
         if (!selectCheckersDialog || !selectCheckersDialog->isVisible()) {
             QTimer::singleShot(100, this, SLOT(addCheckers()));
             return;
@@ -2317,13 +2357,13 @@ public Q_SLOTS:
             select(view, rows, QItemSelectionModel::Select);
         }
 
-        selectCheckersDialog->findChild<KPushButton*>("addButton")->click();
+        selectCheckersDialog->findChild<QPushButton*>("addButton")->click();
 
         selectCheckersDialog->accept();
     }
 
     void removeCheckers() {
-        KDialog* selectCheckersDialog = m_view->findChild<KDialog*>();
+        Krazy2Dialog* selectCheckersDialog = m_view->findChild<Krazy2Dialog*>();
         if (!selectCheckersDialog || !selectCheckersDialog->isVisible()) {
             QTimer::singleShot(100, this, SLOT(removeCheckers()));
             return;
@@ -2334,19 +2374,19 @@ public Q_SLOTS:
             select(view, rows, QItemSelectionModel::Select);
         }
 
-        selectCheckersDialog->findChild<KPushButton*>("removeButton")->click();
+        selectCheckersDialog->findChild<QPushButton*>("removeButton")->click();
 
         selectCheckersDialog->accept();
     }
 
     void acceptDialog() {
-        KDialog* selectCheckersDialog = m_view->findChild<KDialog*>();
+        Krazy2Dialog* selectCheckersDialog = m_view->findChild<Krazy2Dialog*>();
         if (!selectCheckersDialog || !selectCheckersDialog->isVisible()) {
             QTimer::singleShot(100, this, SLOT(acceptDialog()));
             return;
         }
 
-        if (!selectCheckersDialog->button(KDialog::Ok)->isEnabled()) {
+        if (!selectCheckersDialog->button(Krazy2Dialog::Ok)->isEnabled()) {
             if (selectCheckersDialog->cursor().shape() != Qt::BusyCursor) {
                 //As QFAIL causes a return from this method, the modal dialog
                 //must be closed before failing for the tests to be able to
@@ -2368,13 +2408,13 @@ public Q_SLOTS:
     }
 
     void rejectDialog() {
-        KDialog* selectCheckersDialog = m_view->findChild<KDialog*>();
+        Krazy2Dialog* selectCheckersDialog = m_view->findChild<Krazy2Dialog*>();
         if (!selectCheckersDialog || !selectCheckersDialog->isVisible()) {
             QTimer::singleShot(100, this, SLOT(rejectDialog()));
             return;
         }
 
-        if (!selectCheckersDialog->button(KDialog::Ok)->isEnabled() &&
+        if (!selectCheckersDialog->button(Krazy2Dialog::Ok)->isEnabled() &&
             selectCheckersDialog->cursor().shape() != Qt::BusyCursor) {
             //As QFAIL causes a return from this method, the modal dialog must
             //be closed before failing for the tests to be able to continue.
@@ -2382,7 +2422,7 @@ public Q_SLOTS:
             QFAIL("The cursor shape of the dialog is not BusyCursor");
         }
 
-        if (selectCheckersDialog->button(KDialog::Ok)->isEnabled() &&
+        if (selectCheckersDialog->button(Krazy2Dialog::Ok)->isEnabled() &&
             selectCheckersDialog->cursor().shape() != Qt::ArrowCursor) {
             selectCheckersDialog->close();
             QFAIL("The cursor shape of the dialog is not ArrowCursor");
@@ -2392,13 +2432,13 @@ public Q_SLOTS:
     }
 
     void rejectDialogOnceInitialized() {
-        KDialog* selectCheckersDialog = m_view->findChild<KDialog*>();
+        Krazy2Dialog* selectCheckersDialog = m_view->findChild<Krazy2Dialog*>();
         if (!selectCheckersDialog || !selectCheckersDialog->isVisible()) {
             QTimer::singleShot(100, this, SLOT(rejectDialogOnceInitialized()));
             return;
         }
 
-        if (!selectCheckersDialog->button(KDialog::Ok)->isEnabled()) {
+        if (!selectCheckersDialog->button(Krazy2Dialog::Ok)->isEnabled()) {
             if (selectCheckersDialog->cursor().shape() != Qt::BusyCursor) {
                 //As QFAIL causes a return from this method, the modal dialog
                 //must be closed before failing for the tests to be able to
@@ -2465,6 +2505,6 @@ void Krazy2ViewTest::queueRejectCheckersDialogOnceInitialized(const Krazy2View* 
     helper->rejectDialogOnceInitialized();
 }
 
-QTEST_KDEMAIN(Krazy2ViewTest, GUI)
+QTEST_MAIN(Krazy2ViewTest)
 
 #include "krazy2viewtest.moc"

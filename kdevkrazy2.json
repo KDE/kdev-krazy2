@@ -1,0 +1,56 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Daniel Calviño Sánchez"
+            }
+        ],
+        "Description": "This plugin shows issues reported by Krazy2",
+        "Description[bs]": "Ovaj priključak prikazuje probleme koje je javio Krazy2",
+        "Description[ca@valencia]": "Este connector mostra els problemes informats per Krazy2",
+        "Description[ca]": "Aquest connector mostra els problemes informats per Krazy2",
+        "Description[de]": "Dieses Modul zeigt von Krazy2 ermittelte Fehler",
+        "Description[es]": "Este complemento muestra problemas detectados por Krazy2",
+        "Description[et]": "See plugin näitab Krazy2 tuvastatud probleeme",
+        "Description[fr]": "Ce module externe affiche les problèmes signalés par Krazy2",
+        "Description[hu]": "Ez a bővítmény megjeleníti a Krazy2 által jelentett problémákat",
+        "Description[nl]": "Deze plug-in toont fouten gerapporteerd door Krazy2",
+        "Description[pl]": "Wtyczka ta pokazuje problemy zgłoszone przez Krazy2",
+        "Description[pt]": "Este 'plugin' mostra os erros comunicados pelo Krazy2",
+        "Description[pt_BR]": "Este plugin mostra os erros comunicados pelo Krazy2",
+        "Description[sk]": "Tento plugin zobrazí chyby zadané cez Krazy2",
+        "Description[sv]": "Insticksprogrammet visar fel i källkod rapporterade av Krazy2",
+        "Description[tr]": "Bu eklenti Krazy2 tarafından bildirilen sorunları gösterir",
+        "Description[uk]": "За допомогою цього додатка можна переглянути список недоліків, виявлених Krazy2",
+        "Description[x-test]": "xxThis plugin shows issues reported by Krazy2xx",
+        "Icon": "kdevelop",
+        "Id": "krazy2plugin",
+        "License": "GPL",
+        "Name": "Krazy2 Code Checking",
+        "Name[bs]": "Krazy2 provjera koda",
+        "Name[ca@valencia]": "Comprova el codi amb Krazy2",
+        "Name[ca]": "Comprova el codi amb Krazy2",
+        "Name[de]": "Krazy2-Quelltextüberprüfung",
+        "Name[es]": "Comprobador de código Krazy2",
+        "Name[et]": "Krazy2 koodikontroll",
+        "Name[fr]": "Vérification du code par Krazy2",
+        "Name[ga]": "Seiceáil Cóid Krazy2",
+        "Name[gl]": "Comprobación de código con Krazy2",
+        "Name[hu]": "Krazy2 kódellenőrzés",
+        "Name[nl]": "Code controleren door Krazy2",
+        "Name[pl]": "Sprawdzanie kodu Krazy2",
+        "Name[pt]": "Verificação de Código do Krazy2",
+        "Name[pt_BR]": "Verificação de código Krazy2",
+        "Name[sk]": "Kontrola kódu Krazy2",
+        "Name[sv]": "Kodkontroller med Krazy2",
+        "Name[tr]": "Krazy2 Kod Denetimi",
+        "Name[uk]": "Перевірка коду Krazy2",
+        "Name[x-test]": "xxKrazy2 Code Checkingxx",
+        "ServiceTypes": [
+            "KDevelop/Plugin"
+        ],
+        "Version": "0.1"
+    },
+    "X-KDevelop-Category": "Global",
+    "X-KDevelop-Mode": "GUI"
+}

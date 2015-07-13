@@ -17,7 +17,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
+#include <QSignalSpy>
+
+#include <KLocalizedString>
 
 #include "../issuemodel.h"
 #include "../analysisresults.h"
@@ -519,6 +522,6 @@ void IssueModelTest::testSetAnalysisResults() {
     QCOMPARE(modelResetSpy.count(), 1);
 }
 
-QTEST_KDEMAIN(IssueModelTest, NoGUI)
+QTEST_GUILESS_MAIN(IssueModelTest)
 
 #include "issuemodeltest.moc"

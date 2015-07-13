@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
 
 #include "../checker.h"
 
@@ -84,6 +84,6 @@ void CheckerTest::testSetExtra() {
     QCOMPARE(checker.isExtra(), true);
 }
 
-QTEST_KDEMAIN(CheckerTest, NoGUI)
+QTEST_GUILESS_MAIN(CheckerTest)
 
 #include "checkertest.moc"

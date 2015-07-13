@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
 
 #include "../analysisresults.h"
 #include "../checker.h"
@@ -299,6 +299,6 @@ void AnalysisResultsTest::testAddAnalysisResultsWithDuplicatedIssues() {
     QCOMPARE(newIssue3->checker(), checker1);
 }
 
-QTEST_KDEMAIN(AnalysisResultsTest, NoGUI)
+QTEST_GUILESS_MAIN(AnalysisResultsTest)
 
 #include "analysisresultstest.moc"

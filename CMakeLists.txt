@@ -1,9 +1,19 @@
+cmake_minimum_required(VERSION 2.8.12)
+
 project(kdevkrazy2)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${kdevkrazy2_SOURCE_DIR}/cmake/)
+find_package(ECM 0.0.9 REQUIRED NO_MODULE)
 
-find_package(KDE4 REQUIRED)
-find_package(KDevPlatform REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+
+include(ECMAddTests)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDECompilerSettings)
+
+find_package(Qt5 REQUIRED Core Widgets Test)
+find_package(KF5 REQUIRED COMPONENTS KDELibs4Support TextEditor ThreadWeaver)
+find_package(KDevPlatform 1.90.90 REQUIRED)
 
 include(KDE4Defaults)
 
@@ -12,7 +22,6 @@ include_directories(
     ${KDE4_INCLUDES}
 )
 
-add_subdirectory(settings)
 add_subdirectory(tests)
 
 set(kdevkrazy2_library_SRCS
@@ -28,10 +37,12 @@ set(kdevkrazy2_library_SRCS
     issue.cpp
     issuemodel.cpp
     issuewidget.cpp
+    krazy2dialog.cpp
     krazy2view.cpp
     selectcheckerswidget.cpp
     selectpathswidget.cpp
     sortedissuesproxymodel.cpp
+    settings/krazy2preferences.cpp
 )
 
 # Instead of compiling the plugin directly from the sources, the sources are
@@ -39,29 +50,34 @@ set(kdevkrazy2_library_SRCS
 # in the plugin.
 # As everything but a tiny initialization code is in a static library, the build
 # system for the tests can be easily set up.
-kde4_add_ui_files(kdevkrazy2_library_SRCS
+ki18n_wrap_ui(kdevkrazy2_library_SRCS
                   krazy2view.ui
                   selectcheckerswidget.ui
-                  selectpathswidget.ui)
-kde4_add_library(kdevkrazy2_library ${kdevkrazy2_library_SRCS})
+                  selectpathswidget.ui
+                  settings/krazy2settings.ui)
+
+kconfig_add_kcfg_files(kdevkrazy2_library_SRCS settings/krazy2config.kcfgc)
+
+
+add_library(kdevkrazy2_library STATIC ${kdevkrazy2_library_SRCS})
 target_link_libraries(kdevkrazy2_library
-    ${KDEVPLATFORM_INTERFACES_LIBRARIES}
-    ${KDEVPLATFORM_UTIL_LIBRARIES}
+    KDev::Interfaces
+    KDev::Util
+    KDev::Project
 )
 
 # In x86_64, linking fails when a static library is added to a shared library.
 # In order to work, they must be compiled using -fPIC
 add_definitions("-fPIC")
 
-kde4_add_plugin(kdevkrazy2 krazy2plugin.cpp)
+kdevplatform_add_plugin(kdevkrazy2 JSON kdevkrazy2.json SOURCES krazy2plugin.cpp)
+
 target_link_libraries(kdevkrazy2
     kdevkrazy2_library
-    ${KDEVPLATFORM_INTERFACES_LIBRARIES}
 )
 
 install(TARGETS kdevkrazy2 DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install(FILES kdevkrazy2.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 install(FILES kdevkrazy2.rc DESTINATION ${DATA_INSTALL_DIR}/kdevkrazy2)

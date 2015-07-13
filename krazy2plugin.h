@@ -22,7 +22,7 @@
 
 #include <QVariant>
 
-#include <interfaces/iplugin.h>
+#include <kdevplatform/interfaces/iplugin.h>
 
 /**
  * KDevelop plugin to show issues reported by Krazy2.
@@ -50,6 +50,10 @@ public:
      * Remove KDevelop tool view when this Krazy2Plugin is unloaded.
      */
     virtual void unload();
+
+    virtual int configPages() const override { return 1; }
+
+    virtual KDevelop::ConfigPage* configPage(int number, QWidget *parent) override;
 
 private:
 

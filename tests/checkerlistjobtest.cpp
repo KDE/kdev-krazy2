@@ -17,7 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
+
+#include <QSignalSpy>
+#include <KLocalizedString>
+#include <KSharedConfig>
+#include <QTimer>
 
 #include <KConfigGroup>
 
@@ -130,7 +135,7 @@ void CheckerListJobTest::testRun() {
     checkerListJob.setAutoDelete(false);
     checkerListJob.setCheckerList(m_checkerList);
 
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
     SignalSpy resultSpy(&checkerListJob, SIGNAL(result(KJob*)));
@@ -194,7 +199,7 @@ void CheckerListJobTest::testRunWithEmptyPaths() {
     checkerListJob.setAutoDelete(false);
     checkerListJob.setCheckerList(m_checkerList);
 
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "");
 
     SignalSpy resultSpy(&checkerListJob, SIGNAL(result(KJob*)));
@@ -215,7 +220,7 @@ void CheckerListJobTest::testRunWithInvalidPaths() {
     checkerListJob.setAutoDelete(false);
     checkerListJob.setCheckerList(m_checkerList);
 
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "invalid/krazy2/path");
 
     SignalSpy resultSpy(&checkerListJob, SIGNAL(result(KJob*)));
@@ -241,7 +246,7 @@ void CheckerListJobTest::testKill() {
     checkerListJob.setAutoDelete(false);
     checkerListJob.setCheckerList(m_checkerList);
 
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
     SignalSpy resultSpy(&checkerListJob, SIGNAL(result(KJob*)));
@@ -285,6 +290,6 @@ const Checker* CheckerListJobTest::findChecker(const QList<const Checker*>* chec
     return 0;
 }
 
-QTEST_KDEMAIN(CheckerListJobTest, GUI)
+QTEST_MAIN(CheckerListJobTest)
 
 #include "checkerlistjobtest.moc"

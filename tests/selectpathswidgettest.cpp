@@ -17,12 +17,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
 
 #include <QListView>
+#include <QFileDialog>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
-#include <KFileDialog>
-#include <KPushButton>
+#include <QTimer>
 
 #include "../selectpathswidget.h"
 
@@ -51,8 +53,8 @@ private:
 
     bool examplesInSubdirectory() const;
 
-    KPushButton* addButton(const SelectPathsWidget* widget) const;
-    KPushButton* removeButton(const SelectPathsWidget* widget) const;
+    QPushButton* addButton(const SelectPathsWidget* widget) const;
+    QPushButton* removeButton(const SelectPathsWidget* widget) const;
     QListView* pathsView(const SelectPathsWidget* widget) const;
 
     void assertPaths(const SelectPathsWidget* widget, const QStringList& paths) const;
@@ -293,12 +295,12 @@ bool SelectPathsWidgetTest::examplesInSubdirectory() const {
     return false;
 }
 
-KPushButton* SelectPathsWidgetTest::addButton(const SelectPathsWidget* widget) const {
-    return widget->findChild<KPushButton*>("addButton");
+QPushButton* SelectPathsWidgetTest::addButton(const SelectPathsWidget* widget) const {
+    return widget->findChild<QPushButton*>("addButton");
 }
 
-KPushButton* SelectPathsWidgetTest::removeButton(const SelectPathsWidget* widget) const {
-    return widget->findChild<KPushButton*>("removeButton");
+QPushButton* SelectPathsWidgetTest::removeButton(const SelectPathsWidget* widget) const {
+    return widget->findChild<QPushButton*>("removeButton");
 }
 
 QListView* SelectPathsWidgetTest::pathsView(const SelectPathsWidget* widget) const {
@@ -339,21 +341,21 @@ public:
 public Q_SLOTS:
 
     void selectPaths() {
-        KFileDialog* fileDialog = m_widget->findChild<KFileDialog*>();
+        QFileDialog* fileDialog = m_widget->findChild<QFileDialog*>();
         if (!fileDialog || !fileDialog->isVisible()) {
             QTimer::singleShot(100, this, SLOT(selectPaths()));
             return;
         }
 
-        fileDialog->setUrl(m_directory);
+        fileDialog->setDirectory(m_directory);
 
-        QString selection;
         foreach (const QString& path, m_paths) {
-            selection += '"' + path + '"' + ' ';
+            fileDialog->selectFile(path);
         }
-        fileDialog->setSelection(selection);
 
-        fileDialog->okButton()->click();
+
+        QDialogButtonBox *box = fileDialog->findChild<QDialogButtonBox*>();
+        box->button(QDialogButtonBox::Ok)->click();
     }
 
 };
@@ -368,6 +370,6 @@ void SelectPathsWidgetTest::queueSelectPaths(const SelectPathsWidget* widget,
     helper->selectPaths();
 }
 
-QTEST_KDEMAIN(SelectPathsWidgetTest, GUI)
+QTEST_MAIN(SelectPathsWidgetTest)
 
 #include "selectpathswidgettest.moc"

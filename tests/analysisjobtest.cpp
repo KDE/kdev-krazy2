@@ -17,9 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QtTest>
 
 #include <KConfigGroup>
+#include <KSharedConfig>
+#include <KLocalizedString>
 
 #include <tests/autotestshell.h>
 #include <tests/testcore.h>
@@ -142,7 +144,7 @@ void AnalysisJobTest::init() {
         QSKIP("krazy2 is not in the execution path", SkipAll);
     }
 
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 }
 
@@ -1211,7 +1213,7 @@ void AnalysisJobTest::testRunWithEmptyKrazy2ExecutablePath() {
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);
 
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "");
 
     SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
@@ -1246,7 +1248,7 @@ void AnalysisJobTest::testRunWithInvalidKrazy2ExecutablePath() {
     AnalysisResults analysisResults;
     analysisJob.setAnalysisResults(&analysisResults);
 
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "invalid/krazy2/path");
 
     SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
@@ -1323,7 +1325,7 @@ bool AnalysisJobTest::krazy2InPath() const {
 }
 
 QList< const Checker* > AnalysisJobTest::getAvailableCheckers() const {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
+    KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
     krazy2Configuration.writeEntry("krazy2 Path", "krazy2");
 
     QList<const Checker*> availableCheckers;
@@ -1354,6 +1356,6 @@ const Issue* AnalysisJobTest::findIssue(const AnalysisResults* analysisResults,
     return 0;
 }
 
-QTEST_KDEMAIN(AnalysisJobTest, GUI)
+QTEST_MAIN(AnalysisJobTest)
 
 #include "analysisjobtest.moc"

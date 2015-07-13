@@ -20,7 +20,7 @@
 #ifndef KRAZY2VIEW_H
 #define KRAZY2VIEW_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KJob;
 

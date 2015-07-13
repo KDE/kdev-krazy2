@@ -27,7 +27,7 @@
    <item>
     <layout class="QVBoxLayout" name="buttonVerticalLayout">
      <item>
-      <widget class="KPushButton" name="addButton">
+      <widget class="QPushButton" name="addButton">
        <property name="toolTip">
         <string comment="@info:tooltip">Add files and directories.</string>
        </property>
@@ -42,7 +42,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="removeButton">
+      <widget class="QPushButton" name="removeButton">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -74,13 +74,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

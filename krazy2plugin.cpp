@@ -28,14 +28,10 @@
 
 #include "krazy2view.h"
 
+#include "./settings/krazy2preferences.h"
+
 //KPluginFactory stuff to load the plugin dynamically at runtime
-K_PLUGIN_FACTORY(KDevKrazy2Factory, registerPlugin<Krazy2Plugin>();)
-K_EXPORT_PLUGIN(KDevKrazy2Factory(KAboutData("kdevkrazy2", "kdevkrazy2",
-                                             ki18n("Krazy2 Code Checking"), "0.1",
-                                             ki18n("Shows issues reported by Krazy2"),
-                                             KAboutData::License_GPL).addAuthor(ki18n("Daniel Calviño Sánchez"),
-                                                                                ki18n("Author"),
-                                                                                "danxuliu@gmail.com")))
+K_PLUGIN_FACTORY_WITH_JSON(KDevKrazy2Factory, "kdevkrazy2.json", registerPlugin<Krazy2Plugin>();)
 
 //KDevelop tool view factory to manage Krazy2 tool view
 class Krazy2Factory: public KDevelop::IToolViewFactory {
@@ -62,7 +58,7 @@ private:
 //public:
 
 Krazy2Plugin::Krazy2Plugin(QObject* parent, const QVariantList& /*= QVariantList()*/):
-        KDevelop::IPlugin(KDevKrazy2Factory::componentData(), parent),
+        KDevelop::IPlugin("kdevkrazy2", parent),
         m_factory(new Krazy2Factory(this)) {
     core()->uiController()->addToolView(i18n("Krazy2"), m_factory);
     setXMLFile("kdevkrazy2.rc");
@@ -74,3 +70,13 @@ Krazy2Plugin::~Krazy2Plugin() {
 void Krazy2Plugin::unload() {
     core()->uiController()->removeToolView(m_factory);
 }
+
+KDevelop::ConfigPage* Krazy2Plugin::configPage(int number, QWidget *parent)
+{
+    if(number != 0)
+        return nullptr;
+
+    return new Krazy2Preferences(this, parent);
+}
+
+#include "krazy2plugin.moc"

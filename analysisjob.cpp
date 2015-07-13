@@ -20,7 +20,6 @@
 #include "analysisjob.h"
 
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KProcess>
 #include <KSharedConfig>
@@ -33,6 +32,9 @@
 #include "analysisresults.h"
 #include "analysisresultsparser.h"
 #include "checker.h"
+#include "./krazy2defaults.h"
+
+#include <QUrl>
 
 //public:
 
@@ -216,8 +218,10 @@ QStringList AnalysisJob::checkersToRunAsKrazy2Arguments(const QString& fileType)
 }
 
 void AnalysisJob::startAnalysis(const QString& fileType) {
-    KConfigGroup krazy2Configuration = KGlobal::config()->group("Krazy2");
-    KUrl krazy2Path = krazy2Configuration.readEntry("krazy2 Path");
+    KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
+    QUrl krazy2Path = krazy2Configuration.readEntry("krazy2 Path");
+    if(krazy2Path.toString().isEmpty())
+        krazy2Path = QUrl::fromLocalFile(defaultPath());
 
     QStringList arguments;
     arguments << "--export" << "xml";
@@ -285,7 +289,7 @@ void AnalysisJob::handleProcessError(QProcess::ProcessError processError) {
                                     "for the <command>krazy2</command> executable.</para>"));
     } else if (processError == QProcess::FailedToStart) {
         setErrorText(i18nc("@info", "<para><command>krazy2</command> failed to start "
-                                    "using the path set in the Krazy2 configuration "
+                                    "using the path"
                                     "(<filename>%1</filename>).</para>", m_process->program().first()));
     } else if (processError == QProcess::Crashed) {
         setErrorText(i18nc("@info", "<para><command>krazy2</command> crashed.</para>"));

@@ -9,12 +9,7 @@ add_definitions(-DQT_GUI_LIB)
 macro(UNIT_TESTS)
     foreach(_className ${ARGN})
         set(_testName ${_className}test)
-        kde4_add_unit_test(${_testName} TESTNAME unit-${_testName} ${_testName}.cpp)
-        target_link_libraries(${_testName}
-            kdevkrazy2_library
-            ${KDEVPLATFORM_TESTS_LIBRARIES}
-            ${QT_QTTEST_LIBRARY}
-        )
+        ecm_add_test(${_testName} LINK_LIBRARIES kdevkrazy2_library KDev::Tests Qt5::Test)
     endforeach(_className)
 endmacro(UNIT_TESTS)
 

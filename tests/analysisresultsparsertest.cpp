@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
 
 #include "../analysisresultsparser.h"
 #include "../analysisresults.h"
@@ -645,6 +645,6 @@ void AnalysisResultsParserTest::assertIssue(int index, const QString& message,
     QCOMPARE(issue->line(), line);
 }
 
-QTEST_KDEMAIN(AnalysisResultsParserTest, NoGUI)
+QTEST_GUILESS_MAIN(AnalysisResultsParserTest)
 
 #include "analysisresultsparsertest.moc"

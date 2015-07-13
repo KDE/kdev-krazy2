@@ -17,11 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
 
 #include <QTreeView>
 
-#include <KPushButton>
+#include <QPushButton>
 
 #include "../selectcheckerswidget.h"
 #include "../checker.h"
@@ -73,8 +73,8 @@ private:
 
     QTreeView* otherAvailableCheckersView(const SelectCheckersWidget* widget) const;
     QTreeView* checkersToRunView(const SelectCheckersWidget* widget) const;
-    KPushButton* addButton(const SelectCheckersWidget* widget) const;
-    KPushButton* removeButton(const SelectCheckersWidget* widget) const;
+    QPushButton* addButton(const SelectCheckersWidget* widget) const;
+    QPushButton* removeButton(const SelectCheckersWidget* widget) const;
 
     void select(QTreeView* view, const QString& rows,
                 QItemSelectionModel::SelectionFlags command);
@@ -580,12 +580,12 @@ QTreeView* SelectCheckersWidgetTest::checkersToRunView(const SelectCheckersWidge
     return widget->findChild<QTreeView*>("checkersToRunView");
 }
 
-KPushButton* SelectCheckersWidgetTest::addButton(const SelectCheckersWidget* widget) const {
-    return widget->findChild<KPushButton*>("addButton");
+QPushButton* SelectCheckersWidgetTest::addButton(const SelectCheckersWidget* widget) const {
+    return widget->findChild<QPushButton*>("addButton");
 }
 
-KPushButton* SelectCheckersWidgetTest::removeButton(const SelectCheckersWidget* widget) const {
-    return widget->findChild<KPushButton*>("removeButton");
+QPushButton* SelectCheckersWidgetTest::removeButton(const SelectCheckersWidget* widget) const {
+    return widget->findChild<QPushButton*>("removeButton");
 }
 
 void SelectCheckersWidgetTest::select(QTreeView* view, const QString& rows,
@@ -598,6 +598,6 @@ void SelectCheckersWidgetTest::select(QTreeView* view, const QString& rows,
     view->selectionModel()->select(index, command);
 }
 
-QTEST_KDEMAIN(SelectCheckersWidgetTest, GUI)
+QTEST_MAIN(SelectCheckersWidgetTest)
 
 #include "selectcheckerswidgettest.moc"

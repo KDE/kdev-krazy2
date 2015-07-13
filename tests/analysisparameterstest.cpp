@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QtTest>
 
 #include "../analysisparameters.h"
 #include "../checker.h"
@@ -305,6 +305,6 @@ bool AnalysisParametersTest::examplesInSubdirectory() const {
     return false;
 }
 
-QTEST_KDEMAIN(AnalysisParametersTest, NoGUI)
+QTEST_GUILESS_MAIN(AnalysisParametersTest)
 
 #include "analysisparameterstest.moc"

@@ -34,6 +34,8 @@
 #include "issue.h"
 #include "issuemodel.h"
 
+#include <QUrl>
+
 //public:
 
 IssueWidget::IssueWidget(QWidget* parent /*= 0*/): QTableView(parent) {
@@ -157,7 +159,7 @@ void IssueWidget::openDocumentForActivatedIssue(const QModelIndex& index) const 
         return;
     }
 
-    KUrl url = issue->fileName();
+    QUrl url = QUrl::fromLocalFile(issue->fileName());
     KTextEditor::Cursor line(issue->line() - 1, 0);
 
     KDevelop::ICore::self()->documentController()->openDocument(url, line);

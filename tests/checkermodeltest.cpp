@@ -17,7 +17,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <qtest_kde.h>
+#include <QTest>
+
+#include <KLocalizedString>
 
 #include "../checkermodel.h"
 #include "../checker.h"
@@ -516,6 +518,6 @@ void CheckerModelTest::assertItem(const QModelIndex& index,
     QCOMPARE(model->columnCount(index), 1);
 }
 
-QTEST_KDEMAIN(CheckerModelTest, NoGUI)
+QTEST_GUILESS_MAIN(CheckerModelTest)
 
 #include "checkermodeltest.moc"
