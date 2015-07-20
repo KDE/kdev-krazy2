@@ -18,6 +18,7 @@
  */
 
 #include "checker.h"
+#include <QStringList>
 
 //public:
 
@@ -64,3 +65,25 @@ bool Checker::isExtra() const {
 void Checker::setExtra(bool extra) {
     m_extra = extra;
 }
+
+
+const Checker* findChecker(const QList<const Checker*> &list, const QString &s)
+{
+    // s comes in as "C++;endswithnewline"
+    // break that up into two strings
+    // sl[0] "C++"
+    // sl[1] "endswithnewline"
+    QStringList sl = s.split(';');
+    if(sl.size() != 2)
+        return nullptr;
+
+    // Find this checker tool, if exists
+    foreach (const Checker *checker, list) {
+        if ((checker->fileType() == sl[0]) && (checker->name() == sl[1])) {
+            return checker;
+        }
+    }
+
+    return nullptr;
+}
+

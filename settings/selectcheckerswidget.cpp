@@ -19,8 +19,8 @@
 
 #include "selectcheckerswidget.h"
 
-#include "checker.h"
-#include "checkermodel.h"
+#include "../checker.h"
+#include "../checkermodel.h"
 
 #include "ui_selectcheckerswidget.h"
 

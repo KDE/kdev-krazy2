@@ -35,14 +35,10 @@ set(kdevkrazy2_library_SRCS
     checkerlistparser.cpp
     checkermodel.cpp
     issue.cpp
-    issuemodel.cpp
-    issuewidget.cpp
-    krazy2dialog.cpp
-    krazy2view.cpp
-    selectcheckerswidget.cpp
-    selectpathswidget.cpp
-    sortedissuesproxymodel.cpp
+    settings/selectcheckerswidget.cpp
+    settings/selectpathswidget.cpp
     settings/krazy2preferences.cpp
+    settings/krazy2projectsettings.cpp
 )
 
 # Instead of compiling the plugin directly from the sources, the sources are
@@ -51,9 +47,8 @@ set(kdevkrazy2_library_SRCS
 # As everything but a tiny initialization code is in a static library, the build
 # system for the tests can be easily set up.
 ki18n_wrap_ui(kdevkrazy2_library_SRCS
-                  krazy2view.ui
-                  selectcheckerswidget.ui
-                  selectpathswidget.ui
+                  settings/selectcheckerswidget.ui
+                  settings/selectpathswidget.ui
                   settings/krazy2settings.ui)
 
 kconfig_add_kcfg_files(kdevkrazy2_library_SRCS settings/krazy2config.kcfgc)
@@ -64,6 +59,9 @@ target_link_libraries(kdevkrazy2_library
     KDev::Interfaces
     KDev::Util
     KDev::Project
+    KDev::Shell
+    KDev::Language
+    KF5::TextEditor
 )
 
 # In x86_64, linking fails when a static library is added to a shared library.

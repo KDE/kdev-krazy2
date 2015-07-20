@@ -21,6 +21,7 @@
 #define CHECKER_H
 
 #include <QString>
+#include <QList>
 
 /**
  * A checker run by Krazy2.
@@ -54,5 +55,8 @@ private:
     bool m_extra;
 
 };
+
+// Find the checker tool in the list, by name and file type. E.g.: "C++;endswithnewline"
+const Checker* findChecker(const QList<const Checker*> &list, const QString &s);
 
 #endif

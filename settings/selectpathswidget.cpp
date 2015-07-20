@@ -79,6 +79,13 @@ void SelectPathsWidget::addPaths(const QStringList& paths) {
     updatePaths();
 }
 
+void SelectPathsWidget::clearPaths()
+{
+    m_paths.clear();
+
+    updatePaths();
+}
+
 void SelectPathsWidget::updatePaths() {
     m_paths.sort();
     m_pathsModel->setStringList(m_paths);

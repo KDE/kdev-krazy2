@@ -24,12 +24,8 @@ unit_tests(
     checkerlistparser
     checkermodel
     issue
-    issuemodel
-    issuewidget
-    krazy2view
     selectcheckerswidget
     selectpathswidget
-    sortedissuesproxymodel
 )
 
 macro(MEM_TESTS)
@@ -49,12 +45,8 @@ mem_tests(
     checkerlistparser
     checkermodel
     issue
-    issuemodel
-    #issuewidget # Disabled by default, as it uses KDevelop::TestCore and thus needs a lot of memory to perform the test
-    #krazy2view # Disabled by default, as it uses KDevelop::TestCore and thus needs a lot of memory to perform the test
     selectcheckerswidget
     selectpathswidget
-    sortedissuesproxymodel
 )
 
 # Copy example files for real Krazy2 tests to binary directory. The source files

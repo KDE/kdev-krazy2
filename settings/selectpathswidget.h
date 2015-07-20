@@ -61,6 +61,14 @@ public:
      */
     QStringList selectedFilesAndDirectories() const;
 
+    /**
+     * Add the given paths to the selected paths.
+     *
+     * @param paths The paths to add.
+     */
+    void addPaths(const QStringList& paths);
+    void clearPaths();
+
 private:
 
     /**
@@ -77,13 +85,6 @@ private:
      * The model to show the paths in the list view.
      */
     QStringListModel* m_pathsModel;
-
-    /**
-     * Add the given paths to the selected paths.
-     *
-     * @param paths The paths to add.
-     */
-    void addPaths(const QStringList& paths);
 
     /**
      * Updates the paths after a change.

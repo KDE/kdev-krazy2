@@ -23,7 +23,7 @@
 
 #include <QPushButton>
 
-#include "../selectcheckerswidget.h"
+#include "../settings/selectcheckerswidget.h"
 #include "../checker.h"
 
 class SelectCheckersWidgetTest: public QObject {

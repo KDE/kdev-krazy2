@@ -26,7 +26,7 @@
 
 #include <QTimer>
 
-#include "../selectpathswidget.h"
+#include "../settings/selectpathswidget.h"
 
 class SelectPathsWidgetTest: public QObject {
 Q_OBJECT

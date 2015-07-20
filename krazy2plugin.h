@@ -23,6 +23,16 @@
 #include <QVariant>
 
 #include <kdevplatform/interfaces/iplugin.h>
+#include <QList>
+
+namespace KDevelop
+{
+class ProblemModel;
+}
+
+class Checker;
+class AnalysisResults;
+class KJob;
 
 /**
  * KDevelop plugin to show issues reported by Krazy2.
@@ -55,13 +65,39 @@ public:
 
     virtual KDevelop::ConfigPage* configPage(int number, QWidget *parent) override;
 
+    virtual int perProjectConfigPages() const override{ return 1; }
+
+    virtual KDevelop::ConfigPage* perProjectConfigPage(int number, const KDevelop::ProjectConfigOptions &options, QWidget *parent);
+
+    QList<const Checker*>* checkers() { return &m_checkers; }
+
+private slots:
+    // Check the files that have been selected in the per project Krazy2 settings page
+    void checkSelectedFiles();
+
+    // Check all files of the project
+    void checkAllFiles();
+
+    // Triggered when the checker list job is finished
+    void onListingFinished(KJob *job);
+
+    // Triggered when a Krazy2 analysis job is finished
+    void onAnalysisFinished(KJob *job);
+
 private:
+    // Starts a job that grabs the checker list
+    void grabCheckerList();
 
-    /**
-     * KDevelop tool view factory for this Krazy2Plugin.
-     */
-    class Krazy2Factory* m_factory;
+    // Gathers all required data (paths, checker tools) and passes it to the other check method
+    void check(bool allFiles);
 
+    // Starts the Krazy2 checker job
+    void check(QStringList paths, QList<const Checker*> &selectedCheckers);
+
+    bool m_analysisInProgress;
+    KDevelop::ProblemModel *m_model;
+    QScopedPointer<AnalysisResults> m_results;
+    QList<const Checker*> m_checkers;
 };
 
 #endif
