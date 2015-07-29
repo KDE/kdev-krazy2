@@ -79,4 +79,4 @@ install(TARGETS kdevkrazy2 DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install(FILES kdevkrazy2.rc DESTINATION ${DATA_INSTALL_DIR}/kdevkrazy2)
+install(FILES kdevkrazy2.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kdevkrazy2)
