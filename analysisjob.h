@@ -24,8 +24,6 @@
 
 #include <QProcess>
 
-class KProcess;
-
 class AnalysisParameters;
 class AnalysisProgressParser;
 class AnalysisResults;
@@ -153,7 +151,7 @@ private:
     /**
      * The krazy2 process to parse its output.
      */
-    KProcess* m_process;
+    QProcess* m_process;
 
     /**
      * Returns the number of checkers that will be executed.

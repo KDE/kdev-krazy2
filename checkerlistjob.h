@@ -24,8 +24,6 @@
 
 #include <QProcess>
 
-class KProcess;
-
 class Checker;
 
 /**
@@ -89,7 +87,7 @@ private:
     /**
      * The krazy2 process to parse its output.
      */
-    KProcess* m_process;
+    QProcess* m_process;
 
 private Q_SLOTS:
 

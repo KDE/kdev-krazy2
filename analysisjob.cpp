@@ -21,7 +21,6 @@
 
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KProcess>
 #include <KSharedConfig>
 
 #include <interfaces/icore.h>
@@ -42,7 +41,7 @@ AnalysisJob::AnalysisJob(QObject* parent /*= 0*/): KJob(parent),
     m_currentAnalysisParameters(0),
     m_analysisResults(0),
     m_analysisProgressParser(new AnalysisProgressParser(this)),
-    m_process(new KProcess(this)) {
+    m_process(new QProcess(this)) {
 
     setObjectName(i18nc("@action:inmenu", "<command>krazy2</command> analysis"));
 
@@ -229,8 +228,9 @@ void AnalysisJob::startAnalysis(const QString& fileType) {
     arguments << checkersToRunAsKrazy2Arguments(fileType);
     arguments << "-";
 
-    m_process->setProgram(krazy2Path.toLocalFile(), arguments);
-    m_process->setOutputChannelMode(KProcess::SeparateChannels);
+    m_process->setProgram(krazy2Path.toLocalFile());
+    m_process->setArguments(arguments);
+    m_process->setReadChannelMode(QProcess::SeparateChannels);
 
     connect(m_process, SIGNAL(readyReadStandardError()),
             this, SLOT(handleProcessReadyStandardError()));
@@ -284,13 +284,13 @@ void AnalysisJob::handleProcessFinished(int exitCode) {
 void AnalysisJob::handleProcessError(QProcess::ProcessError processError) {
     setError(UserDefinedError);
 
-    if (processError == QProcess::FailedToStart && m_process->program().first().isEmpty()) {
+    if (processError == QProcess::FailedToStart && m_process->program().isEmpty()) {
         setErrorText(i18nc("@info", "<para>There is no path set in the Krazy2 configuration "
                                     "for the <command>krazy2</command> executable.</para>"));
     } else if (processError == QProcess::FailedToStart) {
         setErrorText(i18nc("@info", "<para><command>krazy2</command> failed to start "
                                     "using the path"
-                                    "(<filename>%1</filename>).</para>", m_process->program().first()));
+                                    "(<filename>%1</filename>).</para>", m_process->program()));
     } else if (processError == QProcess::Crashed) {
         setErrorText(i18nc("@info", "<para><command>krazy2</command> crashed.</para>"));
     } else {

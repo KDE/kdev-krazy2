@@ -21,7 +21,6 @@
 
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KProcess>
 #include <KSharedConfig>
 
 #include "checkerlistparser.h"
@@ -33,7 +32,7 @@
 
 CheckerListJob::CheckerListJob(QObject* parent /*= 0*/): KJob(parent),
     m_checkerList(0),
-    m_process(new KProcess(this)) {
+    m_process(new QProcess(this)) {
 
     setObjectName(i18nc("@action:inmenu", "Find available checkers for <command>krazy2</command>"));
 
@@ -58,8 +57,9 @@ void CheckerListJob::start() {
     arguments << "--explain";
     arguments << "--export" << "xml";
 
-    m_process->setProgram(krazy2Path.toLocalFile(), arguments);
-    m_process->setOutputChannelMode(KProcess::SeparateChannels);
+    m_process->setProgram(krazy2Path.toLocalFile());
+    m_process->setArguments(arguments);
+    m_process->setReadChannelMode(QProcess::SeparateChannels);
 
     m_process->start();
 }
@@ -93,13 +93,13 @@ void CheckerListJob::handleProcessFinished(int exitCode) {
 void CheckerListJob::handleProcessError(QProcess::ProcessError processError) {
     setError(UserDefinedError);
 
-    if (processError == QProcess::FailedToStart && m_process->program().first().isEmpty()) {
+    if (processError == QProcess::FailedToStart && m_process->program().isEmpty()) {
         setErrorText(i18nc("@info", "<para>There is no path set in the Krazy2 configuration "
                                     "for the <command>krazy2</command> executable.</para>"));
     } else if (processError == QProcess::FailedToStart) {
         setErrorText(i18nc("@info", "<para><command>krazy2</command> failed to start "
                                     "using the path "
-                                    "<filename>%1</filename>.</para>", m_process->program().first()));
+                                    "<filename>%1</filename>.</para>", m_process->program()));
     } else if (processError == QProcess::Crashed) {
         setErrorText(i18nc("@info", "<para><command>krazy2</command> crashed.</para>"));
     } else {
