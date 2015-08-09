@@ -100,6 +100,8 @@ void SelectPathsWidget::updatePaths() {
 
 void SelectPathsWidget::add() {
     QPointer<QFileDialog> fileDialog = new QFileDialog(this);
+    fileDialog->setOption(QFileDialog::DontUseNativeDialog);
+    fileDialog->setFileMode(QFileDialog::ExistingFiles);
 
     if (fileDialog->exec() == QDialog::Rejected) {
         return;

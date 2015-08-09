@@ -45,8 +45,8 @@ mem_tests(
     checkerlistparser
     checkermodel
     issue
-    selectcheckerswidget
-    selectpathswidget
+    # selectcheckerswidget # Disabled because of too many false positives.
+    # selectpathswidget    # Disabled because of too many false positives.
 )
 
 # Copy example files for real Krazy2 tests to binary directory. The source files

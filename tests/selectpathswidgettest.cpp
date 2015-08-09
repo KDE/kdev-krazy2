@@ -23,6 +23,8 @@
 #include <QFileDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QFileSystemModel>
+#include <QLineEdit>
 
 #include <QTimer>
 
@@ -39,9 +41,8 @@ private slots:
     void testConstructorWithInvalidPaths();
 
     void testAddFile();
-    void testAddDirectory();
-    void testAddFilesAndDirectories();
-    void testAddDuplicatedAndNotSortedFilesAndDirectories();
+    void testAddFiles();
+    void testAddDuplicatedAndNotSortedFiles();
     void testRemoveButtonDisabledWhenFileAdded();
 
     void testRemove();
@@ -135,49 +136,33 @@ void SelectPathsWidgetTest::testAddFile() {
     assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/singleIssue.cpp");
 }
 
-void SelectPathsWidgetTest::testAddDirectory() {
-    QStringList paths;
-    SelectPathsWidget widget(paths);
-
-    queueSelectPaths(&widget, QDir::currentPath() + "/examples",
-                     QStringList() << "subdirectory");
-    addButton(&widget)->click();
-
-    assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/subdirectory/");
-}
-
-void SelectPathsWidgetTest::testAddFilesAndDirectories() {
+void SelectPathsWidgetTest::testAddFiles() {
     QStringList paths;
     SelectPathsWidget widget(paths);
 
     queueSelectPaths(&widget, QDir::currentPath() + "/examples",
                      QStringList() << "singleExtraIssue.cpp"
-                                   << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")
-                                   << "subdirectory");
-    addButton(&widget)->click();
-
-    assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/singleExtraIssue.cpp"
-                                       << QDir::currentPath() + QString::fromUtf8("/examples/singleIssueNonAsciiFileNameḶḷambión.cpp")
-                                       << QDir::currentPath() + "/examples/subdirectory/");
-}
-
-void SelectPathsWidgetTest::testAddDuplicatedAndNotSortedFilesAndDirectories() {
-    QStringList paths;
-    paths << QDir::currentPath() + "/examples/singleExtraIssue.cpp";
-    paths << QDir::currentPath() + "/examples/subdirectory";
-    SelectPathsWidget widget(paths);
-
-    queueSelectPaths(&widget, QDir::currentPath() + "/examples",
-                     QStringList() << "singleExtraIssue.cpp"
-                                   << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")
-                                   << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")
-                                   << "subdirectory"
                                    << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"));
     addButton(&widget)->click();
 
     assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/singleExtraIssue.cpp"
-                                       << QDir::currentPath() + QString::fromUtf8("/examples/singleIssueNonAsciiFileNameḶḷambión.cpp")
-                                       << QDir::currentPath() + "/examples/subdirectory/");
+                                       << QDir::currentPath() + QString::fromUtf8("/examples/singleIssueNonAsciiFileNameḶḷambión.cpp"));
+}
+
+void SelectPathsWidgetTest::testAddDuplicatedAndNotSortedFiles() {
+    QStringList paths;
+    paths << QDir::currentPath() + "/examples/singleExtraIssue.cpp";
+    SelectPathsWidget widget(paths);
+
+    queueSelectPaths(&widget, QDir::currentPath() + "/examples",
+                     QStringList() << "singleExtraIssue.cpp"
+                                   << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")
+                                   << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")
+                                   << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"));
+    addButton(&widget)->click();
+
+    assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/singleExtraIssue.cpp"
+                                       << QDir::currentPath() + QString::fromUtf8("/examples/singleIssueNonAsciiFileNameḶḷambión.cpp"));
 }
 
 void SelectPathsWidgetTest::testRemoveButtonDisabledWhenFileAdded() {
@@ -204,7 +189,6 @@ void SelectPathsWidgetTest::testRemove() {
     QStringList paths;
     paths << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp";
     paths << QDir::currentPath() + "/examples/singleIssue.cpp";
-    paths << QDir::currentPath() + "/examples/subdirectory";
     SelectPathsWidget widget(paths);
 
     QVERIFY(!removeButton(&widget)->isEnabled());
@@ -216,8 +200,7 @@ void SelectPathsWidgetTest::testRemove() {
 
     removeButton(&widget)->click();
 
-    assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp"
-                                       << QDir::currentPath() + "/examples/subdirectory/");
+    assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp");
 
     QVERIFY(!removeButton(&widget)->isEnabled());
 }
@@ -225,25 +208,28 @@ void SelectPathsWidgetTest::testRemove() {
 void SelectPathsWidgetTest::testRemoveSeveralPaths() {
     QStringList paths;
     paths << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp";
+    paths << QDir::currentPath() + "/examples/singleExtraIssue.cpp";
     paths << QDir::currentPath() + "/examples/singleIssue.cpp";
-    paths << QDir::currentPath() + "/examples/subdirectory";
+
     SelectPathsWidget widget(paths);
 
     QVERIFY(!removeButton(&widget)->isEnabled());
 
     QModelIndex index = pathsView(&widget)->model()->index(0, 0);
+    QVERIFY(index.isValid());
     pathsView(&widget)->selectionModel()->select(index, QItemSelectionModel::Select);
 
     QVERIFY(removeButton(&widget)->isEnabled());
 
     index = pathsView(&widget)->model()->index(2, 0);
+    QVERIFY(index.isValid());
     pathsView(&widget)->selectionModel()->select(index, QItemSelectionModel::Select);
 
     QVERIFY(removeButton(&widget)->isEnabled());
 
     removeButton(&widget)->click();
 
-    assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/singleIssue.cpp");
+    assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/singleExtraIssue.cpp");
 
     QVERIFY(!removeButton(&widget)->isEnabled());
 }
@@ -252,7 +238,7 @@ void SelectPathsWidgetTest::testSelectAndDeselect() {
     QStringList paths;
     paths << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp";
     paths << QDir::currentPath() + "/examples/singleIssue.cpp";
-    paths << QDir::currentPath() + "/examples/subdirectory";
+    paths << QDir::currentPath() + "/examples/singleExtraIssue.cpp";
     SelectPathsWidget widget(paths);
 
     QModelIndex index = pathsView(&widget)->model()->index(0, 0);
@@ -349,13 +335,38 @@ public Q_SLOTS:
 
         fileDialog->setDirectory(m_directory);
 
+        QListView *lv = fileDialog->findChild<QListView*>("listView");
+        QVERIFY(lv != nullptr);
+
+        QFileSystemModel *model = dynamic_cast<QFileSystemModel*>(lv->model());
+        QVERIFY(model != nullptr);
+
+        QLineEdit *lineEdit = fileDialog->findChild<QLineEdit*>("fileNameEdit");
+        QVERIFY(lineEdit != nullptr);
+
         foreach (const QString& path, m_paths) {
-            fileDialog->selectFile(path);
+            QModelIndex idx = model->index(m_directory + QStringLiteral("/") + path);
+            if (!idx.isValid())
+                continue;
+            lv->selectionModel()->select(idx, QItemSelectionModel::Select);
         }
 
+        QString line;
+        foreach (const QString& path, m_paths) {
+            line += '"';
+            line += path;
+            line += '"';
+            line += ' ';
+        }
+        line.resize(line.size() - 1);
+        lineEdit->setText(line);
 
         QDialogButtonBox *box = fileDialog->findChild<QDialogButtonBox*>();
-        box->button(QDialogButtonBox::Ok)->click();
+        QVERIFY(box != nullptr);
+        QPushButton *button = box->button(QDialogButtonBox::Open);
+        QVERIFY(button != nullptr);
+        QVERIFY(button->isEnabled());
+        button->click();
     }
 
 };

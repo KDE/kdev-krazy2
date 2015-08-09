@@ -100,7 +100,6 @@ private slots:
     void testRunCheckersWithNoFiles();
     void testRunSeveralAnalysisParameters();
     void testRunSeveralAnalysisParametersSomeOfThemWithoutFiles();
-    void testRunWithEmptyKrazy2ExecutablePath();
     void testRunWithInvalidKrazy2ExecutablePath();
 
     void testKill();
@@ -1194,41 +1193,6 @@ void AnalysisJobTest::testRunSeveralAnalysisParametersSomeOfThemWithoutFiles() {
     QCOMPARE(showProgressSpy.at(7).at(3).toInt(), 100);
 }
 
-void AnalysisJobTest::testRunWithEmptyKrazy2ExecutablePath() {
-    AnalysisJob analysisJob;
-    analysisJob.setAutoDelete(false);
-
-    QList<const Checker*> availableCheckers;
-
-    Checker* doubleQuoteCharsChecker = new Checker();
-    doubleQuoteCharsChecker->setFileType("c++");
-    doubleQuoteCharsChecker->setName("doublequote_chars");
-    availableCheckers.append(doubleQuoteCharsChecker);
-
-    AnalysisParameters analysisParameters;
-    analysisParameters.initializeCheckers(availableCheckers);
-    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
-    analysisJob.addAnalysisParameters(&analysisParameters);
-
-    AnalysisResults analysisResults;
-    analysisJob.setAnalysisResults(&analysisResults);
-
-    KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "");
-
-    SignalSpy resultSpy(&analysisJob, SIGNAL(result(KJob*)));
-
-    analysisJob.start();
-
-    resultSpy.waitForSignal();
-
-    QCOMPARE(analysisJob.error(), (int)KJob::UserDefinedError);
-    QCOMPARE(analysisJob.errorString(),
-             i18nc("@info", "<para>There is no path set in the Krazy2 configuration "
-                            "for the <command>krazy2</command> executable.</para>"));
-    QCOMPARE(analysisResults.issues().count(), 0);
-}
-
 void AnalysisJobTest::testRunWithInvalidKrazy2ExecutablePath() {
     AnalysisJob analysisJob;
     analysisJob.setAutoDelete(false);
@@ -1260,7 +1224,7 @@ void AnalysisJobTest::testRunWithInvalidKrazy2ExecutablePath() {
     QCOMPARE(analysisJob.error(), (int)KJob::UserDefinedError);
     QCOMPARE(analysisJob.errorString(),
              i18nc("@info", "<para><command>krazy2</command> failed to start "
-                            "using the path set in the Krazy2 configuration "
+                            "using the path"
                             "(<filename>%1</filename>).</para>", "invalid/krazy2/path"));
     QCOMPARE(analysisResults.issues().count(), 0);
 }

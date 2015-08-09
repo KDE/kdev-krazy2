@@ -88,7 +88,6 @@ private slots:
     void testConstructor();
 
     void testRun();
-    void testRunWithEmptyPaths();
     void testRunWithInvalidPaths();
 
     void testKill();
@@ -194,27 +193,6 @@ void CheckerListJobTest::testRun() {
     QVERIFY(checker5 != checker4);
 }
 
-void CheckerListJobTest::testRunWithEmptyPaths() {
-    CheckerListJob checkerListJob;
-    checkerListJob.setAutoDelete(false);
-    checkerListJob.setCheckerList(m_checkerList);
-
-    KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
-    krazy2Configuration.writeEntry("krazy2 Path", "");
-
-    SignalSpy resultSpy(&checkerListJob, SIGNAL(result(KJob*)));
-
-    checkerListJob.start();
-
-    resultSpy.waitForSignal();
-
-    QCOMPARE(checkerListJob.error(), (int)KJob::UserDefinedError);
-    QCOMPARE(checkerListJob.errorString(),
-             i18nc("@info", "<para>There is no path set in the Krazy2 configuration "
-                            "for the <command>krazy2</command> executable.</para>"));
-    QCOMPARE(m_checkerList->count(), 0);
-}
-
 void CheckerListJobTest::testRunWithInvalidPaths() {
     CheckerListJob checkerListJob;
     checkerListJob.setAutoDelete(false);
@@ -232,7 +210,7 @@ void CheckerListJobTest::testRunWithInvalidPaths() {
     QCOMPARE(checkerListJob.error(), (int)KJob::UserDefinedError);
     QCOMPARE(checkerListJob.errorString(),
              i18nc("@info", "<para><command>krazy2</command> failed to start "
-                            "using the path set in the Krazy2 configuration "
+                            "using the path "
                             "(<filename>%1</filename>).</para>", "invalid/krazy2/path"));
     QCOMPARE(m_checkerList->count(), 0);
 }

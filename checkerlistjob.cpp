@@ -24,7 +24,7 @@
 #include <KSharedConfig>
 
 #include "checkerlistparser.h"
-#include "./krazy2defaults.h"
+#include "./common.h"
 
 #include <QUrl>
 
@@ -48,16 +48,17 @@ void CheckerListJob::start() {
     Q_ASSERT(m_checkerList);
 
     KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
-    QUrl krazy2Path = krazy2Configuration.readEntry("krazy2 Path");
-    if(krazy2Path.toString().isEmpty())
-        krazy2Path = QUrl::fromLocalFile(defaultPath());
+    QUrl krazy2Url = krazy2Configuration.readEntry("krazy2 Path");
+    QString krazy2Path = urlToString(krazy2Url);
+    if(krazy2Path.isEmpty())
+        krazy2Path = defaultPath();
 
     QStringList arguments;
     arguments << "--list";
     arguments << "--explain";
     arguments << "--export" << "xml";
 
-    m_process->setProgram(krazy2Path.toLocalFile());
+    m_process->setProgram(krazy2Path);
     m_process->setArguments(arguments);
     m_process->setReadChannelMode(QProcess::SeparateChannels);
 
@@ -99,7 +100,7 @@ void CheckerListJob::handleProcessError(QProcess::ProcessError processError) {
     } else if (processError == QProcess::FailedToStart) {
         setErrorText(i18nc("@info", "<para><command>krazy2</command> failed to start "
                                     "using the path "
-                                    "<filename>%1</filename>.</para>", m_process->program()));
+                                    "(<filename>%1</filename>).</para>", m_process->program()));
     } else if (processError == QProcess::Crashed) {
         setErrorText(i18nc("@info", "<para><command>krazy2</command> crashed.</para>"));
     } else {

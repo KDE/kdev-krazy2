@@ -4,7 +4,7 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
   <group name="Krazy2">
-    <entry name="krazy2Path" key="krazy2 Path" type="Url">
+    <entry name="krazy2Path" key="krazy2 Path" type="String">
         <default>file:///usr/bin/krazy2</default>
         <label>krazy2 Executable</label>
         <tooltip>The full path to the krazy2 executable</tooltip>

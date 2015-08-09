@@ -34,6 +34,7 @@ set(kdevkrazy2_library_SRCS
     checkerlistjob.cpp
     checkerlistparser.cpp
     checkermodel.cpp
+    common.cpp
     issue.cpp
     settings/selectcheckerswidget.cpp
     settings/selectpathswidget.cpp

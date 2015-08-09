@@ -31,7 +31,7 @@
 #include "analysisresults.h"
 #include "analysisresultsparser.h"
 #include "checker.h"
-#include "./krazy2defaults.h"
+#include "./common.h"
 
 #include <QUrl>
 
@@ -218,9 +218,10 @@ QStringList AnalysisJob::checkersToRunAsKrazy2Arguments(const QString& fileType)
 
 void AnalysisJob::startAnalysis(const QString& fileType) {
     KConfigGroup krazy2Configuration = KSharedConfig::openConfig()->group("Krazy2");
-    QUrl krazy2Path = krazy2Configuration.readEntry("krazy2 Path");
-    if(krazy2Path.toString().isEmpty())
-        krazy2Path = QUrl::fromLocalFile(defaultPath());
+    QString krazy2Url = krazy2Configuration.readEntry("krazy2 Path");
+    QString krazy2Path = urlToString(krazy2Url);
+    if(krazy2Path.isEmpty())
+        krazy2Path = defaultPath();
 
     QStringList arguments;
     arguments << "--export" << "xml";
@@ -228,7 +229,7 @@ void AnalysisJob::startAnalysis(const QString& fileType) {
     arguments << checkersToRunAsKrazy2Arguments(fileType);
     arguments << "-";
 
-    m_process->setProgram(krazy2Path.toLocalFile());
+    m_process->setProgram(krazy2Path);
     m_process->setArguments(arguments);
     m_process->setReadChannelMode(QProcess::SeparateChannels);
 

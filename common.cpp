@@ -1,6 +1,4 @@
 /*
- * This file is part of KDevelop Krazy2 Plugin.
- *
  * Copyright 2015 Laszlo Kis-Adam
  *
  * This program is free software; you can redistribute it and/or
@@ -17,18 +15,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef KRAZY2_DEFAULTS_H
-#define KRAZY2_DEFAULTS_H
+#include <common.h>
+#include <QUrl>
+#include <QTextStream>
 
-namespace
+QString urlToString(const QUrl &url)
 {
+    QString s;
 
-inline QString defaultPath()
-{
-    return QStringLiteral("/usr/local/Krazy2/bin/krazy2");
+    if (url.isLocalFile())
+        s = url.toLocalFile();
+    else
+        s = url.toDisplayString(QUrl::RemoveScheme);
+
+    return s;
 }
-
-}
-
-#endif
 
