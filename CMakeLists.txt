@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 2.8.9)
+
 project(kdevkrazy2)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${kdevkrazy2_SOURCE_DIR}/cmake/)
