@@ -34,6 +34,7 @@
         "Name[sv]": "Kodkontroller med Krazy2", 
         "Name[uk]": "Перевірка коду за допомогою Krazy2", 
         "Name[x-test]": "xxKrazy2 Code Checkingxx", 
+        "Name[zh_CN]": "Krazy2 代码检查", 
         "ServiceTypes": [
             "KDevelop/Plugin"
         ], 
