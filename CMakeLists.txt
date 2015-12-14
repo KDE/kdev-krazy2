@@ -15,13 +15,6 @@ find_package(Qt5 REQUIRED Core Widgets Test)
 find_package(KF5 REQUIRED COMPONENTS KDELibs4Support TextEditor ThreadWeaver)
 find_package(KDevPlatform 1.90.90 REQUIRED)
 
-include(KDE4Defaults)
-
-include_directories(
-    ${KDEVPLATFORM_INCLUDE_DIR}
-    ${KDE4_INCLUDES}
-)
-
 add_subdirectory(tests)
 
 set(kdevkrazy2_library_SRCS
@@ -64,10 +57,6 @@ target_link_libraries(kdevkrazy2_library
     KDev::Language
     KF5::TextEditor
 )
-
-# In x86_64, linking fails when a static library is added to a shared library.
-# In order to work, they must be compiled using -fPIC
-add_definitions("-fPIC")
 
 kdevplatform_add_plugin(kdevkrazy2 JSON kdevkrazy2.json SOURCES krazy2plugin.cpp)
 
