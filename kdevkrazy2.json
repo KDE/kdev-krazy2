@@ -2,7 +2,8 @@
     "KPlugin": {
         "Authors": [
             {
-                "Name": "Daniel Calviño Sánchez"
+                "Name": "Daniel Calviño Sánchez", 
+                "Name[x-test]": "xxDaniel Calviño Sánchezxx"
             }
         ], 
         "Description": "This plugin shows issues reported by Krazy2", 
