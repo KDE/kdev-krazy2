@@ -47,7 +47,6 @@ ki18n_wrap_ui(kdevkrazy2_library_SRCS
 
 kconfig_add_kcfg_files(kdevkrazy2_library_SRCS settings/krazy2config.kcfgc)
 
-
 add_library(kdevkrazy2_library STATIC ${kdevkrazy2_library_SRCS})
 target_link_libraries(kdevkrazy2_library
     KDev::Interfaces
@@ -59,13 +58,8 @@ target_link_libraries(kdevkrazy2_library
 )
 
 kdevplatform_add_plugin(kdevkrazy2 JSON kdevkrazy2.json SOURCES krazy2plugin.cpp)
-
 target_link_libraries(kdevkrazy2
     kdevkrazy2_library
 )
-
-install(TARGETS kdevkrazy2 DESTINATION ${PLUGIN_INSTALL_DIR})
-
-########### install files ###############
 
 install(FILES kdevkrazy2.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kdevkrazy2)
