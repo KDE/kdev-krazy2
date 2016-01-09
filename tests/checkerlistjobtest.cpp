@@ -119,7 +119,7 @@ void CheckerListJobTest::cleanup() {
 
 void CheckerListJobTest::testConstructor() {
     QObject parent;
-    CheckerListJob* checkerListJob = new CheckerListJob(&parent);
+    auto  checkerListJob = new CheckerListJob(&parent);
 
     QCOMPARE(checkerListJob->parent(), &parent);
     QCOMPARE(checkerListJob->capabilities(), KJob::Killable);

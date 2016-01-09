@@ -30,8 +30,8 @@ using namespace KDevelop;
 Krazy2Preferences::Krazy2Preferences(IPlugin *plugin, QWidget* parent)
     : ConfigPage(plugin, Krazy2Settings::self(), parent)
 {
-    QVBoxLayout* layout = new QVBoxLayout(this);
-    QWidget* widget = new QWidget(this);
+    auto  layout = new QVBoxLayout(this);
+    auto  widget = new QWidget(this);
     Ui::Krazy2Settings ui;
     ui.setupUi(widget);
     layout->addWidget(widget);

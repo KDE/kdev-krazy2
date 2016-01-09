@@ -258,28 +258,28 @@ void AnalysisParametersTest::testSetFilesAndDirectoriesWithInvalidEntries() {
 QList<const Checker*> AnalysisParametersTest::createAvailableCheckers() const {
     QList<const Checker*> checkers;
 
-    Checker* fileType1Checker1 = new Checker();
+    auto  fileType1Checker1 = new Checker();
     fileType1Checker1->setFileType("fileType1");
     fileType1Checker1->setName("checker1Name");
     checkers.append(fileType1Checker1);
 
-    Checker* fileType1Checker2 = new Checker();
+    auto  fileType1Checker2 = new Checker();
     fileType1Checker2->setFileType("fileType1");
     fileType1Checker2->setName("checker2Name");
     checkers.append(fileType1Checker2);
 
-    Checker* fileType1ExtraChecker1 = new Checker();
+    auto  fileType1ExtraChecker1 = new Checker();
     fileType1ExtraChecker1->setFileType("fileType1");
     fileType1ExtraChecker1->setName("extraChecker1Name");
     fileType1ExtraChecker1->setExtra(true);
     checkers.append(fileType1ExtraChecker1);
 
-    Checker* fileType2Checker1 = new Checker();
+    auto  fileType2Checker1 = new Checker();
     fileType2Checker1->setFileType("fileType2");
     fileType2Checker1->setName("checker1Name");
     checkers.append(fileType2Checker1);
 
-    Checker* fileType2ExtraChecker1 = new Checker();
+    auto  fileType2ExtraChecker1 = new Checker();
     fileType2ExtraChecker1->setFileType("fileType2");
     fileType2ExtraChecker1->setName("extraChecker1Name");
     fileType2ExtraChecker1->setExtra(true);

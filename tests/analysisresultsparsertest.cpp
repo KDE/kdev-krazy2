@@ -593,14 +593,14 @@ void AnalysisResultsParserTest::testParseWhenAnalysisResultsHasPreviousContents(
         "</file-type>\n"
         KRAZY2_FOOTER_XML;
 
-    Checker* checker = new Checker();
+    auto  checker = new Checker();
     checker->setDescription("Checker1 old description");
     checker->setExplanation("Checker1 old explanation");
     checker->setFileType("fileType");
     checker->setName("checker1Name");
     m_analysisResults->addChecker(checker);
 
-    Issue* issue = new Issue();
+    auto  issue = new Issue();
     issue->setChecker(checker);
     issue->setFileName("someFile.cpp");
     issue->setLine(316);

@@ -88,7 +88,7 @@ void CheckerListParser::processPluginStart() {
         checkerDescription = "";
     }
 
-    Checker* checker = new Checker();
+    auto  checker = new Checker();
     checker->setName(m_xmlStreamReader.attributes().value("name").toString());
     checker->setDescription(checkerDescription);
     checker->setFileType(m_fileType);

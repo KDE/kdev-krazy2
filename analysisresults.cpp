@@ -89,7 +89,7 @@ void AnalysisResults::addAnalysisResults(const AnalysisResults* analysisResults)
         }
 
         if (!duplicated) {
-            Issue* issueCopy = new Issue(*issue);
+            auto  issueCopy = new Issue(*issue);
             issueCopy->setChecker(checker);
             addIssue(issueCopy);
         }

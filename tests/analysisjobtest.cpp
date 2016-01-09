@@ -153,7 +153,7 @@ void AnalysisJobTest::cleanupTestCase() {
 
 void AnalysisJobTest::testConstructor() {
     QObject parent;
-    AnalysisJob* analysisJob = new AnalysisJob(&parent);
+    auto  analysisJob = new AnalysisJob(&parent);
 
     QCOMPARE(analysisJob->parent(), &parent);
     QCOMPARE(analysisJob->capabilities(), KJob::Killable);
@@ -167,7 +167,7 @@ void AnalysisJobTest::testRunCheckers() {
 
     QList<const Checker*> availableCheckers;
 
-    Checker* doubleQuoteCharsChecker = new Checker();
+    auto  doubleQuoteCharsChecker = new Checker();
     doubleQuoteCharsChecker->setFileType("c++");
     doubleQuoteCharsChecker->setName("doublequote_chars");
     doubleQuoteCharsChecker->setDescription("Check single-char QString operations for efficiency");
@@ -175,7 +175,7 @@ void AnalysisJobTest::testRunCheckers() {
                                             "is faster if the characters are QChars...");
     availableCheckers.append(doubleQuoteCharsChecker);
 
-    Checker* licenseChecker = new Checker();
+    auto  licenseChecker = new Checker();
     licenseChecker->setFileType("c++");
     licenseChecker->setName("license");
     licenseChecker->setDescription("Check for an acceptable license");
@@ -183,7 +183,7 @@ void AnalysisJobTest::testRunCheckers() {
                                    "or a reference to a license which states...");
     availableCheckers.append(licenseChecker);
 
-    Checker* spellingChecker = new Checker();
+    auto  spellingChecker = new Checker();
     spellingChecker->setFileType("c++");
     spellingChecker->setName("spelling");
     spellingChecker->setDescription("Check for spelling errors");
@@ -191,7 +191,7 @@ void AnalysisJobTest::testRunCheckers() {
                                     "should be fixed as they may show up later...");
     availableCheckers.append(spellingChecker);
 
-    Checker* validateChecker = new Checker();
+    auto  validateChecker = new Checker();
     validateChecker->setFileType("desktop");
     validateChecker->setName("validate");
     validateChecker->setDescription("Validates desktop files using 'desktop-file-validate'");
@@ -199,7 +199,7 @@ void AnalysisJobTest::testRunCheckers() {
                                     "to the freedesktop.org standard. See the spec...");
     availableCheckers.append(validateChecker);
 
-    Checker* qmlLicenseChecker = new Checker();
+    auto  qmlLicenseChecker = new Checker();
     qmlLicenseChecker->setFileType("qml");
     qmlLicenseChecker->setName("license");
     qmlLicenseChecker->setDescription("Check for an acceptable license");
@@ -614,7 +614,7 @@ void AnalysisJobTest::testRunCheckerWithDuplicatedNamesAndSpecificFileTypes() {
 
     QList<const Checker*> availableCheckers;
 
-    Checker* cppLicenseChecker = new Checker();
+    auto  cppLicenseChecker = new Checker();
     cppLicenseChecker->setFileType("c++");
     cppLicenseChecker->setName("license");
     cppLicenseChecker->setDescription("Check for an acceptable license");
@@ -622,7 +622,7 @@ void AnalysisJobTest::testRunCheckerWithDuplicatedNamesAndSpecificFileTypes() {
                                       "or a reference to a license which states...");
     availableCheckers.append(cppLicenseChecker);
 
-    Checker* qmlSpellingChecker = new Checker();
+    auto  qmlSpellingChecker = new Checker();
     qmlSpellingChecker->setFileType("qml");
     qmlSpellingChecker->setName("spelling");
     qmlSpellingChecker->setDescription("Check for spelling errors");
@@ -705,7 +705,7 @@ void AnalysisJobTest::testRunCheckersWithNoFiles() {
 
     QList<const Checker*> availableCheckers;
 
-    Checker* doubleQuoteCharsChecker = new Checker();
+    auto  doubleQuoteCharsChecker = new Checker();
     doubleQuoteCharsChecker->setFileType("c++");
     doubleQuoteCharsChecker->setName("doublequote_chars");
     doubleQuoteCharsChecker->setDescription("Check single-char QString operations for efficiency");
@@ -713,7 +713,7 @@ void AnalysisJobTest::testRunCheckersWithNoFiles() {
                                             "is faster if the characters are QChars...");
     availableCheckers.append(doubleQuoteCharsChecker);
 
-    Checker* licenseChecker = new Checker();
+    auto  licenseChecker = new Checker();
     licenseChecker->setFileType("c++");
     licenseChecker->setName("license");
     licenseChecker->setDescription("Check for an acceptable license");
@@ -721,7 +721,7 @@ void AnalysisJobTest::testRunCheckersWithNoFiles() {
                                    "or a reference to a license which states...");
     availableCheckers.append(licenseChecker);
 
-    Checker* spellingChecker = new Checker();
+    auto  spellingChecker = new Checker();
     spellingChecker->setFileType("c++");
     spellingChecker->setName("spelling");
     spellingChecker->setDescription("Check for spelling errors");
@@ -729,7 +729,7 @@ void AnalysisJobTest::testRunCheckersWithNoFiles() {
                                     "should be fixed as they may show up later...");
     availableCheckers.append(spellingChecker);
 
-    Checker* validateChecker = new Checker();
+    auto  validateChecker = new Checker();
     validateChecker->setFileType("desktop");
     validateChecker->setName("validate");
     validateChecker->setDescription("Validates desktop files using 'desktop-file-validate'");
@@ -737,7 +737,7 @@ void AnalysisJobTest::testRunCheckersWithNoFiles() {
                                     "to the freedesktop.org standard. See the spec...");
     availableCheckers.append(validateChecker);
 
-    Checker* qmlLicenseChecker = new Checker();
+    auto  qmlLicenseChecker = new Checker();
     qmlLicenseChecker->setFileType("qml");
     qmlLicenseChecker->setName("license");
     qmlLicenseChecker->setDescription("Check for an acceptable license");
@@ -1199,7 +1199,7 @@ void AnalysisJobTest::testRunWithInvalidKrazy2ExecutablePath() {
 
     QList<const Checker*> availableCheckers;
 
-    Checker* doubleQuoteCharsChecker = new Checker();
+    auto  doubleQuoteCharsChecker = new Checker();
     doubleQuoteCharsChecker->setFileType("c++");
     doubleQuoteCharsChecker->setName("doublequote_chars");
     availableCheckers.append(doubleQuoteCharsChecker);

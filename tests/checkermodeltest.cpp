@@ -493,7 +493,7 @@ void CheckerModelTest::testCheckerForIndexWithInvalidIndex() {
 
 Checker* CheckerModelTest::newChecker(const QString& fileType, const QString& name,
                                       const QString& description /*=""*/, bool extra /*=false*/) const {
-    Checker* checker = new Checker();
+    auto  checker = new Checker();
     checker->setFileType(fileType);
     checker->setName(name);
     checker->setDescription(description);

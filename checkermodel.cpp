@@ -218,7 +218,7 @@ void CheckerModel::setCheckers(const QList< const Checker* >& checkers) {
 
     //Keys are returned in ascending order
     foreach (const QString& fileType, checkersByFileType.uniqueKeys()) {
-        Item* fileTypeItem = new Item();
+        auto  fileTypeItem = new Item();
         fileTypeItem->setType(Item::FileTypeItem);
         fileTypeItem->setFileType(fileType);
         m_fileTypeItems.append(fileTypeItem);
@@ -226,7 +226,7 @@ void CheckerModel::setCheckers(const QList< const Checker* >& checkers) {
         QMap<QString, Item*> checkerItems;
         QMap<QString, Item*> extraCheckerItems;
         foreach (const Checker* checker, checkersByFileType.values(fileType)) {
-            Item* checkerItem = new Item();
+            auto  checkerItem = new Item();
             checkerItem->setType(Item::CheckerItem);
             checkerItem->setChecker(checker);
 
@@ -243,7 +243,7 @@ void CheckerModel::setCheckers(const QList< const Checker* >& checkers) {
         }
 
         if (!extraCheckerItems.values().isEmpty()) {
-            Item* extraHeaderItem = new Item();
+            auto  extraHeaderItem = new Item();
             extraHeaderItem->setType(Item::ExtraHeaderItem);
             extraHeaderItem->setFileType(fileTypeItem->fileType());
             fileTypeItem->addChild(extraHeaderItem);

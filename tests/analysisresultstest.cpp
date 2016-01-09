@@ -39,15 +39,15 @@ private slots:
 };
 
 void AnalysisResultsTest::testAddChecker() {
-    Checker* checker1 = new Checker();
+    auto  checker1 = new Checker();
     checker1->setFileType("fileType1");
     checker1->setName("name1");
 
-    Checker* checker2 = new Checker();
+    auto  checker2 = new Checker();
     checker2->setFileType("fileType1");
     checker2->setName("name2");
 
-    Checker* checker3 = new Checker();
+    auto  checker3 = new Checker();
     checker3->setFileType("fileType2");
     checker3->setName("name1");
 
@@ -62,7 +62,7 @@ void AnalysisResultsTest::testAddChecker() {
 }
 
 void AnalysisResultsTest::testAddCheckerWithSameName() {
-    Checker* checker1 = new Checker();
+    auto  checker1 = new Checker();
     checker1->setFileType("fileType");
     checker1->setName("name");
 
@@ -80,7 +80,7 @@ void AnalysisResultsTest::testAddCheckerWithSameName() {
 }
 
 void AnalysisResultsTest::testFindCheckerNotFound() {
-    Checker* checker1 = new Checker();
+    auto  checker1 = new Checker();
     checker1->setFileType("fileType");
     checker1->setName("name");
 
@@ -91,20 +91,20 @@ void AnalysisResultsTest::testFindCheckerNotFound() {
 }
 
 void AnalysisResultsTest::testAddIssue() {
-    Checker* checker1 = new Checker();
+    auto  checker1 = new Checker();
     checker1->setFileType("fileType");
     checker1->setName("name1");
-    Issue* issue1 = new Issue();
+    auto  issue1 = new Issue();
     issue1->setChecker(checker1);
     issue1->setFileName("fileName");
 
-    Checker* checker2 = new Checker();
+    auto  checker2 = new Checker();
     checker2->setFileType("fileType");
     checker2->setName("name2");
-    Issue* issue2a = new Issue();
+    auto  issue2a = new Issue();
     issue2a->setChecker(checker2);
     issue2a->setFileName("fileName");
-    Issue* issue2b = new Issue();
+    auto  issue2b = new Issue();
     issue2b->setChecker(checker2);
     issue2b->setFileName("fileName");
 
@@ -122,20 +122,20 @@ void AnalysisResultsTest::testAddIssue() {
 }
 
 void AnalysisResultsTest::testAddAnalysisResults() {
-    Checker* fileType1Checker1 = new Checker();
+    auto  fileType1Checker1 = new Checker();
     fileType1Checker1->setFileType("fileType1");
     fileType1Checker1->setName("fileType1Checker1Name");
-    Issue* fileType1Checker1Issue1 = new Issue();
+    auto  fileType1Checker1Issue1 = new Issue();
     fileType1Checker1Issue1->setChecker(fileType1Checker1);
     fileType1Checker1Issue1->setFileName("fileType1Checker1Issue1FileName");
 
-    Checker* fileType1Checker2 = new Checker();
+    auto  fileType1Checker2 = new Checker();
     fileType1Checker2->setFileType("fileType1");
     fileType1Checker2->setName("fileType1Checker2Name");
-    Issue* fileType1Checker2Issue2a = new Issue();
+    auto  fileType1Checker2Issue2a = new Issue();
     fileType1Checker2Issue2a->setChecker(fileType1Checker2);
     fileType1Checker2Issue2a->setFileName("fileType1Checker2Issue2aFileName");
-    Issue* fileType1Checker2Issue2b = new Issue();
+    auto  fileType1Checker2Issue2b = new Issue();
     fileType1Checker2Issue2b->setChecker(fileType1Checker2);
     fileType1Checker2Issue2b->setFileName("fileType1Checker2Issue2bFileName");
 
@@ -147,29 +147,29 @@ void AnalysisResultsTest::testAddAnalysisResults() {
     analysisResults.addIssue(fileType1Checker2Issue2b);
 
     //Other AnalysisResults with different checkers and issues
-    Checker* fileType2Checker1 = new Checker();
+    auto  fileType2Checker1 = new Checker();
     fileType2Checker1->setFileType("fileType2");
     fileType2Checker1->setName("fileType2Checker1Name");
     fileType2Checker1->setDescription("fileType2Checker1Description");
     fileType2Checker1->setExplanation("fileType2Checker1Explanation");
     fileType2Checker1->setExtra(true);
-    Issue* fileType2Checker1Issue1 = new Issue();
+    auto  fileType2Checker1Issue1 = new Issue();
     fileType2Checker1Issue1->setChecker(fileType2Checker1);
     fileType2Checker1Issue1->setFileName("fileType2Checker1Issue1FileName");
     fileType2Checker1Issue1->setLine(4);
     fileType2Checker1Issue1->setMessage("fileType2Checker1Issue1Message");
 
-    Checker* fileType2Checker2 = new Checker();
+    auto  fileType2Checker2 = new Checker();
     fileType2Checker2->setFileType("fileType2");
     fileType2Checker2->setName("fileType2Checker2Name");
     fileType2Checker2->setDescription("fileType2Checker2Description");
     fileType2Checker2->setExplanation("fileType2Checker2Explanation");
-    Issue* fileType2Checker2Issue2a = new Issue();
+    auto  fileType2Checker2Issue2a = new Issue();
     fileType2Checker2Issue2a->setChecker(fileType2Checker2);
     fileType2Checker2Issue2a->setFileName("fileType2Checker2Issue2aFileName");
     fileType2Checker2Issue2a->setLine(8);
     fileType2Checker2Issue2a->setMessage("fileType2Checker2Issue2aMessage");
-    Issue* fileType2Checker2Issue2b = new Issue();
+    auto  fileType2Checker2Issue2b = new Issue();
     fileType2Checker2Issue2b->setChecker(fileType2Checker2);
     fileType2Checker2Issue2b->setFileName("fileType2Checker2Issue2bFileName");
     fileType2Checker2Issue2b->setLine(15);
@@ -177,10 +177,10 @@ void AnalysisResultsTest::testAddAnalysisResults() {
 
     //An issue with a checker with the same file type and name as one already
     //added
-    Checker* fileType1Checker1ToAdd = new Checker();
+    auto  fileType1Checker1ToAdd = new Checker();
     fileType1Checker1ToAdd->setFileType("fileType1");
     fileType1Checker1ToAdd->setName("fileType1Checker1Name");
-    Issue* fileType1Checker1Issue2 = new Issue();
+    auto  fileType1Checker1Issue2 = new Issue();
     fileType1Checker1Issue2->setChecker(fileType1Checker1ToAdd);
     fileType1Checker1Issue2->setFileName("fileType1Checker1Issue2FileName");
     fileType1Checker1Issue2->setLine(16);
@@ -246,13 +246,13 @@ void AnalysisResultsTest::testAddAnalysisResults() {
 }
 
 void AnalysisResultsTest::testAddAnalysisResultsWithDuplicatedIssues() {
-    Checker* checker1 = new Checker();
+    auto  checker1 = new Checker();
     checker1->setFileType("fileType");
     checker1->setName("name1");
-    Issue* issue1 = new Issue();
+    auto  issue1 = new Issue();
     issue1->setChecker(checker1);
     issue1->setFileName("fileName");
-    Issue* issue2 = new Issue();
+    auto  issue2 = new Issue();
     issue2->setChecker(checker1);
     issue2->setFileName("fileName");
     issue2->setLine(42);
@@ -263,17 +263,17 @@ void AnalysisResultsTest::testAddAnalysisResultsWithDuplicatedIssues() {
     analysisResults.addIssue(issue2);
 
     //Other AnalysisResults with repeated checkers and issues
-    Checker* checker1b = new Checker();
+    auto  checker1b = new Checker();
     checker1b->setFileType("fileType");
     checker1b->setName("name1");
-    Issue* issue1DifferentChecker = new Issue();
+    auto  issue1DifferentChecker = new Issue();
     issue1DifferentChecker->setChecker(checker1b);
     issue1DifferentChecker->setFileName("fileName");
-    Issue* issue2DifferentChecker = new Issue();
+    auto  issue2DifferentChecker = new Issue();
     issue2DifferentChecker->setChecker(checker1b);
     issue2DifferentChecker->setFileName("fileName");
     issue2DifferentChecker->setLine(42);
-    Issue* issue3DifferentChecker = new Issue();
+    auto  issue3DifferentChecker = new Issue();
     issue3DifferentChecker->setChecker(checker1b);
     issue3DifferentChecker->setFileName("fileName2");
     issue3DifferentChecker->setLine(108);

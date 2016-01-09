@@ -69,12 +69,12 @@ Krazy2Plugin::Krazy2Plugin(QObject* parent, const QVariantList& /*= QVariantList
 
     grabCheckerList();
 
-    QAction *checkFileAction = new QAction(this);
+    auto checkFileAction = new QAction(this);
     checkFileAction->setText(i18n("Krazy2 check (selected files)"));
     checkFileAction->setStatusTip(i18n("Check selected files with Krazy2 tools"));
     connect(checkFileAction, &QAction::triggered, this, &Krazy2Plugin::checkSelectedFiles);
 
-    QAction *checkAllFilesAction = new QAction(this);
+    auto checkAllFilesAction = new QAction(this);
     checkAllFilesAction->setText(i18n("Krazy2 check (all files)"));
     checkAllFilesAction->setStatusTip(i18n("Check all files with Krazy2 tools"));
     connect(checkAllFilesAction, &QAction::triggered, this, &Krazy2Plugin::checkAllFiles);
@@ -172,7 +172,7 @@ void Krazy2Plugin::onAnalysisFinished(KJob *job)
 
 void Krazy2Plugin::grabCheckerList()
 {
-    CheckerListJob *job = new CheckerListJob(this);
+    auto job = new CheckerListJob(this);
     job->setCheckerList(&m_checkers);
 
     connect(job, &KJob::finished, this, &Krazy2Plugin::onListingFinished);
@@ -279,14 +279,14 @@ void Krazy2Plugin::check(bool allFiles)
 
 void Krazy2Plugin::check(QStringList paths, QList<const Checker *> &selectedCheckers)
 {
-    AnalysisParameters *params = new AnalysisParameters();
+    auto params = new AnalysisParameters();
     params->initializeCheckers(m_checkers);
     params->setCheckersToRun(selectedCheckers);
     params->setFilesAndDirectories(paths);
 
     m_results.reset(new AnalysisResults());
 
-    AnalysisJob *job = new AnalysisJob(this);
+    auto job = new AnalysisJob(this);
     job->addAnalysisParameters(params);
     job->setAnalysisResults(m_results.data());
 

@@ -80,7 +80,7 @@ void SelectPathsWidgetTest::testConstructor() {
     paths << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp";
     paths << QDir::currentPath() + "/examples/singleIssue.cpp";
     paths << QDir::currentPath() + "/examples/subdirectory";
-    SelectPathsWidget* widget = new SelectPathsWidget(paths, &parent);
+    auto  widget = new SelectPathsWidget(paths, &parent);
 
     QCOMPARE(widget->parent(), &parent);
 
@@ -99,7 +99,7 @@ void SelectPathsWidgetTest::testConstructorWithPathsDuplicatedAndNotSorted() {
     paths << QDir::currentPath() + "/examples/subdirectory/";
     paths << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp";
     paths << QDir::currentPath() + "/examples/singleIssue.cpp";
-    SelectPathsWidget* widget = new SelectPathsWidget(paths, &parent);
+    auto  widget = new SelectPathsWidget(paths, &parent);
 
     QCOMPARE(widget->parent(), &parent);
 
@@ -116,7 +116,7 @@ void SelectPathsWidgetTest::testConstructorWithInvalidPaths() {
     paths << "examples/severalIssuesSingleChecker.cpp";
     paths << QDir::currentPath() + "/examples/subdirectory";
     paths << QDir::currentPath() + "/examples/fileThatDoesNotExist.cpp";
-    SelectPathsWidget* widget = new SelectPathsWidget(paths, &parent);
+    auto  widget = new SelectPathsWidget(paths, &parent);
 
     QCOMPARE(widget->parent(), &parent);
 
@@ -374,7 +374,7 @@ public Q_SLOTS:
 void SelectPathsWidgetTest::queueSelectPaths(const SelectPathsWidget* widget,
                                              const QString& directory,
                                              const QStringList& paths) {
-    QueuedSelectPathsAction* helper = new QueuedSelectPathsAction(this);
+    auto  helper = new QueuedSelectPathsAction(this);
     helper->m_widget = widget;
     helper->m_directory = directory;
     helper->m_paths = paths;

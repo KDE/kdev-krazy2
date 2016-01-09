@@ -44,7 +44,7 @@ Krazy2ProjectSettings::Krazy2ProjectSettings(KDevelop::IProject *project, QList<
 {
     Q_ASSERT(m_project != nullptr);
 
-    QHBoxLayout *l = new QHBoxLayout();
+    auto l = new QHBoxLayout();
     l->addWidget(m_tabs);
     setLayout(l);
 

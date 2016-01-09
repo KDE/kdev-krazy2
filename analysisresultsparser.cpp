@@ -154,7 +154,7 @@ void AnalysisResultsParser::processLineEnd() {
         m_issueDetails.clear();
     }
 
-    Issue* issue = new Issue();
+    auto  issue = new Issue();
     issue->setChecker(m_checker);
     issue->setFileName(m_issueFileName);
     issue->setMessage(message);
