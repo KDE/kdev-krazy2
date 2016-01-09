@@ -28,27 +28,6 @@ unit_tests(
     selectpathswidget
 )
 
-macro(MEM_TESTS)
-    foreach(_testname ${ARGN})
-        add_test(unit-mem-${_testname} ${CMAKE_CURRENT_SOURCE_DIR}/runMemcheck.py ${CMAKE_CURRENT_BINARY_DIR}/${_testname}test ${CMAKE_CURRENT_BINARY_DIR})
-    endforeach(_testname)
-endmacro(MEM_TESTS)
-
-mem_tests(
-    # analysisjob # Disabled by default, as it uses KDevelop::TestCore and thus needs a lot of memory to perform the test
-    analysisparameters
-    analysisprogressparser
-    analysisresults
-    analysisresultsparser
-    checker
-    checkerlistjob
-    checkerlistparser
-    checkermodel
-    issue
-    # selectcheckerswidget # Disabled because of too many false positives.
-    # selectpathswidget    # Disabled because of too many false positives.
-)
-
 # Copy example files for real Krazy2 tests to binary directory. The source files
 # contain a "//krazy:skip" line to prevent the errors from being shown when
 # analyzing the project itself. That line is removed from the examples in the
