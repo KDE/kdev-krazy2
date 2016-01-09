@@ -51,7 +51,7 @@ public:
     /**
      * Destroys this SelectCheckersWidget.
      */
-    virtual ~SelectCheckersWidget();
+    ~SelectCheckersWidget() override;
 
     /**
      * Returns the checkers to run.

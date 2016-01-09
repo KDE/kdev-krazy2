@@ -52,7 +52,7 @@ public:
     /**
      * Destroys this SelectPathsWidget.
      */
-    virtual ~SelectPathsWidget();
+    ~SelectPathsWidget() override;
 
     /**
      * Returns the selected files and directories.

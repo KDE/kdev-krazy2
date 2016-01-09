@@ -64,7 +64,7 @@ public:
     /**
      * Starts the analysis.
      */
-    virtual void start();
+    void start() override;
 
     //</KJob>
 
@@ -98,7 +98,7 @@ protected:
      *
      * @return Always true.
      */
-    virtual bool doKill();
+    bool doKill() override;
 
     //</KJob>
 

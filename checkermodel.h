@@ -58,7 +58,7 @@ public:
     /**
      * Destroys all the items (but not the checkers).
      */
-    virtual ~CheckerModel();
+    ~CheckerModel() override;
 
     //<QAbstractItemModel>
 
@@ -68,14 +68,14 @@ public:
      *
      * @return The index of the item.
      */
-    virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
 
     /**
      * Returns the parent of the model item with the given index.
      *
      * @return The parent of the model item with the given index.
      */
-    virtual QModelIndex parent(const QModelIndex& index) const;
+    QModelIndex parent(const QModelIndex& index) const override;
 
     /**
      * Returns the number of rows under the given parent.
@@ -86,7 +86,7 @@ public:
      * @param parent The parent index.
      * @return The number of rows under the given parent.
      */
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
     /**
      * Returns the number of columns, which is one.
@@ -94,7 +94,7 @@ public:
      * @param parent Unused.
      * @return One column.
      */
-    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
     /**
      * Returns the data stored under the given role for the item referred to by
@@ -109,7 +109,7 @@ public:
      * @param role The role for the data.
      * @return The data for the given role and index.
      */
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
     //</QAbstractItemModel>
 

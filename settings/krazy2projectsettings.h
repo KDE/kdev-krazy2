@@ -45,14 +45,14 @@ class Krazy2ProjectSettings : public KDevelop::ConfigPage
 
 public:
     Krazy2ProjectSettings(KDevelop::IProject *project, QList<const Checker*> *checkers, QWidget *parent = nullptr);
-    ~Krazy2ProjectSettings();
+    ~Krazy2ProjectSettings() override;
 
-    virtual QString name() const override;
+    QString name() const override;
 
 public slots:
-    virtual void apply() override;
-    virtual void defaults() override;
-    virtual void reset() override;
+    void apply() override;
+    void defaults() override;
+    void reset() override;
 
 private slots:
     // Triggered when the current tab is changed

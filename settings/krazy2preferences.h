@@ -42,10 +42,10 @@ class Krazy2Preferences: public KDevelop::ConfigPage {
 Q_OBJECT
 public:
     explicit Krazy2Preferences(KDevelop::IPlugin *plugin = nullptr, QWidget* parent = nullptr);
-    virtual ~Krazy2Preferences();
-    virtual QString name() const override;
-    virtual QString fullName() const override;
-    virtual QIcon icon() const override;
+    ~Krazy2Preferences() override;
+    QString name() const override;
+    QString fullName() const override;
+    QIcon icon() const override;
 
 };
 

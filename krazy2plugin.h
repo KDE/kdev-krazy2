@@ -54,20 +54,20 @@ public:
     /**
      * Destroys this Krazy2Plugin.
      */
-    virtual ~Krazy2Plugin();
+    ~Krazy2Plugin() override;
 
     /**
      * Remove KDevelop tool view when this Krazy2Plugin is unloaded.
      */
-    virtual void unload();
+    void unload() override;
 
-    virtual int configPages() const override { return 1; }
+    int configPages() const override { return 1; }
 
-    virtual KDevelop::ConfigPage* configPage(int number, QWidget *parent) override;
+    KDevelop::ConfigPage* configPage(int number, QWidget *parent) override;
 
-    virtual int perProjectConfigPages() const override{ return 1; }
+    int perProjectConfigPages() const override{ return 1; }
 
-    virtual KDevelop::ConfigPage* perProjectConfigPage(int number, const KDevelop::ProjectConfigOptions &options, QWidget *parent);
+    KDevelop::ConfigPage* perProjectConfigPage(int number, const KDevelop::ProjectConfigOptions &options, QWidget *parent) override;
 
     QList<const Checker*>* checkers() { return &m_checkers; }
 

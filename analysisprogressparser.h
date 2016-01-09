@@ -90,15 +90,15 @@ public:
      *
      * @return "Running krazy2"
      */
-    virtual QString statusName() const;
+    QString statusName() const override;
 
 Q_SIGNALS:
 
-    void clearMessage(KDevelop::IStatus* status);
-    void showMessage(KDevelop::IStatus* status, const QString & message, int timeout = 0);
-    void showErrorMessage(const QString & message, int timeout = 0);
-    void hideProgress(KDevelop::IStatus* status);
-    void showProgress(KDevelop::IStatus* status, int minimum, int maximum, int value);
+    void clearMessage(KDevelop::IStatus* status) override;
+    void showMessage(KDevelop::IStatus* status, const QString & message, int timeout = 0) override;
+    void showErrorMessage(const QString & message, int timeout = 0) override;
+    void hideProgress(KDevelop::IStatus* status) override;
+    void showProgress(KDevelop::IStatus* status, int minimum, int maximum, int value) override;
 
     //</KDevelop::IStatus>
 
