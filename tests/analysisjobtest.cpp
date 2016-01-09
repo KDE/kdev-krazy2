@@ -136,7 +136,7 @@ void AnalysisJobTest::init() {
     if (!examplesInSubdirectory()) {
         QString message = "The examples were not found in the subdirectory 'examples' "
                           "of the working directory (" + m_workingDirectory + ')';
-        QSKIP(message.toAscii(), SkipAll);
+        QSKIP(message.toLatin1(), SkipAll);
     }
 
     if (!krazy2InPath()) {

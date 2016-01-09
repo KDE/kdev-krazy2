@@ -49,7 +49,7 @@ void AnalysisProgressParser::start() {
 
 void AnalysisProgressParser::parse(const QByteArray& data) {
     //fromAscii() conversion is good enough for progress output
-    m_buffer += QString::fromAscii(data);
+    m_buffer += QString::fromLatin1(data);
 
     discardFilteredOutFileMessages();
 

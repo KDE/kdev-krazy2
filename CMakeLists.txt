@@ -12,7 +12,7 @@ include(KDECMakeSettings)
 include(KDECompilerSettings)
 
 find_package(Qt5 REQUIRED Core Widgets Test)
-find_package(KF5 REQUIRED COMPONENTS KDELibs4Support TextEditor ThreadWeaver)
+find_package(KF5 REQUIRED COMPONENTS ItemModels TextEditor ThreadWeaver)
 find_package(KDevPlatform 1.90.90 REQUIRED)
 
 add_subdirectory(tests)
