@@ -46,7 +46,7 @@ Q_DECLARE_METATYPE(KJob*)
 class SignalSpy: public QObject {
 Q_OBJECT
 public:
-    SignalSpy(QObject* object, const char* signal): QObject(0),
+    SignalSpy(QObject* object, const char* signal): QObject(nullptr),
         m_signalSpy(object, signal) {
         connect(object, signal, this, SLOT(signalEmitted()));
     }
@@ -265,7 +265,7 @@ const Checker* CheckerListJobTest::findChecker(const QList<const Checker*>* chec
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 QTEST_MAIN(CheckerListJobTest)

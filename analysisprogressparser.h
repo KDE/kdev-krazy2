@@ -81,7 +81,7 @@ public:
      *
      * @param parent The parent QObject.
      */
-    explicit AnalysisProgressParser(QObject* parent = 0);
+    explicit AnalysisProgressParser(QObject* parent = nullptr);
 
     //<KDevelop::IStatus>
 

@@ -53,7 +53,7 @@ public:
      *
      *  @param parent The parent object.
      */
-    explicit CheckerModel(QObject* parent = 0);
+    explicit CheckerModel(QObject* parent = nullptr);
 
     /**
      * Destroys all the items (but not the checkers).

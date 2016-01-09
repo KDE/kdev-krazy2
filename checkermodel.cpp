@@ -33,8 +33,8 @@ public:
     };
 
     Item():
-        m_parent(0),
-        m_checker(0) {
+        m_parent(nullptr),
+        m_checker(nullptr) {
     }
 
     ~Item() {
@@ -194,12 +194,12 @@ QVariant CheckerModel::data(const QModelIndex& index, int role /*= Qt::DisplayRo
 
 const Checker* CheckerModel::checkerForIndex(const QModelIndex& index) const {
     if (!index.isValid()) {
-        return 0;
+        return nullptr;
     }
 
     Item* item = static_cast<Item*>(index.internalPointer());
     if (item->type() == Item::FileTypeItem || item->type() == Item::ExtraHeaderItem) {
-        return 0;
+        return nullptr;
     }
 
     return item->checker();

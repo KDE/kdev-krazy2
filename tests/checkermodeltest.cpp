@@ -441,13 +441,13 @@ void CheckerModelTest::testCheckerForIndexWithFileTypeIndex() {
     checkerModel.setCheckers(m_checkers);
 
     QModelIndex fileType1Index = checkerModel.index(0, 0);
-    QCOMPARE(checkerModel.checkerForIndex(fileType1Index), (Checker*)0);
+    QCOMPARE(checkerModel.checkerForIndex(fileType1Index), (Checker*)nullptr);
 
     QModelIndex fileType2Index = checkerModel.index(1, 0);
-    QCOMPARE(checkerModel.checkerForIndex(fileType2Index), (Checker*)0);
+    QCOMPARE(checkerModel.checkerForIndex(fileType2Index), (Checker*)nullptr);
 
     QModelIndex fileType3Index = checkerModel.index(2, 0);
-    QCOMPARE(checkerModel.checkerForIndex(fileType3Index), (Checker*)0);
+    QCOMPARE(checkerModel.checkerForIndex(fileType3Index), (Checker*)nullptr);
 }
 
 void CheckerModelTest::testCheckerForIndexWithExtraHeaderIndex() {
@@ -463,11 +463,11 @@ void CheckerModelTest::testCheckerForIndexWithExtraHeaderIndex() {
 
     QModelIndex fileType1Index = checkerModel.index(0, 0);
     QModelIndex extraHeader1Index = checkerModel.index(1, 0, fileType1Index);
-    QCOMPARE(checkerModel.checkerForIndex(extraHeader1Index), (Checker*)0);
+    QCOMPARE(checkerModel.checkerForIndex(extraHeader1Index), (Checker*)nullptr);
 
     QModelIndex fileType2Index = checkerModel.index(1, 0);
     QModelIndex extraHeader2Index = checkerModel.index(0, 0, fileType2Index);
-    QCOMPARE(checkerModel.checkerForIndex(extraHeader2Index), (Checker*)0);
+    QCOMPARE(checkerModel.checkerForIndex(extraHeader2Index), (Checker*)nullptr);
 }
 
 void CheckerModelTest::testCheckerForIndexWithInvalidIndex() {
@@ -478,15 +478,15 @@ void CheckerModelTest::testCheckerForIndexWithInvalidIndex() {
     CheckerModel checkerModel;
     checkerModel.setCheckers(m_checkers);
 
-    QCOMPARE(checkerModel.checkerForIndex(checkerModel.index(4, 0)), (Checker*)0);
-    QCOMPARE(checkerModel.checkerForIndex(checkerModel.index(0, 8)), (Checker*)0);
+    QCOMPARE(checkerModel.checkerForIndex(checkerModel.index(4, 0)), (Checker*)nullptr);
+    QCOMPARE(checkerModel.checkerForIndex(checkerModel.index(0, 8)), (Checker*)nullptr);
 
     QModelIndex fileType1Index = checkerModel.index(0, 0);
-    QCOMPARE(checkerModel.checkerForIndex(checkerModel.index(15, 0, fileType1Index)), (Checker*)0);
+    QCOMPARE(checkerModel.checkerForIndex(checkerModel.index(15, 0, fileType1Index)), (Checker*)nullptr);
 
     QModelIndex fileType2Index = checkerModel.index(1, 0);
     QModelIndex extraHeader2Index = checkerModel.index(0, 0, fileType2Index);
-    QCOMPARE(checkerModel.checkerForIndex(checkerModel.index(16, 0, extraHeader2Index)), (Checker*)0);
+    QCOMPARE(checkerModel.checkerForIndex(checkerModel.index(16, 0, extraHeader2Index)), (Checker*)nullptr);
 }
 
 ///////////////////////////////// Helpers //////////////////////////////////////

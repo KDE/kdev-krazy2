@@ -38,8 +38,8 @@
 //public:
 
 AnalysisJob::AnalysisJob(QObject* parent /*= 0*/): KJob(parent),
-    m_currentAnalysisParameters(0),
-    m_analysisResults(0),
+    m_currentAnalysisParameters(nullptr),
+    m_analysisResults(nullptr),
     m_analysisProgressParser(new AnalysisProgressParser(this)),
     m_process(new QProcess(this)) {
 

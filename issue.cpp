@@ -21,7 +21,7 @@
 
 Issue::Issue():
     m_line(-1),
-    m_checker(0) {
+    m_checker(nullptr) {
 }
 
 QString Issue::message() const {

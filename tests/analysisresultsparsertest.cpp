@@ -532,7 +532,7 @@ void AnalysisResultsParserTest::testParseWithDataInSeveralChunks() {
         "</file-type>\n"
         KRAZY2_FOOTER_XML;
 
-    srand(time(0));
+    srand(time(nullptr));
 
     for (int i=0; i<1000; i++) {
         delete m_analysisResults;

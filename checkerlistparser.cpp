@@ -26,7 +26,7 @@
 //public:
 
 CheckerListParser::CheckerListParser():
-    m_checkerList(0),
+    m_checkerList(nullptr),
     m_extra(false) {
 }
 

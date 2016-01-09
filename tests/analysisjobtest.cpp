@@ -52,7 +52,7 @@ Q_DECLARE_METATYPE(KDevelop::IStatus*)
 class SignalSpy: public QObject {
 Q_OBJECT
 public:
-    SignalSpy(QObject* object, const char* signal): QObject(0),
+    SignalSpy(QObject* object, const char* signal): QObject(nullptr),
         m_signalSpy(object, signal) {
         connect(object, signal, this, SLOT(signalEmitted()));
     }
@@ -1317,7 +1317,7 @@ const Issue* AnalysisJobTest::findIssue(const AnalysisResults* analysisResults,
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 QTEST_MAIN(AnalysisJobTest)

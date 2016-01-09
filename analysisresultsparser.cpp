@@ -28,9 +28,9 @@
 //public:
 
 AnalysisResultsParser::AnalysisResultsParser():
-    m_analysisResults(0),
-    m_checker(0),
-    m_checkerBeingInitialized(0) {
+    m_analysisResults(nullptr),
+    m_checker(nullptr),
+    m_checkerBeingInitialized(nullptr) {
 }
 
 void AnalysisResultsParser::setAnalysisResults(AnalysisResults* analysisResults) {
@@ -100,7 +100,7 @@ void AnalysisResultsParser::processCheckStart() {
     }
 
     m_checker = m_analysisResults->findChecker(m_checkerFileType, checkerName);
-    m_checkerBeingInitialized = 0;
+    m_checkerBeingInitialized = nullptr;
 
     if (!m_checker) {
         m_checkerBeingInitialized = new Checker();

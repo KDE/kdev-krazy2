@@ -87,7 +87,7 @@ void AnalysisResultsTest::testFindCheckerNotFound() {
     AnalysisResults analysisResults;
     analysisResults.addChecker(checker1);
 
-    QCOMPARE(analysisResults.findChecker("fileType", "nameNotAdded"), (Checker*)0);
+    QCOMPARE(analysisResults.findChecker("fileType", "nameNotAdded"), (Checker*)nullptr);
 }
 
 void AnalysisResultsTest::testAddIssue() {

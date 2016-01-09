@@ -44,7 +44,7 @@ void IssueTest::testConstructor() {
     QCOMPARE(issue.message(), QString());
     QCOMPARE(issue.fileName(), QString());
     QCOMPARE(issue.line(), -1);
-    QCOMPARE(issue.checker(), (Checker*)0);
+    QCOMPARE(issue.checker(), (Checker*)nullptr);
 }
 
 void IssueTest::testSetMessage() {

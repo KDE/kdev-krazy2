@@ -45,7 +45,7 @@ public:
      *
      * @param parent The parent QObject.
      */
-    explicit CheckerListJob(QObject* parent = 0);
+    explicit CheckerListJob(QObject* parent = nullptr);
 
     //<KJob>
 

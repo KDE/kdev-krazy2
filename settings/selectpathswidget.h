@@ -47,7 +47,7 @@ public:
      * @param paths The already selected paths.
      * @param parent The parent widget.
      */
-    explicit SelectPathsWidget(const QStringList& paths, QWidget* parent = 0);
+    explicit SelectPathsWidget(const QStringList& paths, QWidget* parent = nullptr);
 
     /**
      * Destroys this SelectPathsWidget.

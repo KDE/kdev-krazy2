@@ -57,7 +57,7 @@ public:
      *
      * @param parent The parent QObject.
      */
-    explicit AnalysisJob(QObject* parent = 0);
+    explicit AnalysisJob(QObject* parent = nullptr);
 
     //<KJob>
 

@@ -46,7 +46,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit SelectCheckersWidget(QWidget* parent = 0);
+    explicit SelectCheckersWidget(QWidget* parent = nullptr);
 
     /**
      * Destroys this SelectCheckersWidget.
