@@ -111,13 +111,13 @@ void SelectCheckersWidgetTest::cleanup() {
 
 void SelectCheckersWidgetTest::testConstructor() {
     QWidget parent;
-    SelectCheckersWidget* widget = new SelectCheckersWidget(&parent);
+    SelectCheckersWidget widget(&parent);
 
-    QCOMPARE(widget->parent(), &parent);
-    QVERIFY(!otherAvailableCheckersView(widget)->isEnabled());
-    QVERIFY(!checkersToRunView(widget)->isEnabled());
-    QVERIFY(!addButton(widget)->isEnabled());
-    QVERIFY(!removeButton(widget)->isEnabled());
+    QCOMPARE(widget.parent(), &parent);
+    QVERIFY(!otherAvailableCheckersView(&widget)->isEnabled());
+    QVERIFY(!checkersToRunView(&widget)->isEnabled());
+    QVERIFY(!addButton(&widget)->isEnabled());
+    QVERIFY(!removeButton(&widget)->isEnabled());
 }
 
 void SelectCheckersWidgetTest::testSetCheckers() {

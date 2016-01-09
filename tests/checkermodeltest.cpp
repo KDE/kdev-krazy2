@@ -68,11 +68,11 @@ void CheckerModelTest::cleanup() {
 
 void CheckerModelTest::testConstructor() {
     QObject parent;
-    CheckerModel* checkerModel = new CheckerModel(&parent);
+    CheckerModel checkerModel(&parent);
 
-    QCOMPARE(((QObject*)checkerModel)->parent(), &parent);
-    QCOMPARE(checkerModel->rowCount(), 0);
-    QCOMPARE(checkerModel->columnCount(), 1);
+    QCOMPARE(((QObject*)&checkerModel)->parent(), &parent);
+    QCOMPARE(checkerModel.rowCount(), 0);
+    QCOMPARE(checkerModel.columnCount(), 1);
 }
 
 void CheckerModelTest::testSingleFileTypeSingleChecker() {
