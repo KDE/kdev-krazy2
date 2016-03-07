@@ -7,6 +7,7 @@
             }
         ], 
         "Description": "This plugin shows issues reported by Krazy2", 
+        "Description[ast]": "Esti complementu amuesa torgues informaes por Krazy2", 
         "Description[ca@valencia]": "Este connector mostra els problemes informats pel Krazy2", 
         "Description[ca]": "Aquest connector mostra els problemes informats pel Krazy2", 
         "Description[de]": "Dieses Modul zeigt von Krazy2 ermittelte Fehler", 
