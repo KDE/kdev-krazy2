@@ -23,7 +23,7 @@
         "Description[uk]": "Цей додаток призначено для показу вад, які буде виявлено Krazy2", 
         "Description[x-test]": "xxThis plugin shows issues reported by Krazy2xx", 
         "Icon": "kdevelop", 
-        "Id": "krazy2plugin", 
+        "Id": "kdevkrazy2",
         "License": "GPL", 
         "Name": "Krazy2 Code Checking", 
         "Name[ast]": "Comprobación de códigu Krazy2", 
