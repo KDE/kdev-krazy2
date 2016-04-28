@@ -290,7 +290,7 @@ void AnalysisJob::handleProcessError(QProcess::ProcessError processError) {
                                     "for the <command>krazy2</command> executable.</para>"));
     } else if (processError == QProcess::FailedToStart) {
         setErrorText(i18nc("@info", "<para><command>krazy2</command> failed to start "
-                                    "using the path"
+                                    "using the path "
                                     "(<filename>%1</filename>).</para>", m_process->program()));
     } else if (processError == QProcess::Crashed) {
         setErrorText(i18nc("@info", "<para><command>krazy2</command> crashed.</para>"));
