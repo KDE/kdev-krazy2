@@ -83,7 +83,7 @@ Krazy2Plugin::Krazy2Plugin(QObject* parent, const QVariantList& /*= QVariantList
     actionCollection()->addAction("krazy2_all", checkAllFilesAction);
 
     KDevelop::ProblemModelSet *set = KDevelop::ICore::self()->languageController()->problemModelSet();
-    set->addModel(QStringLiteral("Krazy2"), m_model);
+    set->addModel(QStringLiteral("Krazy2"), i18n("Krazy2"), m_model);
 }
 
 Krazy2Plugin::~Krazy2Plugin() {
