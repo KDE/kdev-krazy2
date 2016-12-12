@@ -128,7 +128,7 @@ void AnalysisJobTest::initTestCase() {
     qRegisterMetaType<KJob*>();
     qRegisterMetaType<KDevelop::IStatus*>();
 
-    KDevelop::AutoTestShell::init();
+    KDevelop::AutoTestShell::init({"kdevkrazy2"});
     KDevelop::TestCore::initialize();
 }
 
