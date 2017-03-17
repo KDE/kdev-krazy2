@@ -32,6 +32,7 @@
 
 #include <QMessageBox>
 #include <KLocalizedString>
+#include <KConfigGroup>
 
 
 using namespace KDevelop;
