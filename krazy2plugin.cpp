@@ -34,6 +34,8 @@
 #include <interfaces/iprojectcontroller.h>
 #include <interfaces/iproject.h>
 
+#include <language/editor/documentrange.h>
+
 #include "./settings/krazy2preferences.h"
 #include "./settings/krazy2projectsettings.h"
 
