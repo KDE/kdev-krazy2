@@ -1,5 +1,5 @@
-<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="kdevkrazy2" version="1">
+<!DOCTYPE gui SYSTEM "kpartgui.dtd">
+<gui name="kdevkrazy2" version="1">
 <MenuBar>
  <Menu name="run">
    <text context="@title:menu">Run</text>
@@ -7,6 +7,6 @@
      <Action name="krazy2_all" group="run_operations"/>
  </Menu>
 </MenuBar>
-</kpartgui>
+</gui>
 
 
