@@ -129,7 +129,7 @@ void AnalysisJobTest::initTestCase() {
     qRegisterMetaType<KDevelop::IStatus*>();
 
     KDevelop::AutoTestShell::init({"kdevkrazy2"});
-    KDevelop::TestCore::initialize();
+    KDevelop::TestCore::initialize(KDevelop::Core::NoUi);
 }
 
 void AnalysisJobTest::init() {
@@ -1320,6 +1320,6 @@ const Issue* AnalysisJobTest::findIssue(const AnalysisResults* analysisResults,
     return nullptr;
 }
 
-QTEST_MAIN(AnalysisJobTest)
+QTEST_GUILESS_MAIN(AnalysisJobTest)
 
 #include "analysisjobtest.moc"

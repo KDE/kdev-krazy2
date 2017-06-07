@@ -268,6 +268,6 @@ const Checker* CheckerListJobTest::findChecker(const QList<const Checker*>* chec
     return nullptr;
 }
 
-QTEST_MAIN(CheckerListJobTest)
+QTEST_GUILESS_MAIN(CheckerListJobTest)
 
 #include "checkerlistjobtest.moc"
