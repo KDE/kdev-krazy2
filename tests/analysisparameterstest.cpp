@@ -26,6 +26,8 @@ class AnalysisParametersTest: public QObject {
 Q_OBJECT
 private slots:
 
+    void initTestCase();
+
     void testConstructor();
 
     void testInitializeCheckers();
@@ -44,7 +46,13 @@ private:
 
     bool examplesInSubdirectory() const;
 
+    QString m_examplesPath;
 };
+
+void AnalysisParametersTest::initTestCase()
+{
+    m_examplesPath = QStringLiteral(EXAMPLETESTDATA_PATH);
+}
 
 void AnalysisParametersTest::testConstructor() {
     AnalysisParameters analysisparameters;
@@ -146,19 +154,17 @@ void AnalysisParametersTest::testSetCheckersToRunWithNotAvailableCheckers() {
 
 void AnalysisParametersTest::testSetFilesAndDirectories() {
     if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + QDir::currentPath() + ')';
+        QString message = "The examples were not found in the 'examples' directory (" + m_examplesPath + ')';
         QSKIP(message.toLatin1(), SkipAll);
     }
 
     AnalysisParameters analysisparameters;
-    QString workingDirectory = QDir::currentPath() + '/';
 
     QStringList paths;
-    paths.append(workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp"));
-    paths.append(workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp");
-    paths.append(workingDirectory + "examples/subdirectory");
-    paths.append(workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+    paths.append(m_examplesPath + QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"));
+    paths.append(m_examplesPath + ".singleIssueHiddenUnixFileName.cpp");
+    paths.append(m_examplesPath + "subdirectory");
+    paths.append(m_examplesPath + "severalIssuesSeveralCheckers.cpp");
     analysisparameters.setFilesAndDirectories(paths);
 
     QCOMPARE(analysisparameters.filesAndDirectories(), paths);
@@ -166,32 +172,30 @@ void AnalysisParametersTest::testSetFilesAndDirectories() {
     QStringList filesToBeAnalyzed = analysisparameters.filesToBeAnalyzed();
     QCOMPARE(filesToBeAnalyzed.count(), 5);
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp")));
+            m_examplesPath + QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")));
     QVERIFY(filesToBeAnalyzed.contains
-            (workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp"));
+            (m_examplesPath + ".singleIssueHiddenUnixFileName.cpp"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/subdirectory/singleIssue.desktop"));
+            m_examplesPath + "subdirectory/singleIssue.desktop"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml"));
+            m_examplesPath + "subdirectory/severalIssuesSeveralCheckers.qml"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/severalIssuesSeveralCheckers.cpp"));
+            m_examplesPath + "severalIssuesSeveralCheckers.cpp"));
 }
 
 void AnalysisParametersTest::testSetFilesAndDirectoriesWithRepeatedEntries() {
     if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + QDir::currentPath() + ')';
+        QString message = "The examples were not found in the 'examples' directory (" + m_examplesPath + ')';
         QSKIP(message.toLatin1(), SkipAll);
     }
 
     AnalysisParameters analysisparameters;
-    QString workingDirectory = QDir::currentPath() + '/';
 
     QStringList paths;
-    paths.append(workingDirectory + "examples/singleIssue.cpp");
-    paths.append(workingDirectory + "examples");
-    paths.append(workingDirectory + "examples/singleIssue.cpp");
-    paths.append(workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+    paths.append(m_examplesPath + "singleIssue.cpp");
+    paths.append(m_examplesPath);
+    paths.append(m_examplesPath + "singleIssue.cpp");
+    paths.append(m_examplesPath + "severalIssuesSeveralCheckers.cpp");
     analysisparameters.setFilesAndDirectories(paths);
 
     QCOMPARE(analysisparameters.filesAndDirectories(), paths);
@@ -199,42 +203,40 @@ void AnalysisParametersTest::testSetFilesAndDirectoriesWithRepeatedEntries() {
     QStringList filesToBeAnalyzed = analysisparameters.filesToBeAnalyzed();
     QCOMPARE(filesToBeAnalyzed.count(), 9);
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/singleIssue.cpp"));
+            m_examplesPath + "singleIssue.cpp"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/singleExtraIssue.cpp"));
+            m_examplesPath + "singleExtraIssue.cpp"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp")));
+            m_examplesPath + QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp"));
+            m_examplesPath + ".singleIssueHiddenUnixFileName.cpp"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/severalIssuesSingleChecker.cpp"));
+            m_examplesPath + "severalIssuesSingleChecker.cpp"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/severalIssuesSeveralCheckers.cpp"));
+            m_examplesPath + "severalIssuesSeveralCheckers.cpp"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq"));
+            m_examplesPath + "severalIssuesSeveralCheckersUnknownFileType.dqq"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/subdirectory/singleIssue.desktop"));
+            m_examplesPath + "subdirectory/singleIssue.desktop"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml"));
+            m_examplesPath + "subdirectory/severalIssuesSeveralCheckers.qml"));
 }
 
 void AnalysisParametersTest::testSetFilesAndDirectoriesWithInvalidEntries() {
     if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + QDir::currentPath() + ')';
+        QString message = "The examples were not found in the 'examples' directory (" + m_examplesPath + ')';
         QSKIP(message.toLatin1(), SkipAll);
     }
 
     AnalysisParameters analysisparameters;
-    QString workingDirectory = QDir::currentPath() + '/';
 
     QStringList paths;
-    paths.append(workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp"));
-    paths.append(workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp");
+    paths.append(m_examplesPath + QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"));
+    paths.append(m_examplesPath + ".singleIssueHiddenUnixFileName.cpp");
     paths.append("http://someServer.com/remoteFile.cpp");
-    paths.append(workingDirectory + "examples/subdirectory");
-    paths.append(workingDirectory + "aFileThatDoesNotExist.cpp");
-    paths.append(workingDirectory + "examples/severalIssuesSeveralCheckers.cpp");
+    paths.append(m_examplesPath + "subdirectory");
+    paths.append(m_examplesPath + "aFileThatDoesNotExist.cpp");
+    paths.append(m_examplesPath + "severalIssuesSeveralCheckers.cpp");
     analysisparameters.setFilesAndDirectories(paths);
 
     QCOMPARE(analysisparameters.filesAndDirectories(), paths);
@@ -242,15 +244,15 @@ void AnalysisParametersTest::testSetFilesAndDirectoriesWithInvalidEntries() {
     QStringList filesToBeAnalyzed = analysisparameters.filesToBeAnalyzed();
     QCOMPARE(filesToBeAnalyzed.count(), 5);
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp")));
+            m_examplesPath + QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")));
     QVERIFY(filesToBeAnalyzed.contains
-            (workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp"));
+            (m_examplesPath + ".singleIssueHiddenUnixFileName.cpp"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/subdirectory/singleIssue.desktop"));
+            m_examplesPath + "subdirectory/singleIssue.desktop"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml"));
+            m_examplesPath + "subdirectory/severalIssuesSeveralCheckers.qml"));
     QVERIFY(filesToBeAnalyzed.contains(
-            workingDirectory + "examples/severalIssuesSeveralCheckers.cpp"));
+            m_examplesPath + "severalIssuesSeveralCheckers.cpp"));
 }
 
 ///////////////////////////////// Helpers //////////////////////////////////////
@@ -289,16 +291,15 @@ QList<const Checker*> AnalysisParametersTest::createAvailableCheckers() const {
 }
 
 bool AnalysisParametersTest::examplesInSubdirectory() const {
-    QString workingDirectory = QDir::currentPath() + '/';
-    if (QFile(workingDirectory + "examples/singleIssue.cpp").exists() &&
-        QFile(workingDirectory + "examples/singleExtraIssue.cpp").exists() &&
-        QFile(workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp")).exists() &&
-        QFile(workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp").exists() &&
-        QFile(workingDirectory + "examples/severalIssuesSingleChecker.cpp").exists() &&
-        QFile(workingDirectory + "examples/severalIssuesSeveralCheckers.cpp").exists() &&
-        QFile(workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
-        QFile(workingDirectory + "examples/subdirectory/singleIssue.desktop").exists() &&
-        QFile(workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml").exists()) {
+    if (QFile(m_examplesPath + "singleIssue.cpp").exists() &&
+        QFile(m_examplesPath + "singleExtraIssue.cpp").exists() &&
+        QFile(m_examplesPath + QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")).exists() &&
+        QFile(m_examplesPath + ".singleIssueHiddenUnixFileName.cpp").exists() &&
+        QFile(m_examplesPath + "severalIssuesSingleChecker.cpp").exists() &&
+        QFile(m_examplesPath + "severalIssuesSeveralCheckers.cpp").exists() &&
+        QFile(m_examplesPath + "severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
+        QFile(m_examplesPath + "subdirectory/singleIssue.desktop").exists() &&
+        QFile(m_examplesPath + "subdirectory/severalIssuesSeveralCheckers.qml").exists()) {
         return true;
     }
 

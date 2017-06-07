@@ -8,6 +8,9 @@ macro(UNIT_TESTS)
     endforeach(_className)
 endmacro(UNIT_TESTS)
 
+set(EXAMPLETESTDATA_PATH "${CMAKE_CURRENT_BINARY_DIR}/examples")
+add_definitions(-DEXAMPLETESTDATA_PATH=\"${EXAMPLETESTDATA_PATH}/\")
+
 unit_tests(
     analysisjob
     analysisparameters
@@ -28,22 +31,22 @@ unit_tests(
 # analyzing the project itself. That line is removed from the examples in the
 # binary directory for the errors to be shown in the tests.
 set(examples
-    examples/singleIssue.cpp
-    examples/singleExtraIssue.cpp
-    examples/singleIssueNonAsciiFileNameḶḷambión.cpp
-    examples/.singleIssueHiddenUnixFileName.cpp
-    examples/severalIssuesSingleChecker.cpp
-    examples/severalIssuesSeveralCheckers.cpp
-    examples/severalIssuesSeveralCheckersUnknownFileType.dqq
-    examples/subdirectory/singleIssue.desktop.example.do-not-translate
-    examples/subdirectory/severalIssuesSeveralCheckers.qml
+    singleIssue.cpp
+    singleExtraIssue.cpp
+    singleIssueNonAsciiFileNameḶḷambión.cpp
+    .singleIssueHiddenUnixFileName.cpp
+    severalIssuesSingleChecker.cpp
+    severalIssuesSeveralCheckers.cpp
+    severalIssuesSeveralCheckersUnknownFileType.dqq
+    subdirectory/singleIssue.desktop.example.do-not-translate
+    subdirectory/severalIssuesSeveralCheckers.qml
 )
 
 foreach(example ${examples})
-    file(READ ${example} exampleContents)
+    file(READ examples/${example} exampleContents)
     string(REPLACE "//krazy:skip\n" "" exampleContents "${exampleContents}")
     string(REPLACE "#krazy:skip\n" "" exampleContents "${exampleContents}")
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${example} "${exampleContents}")
+    file(WRITE "${EXAMPLETESTDATA_PATH}/${example}" "${exampleContents}")
 endforeach(example)
 
 # Translatable string extraction from desktop files is not handled by
@@ -54,5 +57,5 @@ endforeach(example)
 # file in the source directory has an extension that will not be used for the
 # automatic string extraction, and it is renamed to the .desktop extension in
 # the build directory, where the tests are run.
-file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/examples/subdirectory/singleIssue.desktop.example.do-not-translate
-            ${CMAKE_CURRENT_BINARY_DIR}/examples/subdirectory/singleIssue.desktop)
+file(RENAME "${EXAMPLETESTDATA_PATH}/subdirectory/singleIssue.desktop.example.do-not-translate"
+            "${EXAMPLETESTDATA_PATH}/subdirectory/singleIssue.desktop")

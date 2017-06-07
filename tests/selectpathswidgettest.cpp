@@ -34,6 +34,7 @@ class SelectPathsWidgetTest: public QObject {
 Q_OBJECT
 private slots:
 
+    void initTestCase();
     void init();
 
     void testConstructor();
@@ -64,12 +65,17 @@ private:
                           const QString& directory,
                           const QStringList& paths);
 
+    QString m_examplesPath;
 };
+
+void SelectPathsWidgetTest::initTestCase()
+{
+    m_examplesPath = QStringLiteral(EXAMPLETESTDATA_PATH);
+}
 
 void SelectPathsWidgetTest::init() {
     if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + QDir::currentPath() + ')';
+        QString message = "The examples were not found in the 'examples' directory (" + m_examplesPath + ')';
         QSKIP(message.toLatin1(), SkipAll);
     }
 }
@@ -77,16 +83,16 @@ void SelectPathsWidgetTest::init() {
 void SelectPathsWidgetTest::testConstructor() {
     QWidget parent;
     QStringList paths;
-    paths << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp";
-    paths << QDir::currentPath() + "/examples/singleIssue.cpp";
-    paths << QDir::currentPath() + "/examples/subdirectory";
+    paths << m_examplesPath + "severalIssuesSeveralCheckers.cpp";
+    paths << m_examplesPath + "singleIssue.cpp";
+    paths << m_examplesPath + "subdirectory";
     auto  widget = new SelectPathsWidget(paths, &parent);
 
     QCOMPARE(widget->parent(), &parent);
 
-    assertPaths(widget, QStringList() << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp"
-                                      << QDir::currentPath() + "/examples/singleIssue.cpp"
-                                      << QDir::currentPath() + "/examples/subdirectory/");
+    assertPaths(widget, QStringList() << m_examplesPath + "severalIssuesSeveralCheckers.cpp"
+                                      << m_examplesPath + "singleIssue.cpp"
+                                      << m_examplesPath + "subdirectory/");
 
     QCOMPARE(pathsView(widget)->editTriggers(), QAbstractItemView::NoEditTriggers);
 }
@@ -94,80 +100,80 @@ void SelectPathsWidgetTest::testConstructor() {
 void SelectPathsWidgetTest::testConstructorWithPathsDuplicatedAndNotSorted() {
     QWidget parent;
     QStringList paths;
-    paths << QDir::currentPath() + "/examples/singleIssue.cpp";
-    paths << QDir::currentPath() + "/examples/subdirectory";
-    paths << QDir::currentPath() + "/examples/subdirectory/";
-    paths << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp";
-    paths << QDir::currentPath() + "/examples/singleIssue.cpp";
+    paths << m_examplesPath + "singleIssue.cpp";
+    paths << m_examplesPath + "subdirectory";
+    paths << m_examplesPath + "subdirectory/";
+    paths << m_examplesPath + "severalIssuesSeveralCheckers.cpp";
+    paths << m_examplesPath + "singleIssue.cpp";
     auto  widget = new SelectPathsWidget(paths, &parent);
 
     QCOMPARE(widget->parent(), &parent);
 
-    assertPaths(widget, QStringList() << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp"
-                                      << QDir::currentPath() + "/examples/singleIssue.cpp"
-                                      << QDir::currentPath() + "/examples/subdirectory/");
+    assertPaths(widget, QStringList() << m_examplesPath + "severalIssuesSeveralCheckers.cpp"
+                                      << m_examplesPath + "singleIssue.cpp"
+                                      << m_examplesPath + "subdirectory/");
 }
 
 void SelectPathsWidgetTest::testConstructorWithInvalidPaths() {
     QWidget parent;
     QStringList paths;
-    paths << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp";
-    paths << QDir::currentPath() + "/examples/singleIssue.cpp";
+    paths << m_examplesPath + "severalIssuesSeveralCheckers.cpp";
+    paths << m_examplesPath + "singleIssue.cpp";
     paths << "examples/severalIssuesSingleChecker.cpp";
-    paths << QDir::currentPath() + "/examples/subdirectory";
-    paths << QDir::currentPath() + "/examples/fileThatDoesNotExist.cpp";
+    paths << m_examplesPath + "subdirectory";
+    paths << m_examplesPath + "fileThatDoesNotExist.cpp";
     auto  widget = new SelectPathsWidget(paths, &parent);
 
     QCOMPARE(widget->parent(), &parent);
 
-    assertPaths(widget, QStringList() << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp"
-                                      << QDir::currentPath() + "/examples/singleIssue.cpp"
-                                      << QDir::currentPath() + "/examples/subdirectory/");
+    assertPaths(widget, QStringList() << m_examplesPath + "severalIssuesSeveralCheckers.cpp"
+                                      << m_examplesPath + "singleIssue.cpp"
+                                      << m_examplesPath + "subdirectory/");
 }
 
 void SelectPathsWidgetTest::testAddFile() {
     QStringList paths;
     SelectPathsWidget widget(paths);
 
-    queueSelectPaths(&widget, QDir::currentPath() + "/examples",
+    queueSelectPaths(&widget, m_examplesPath,
                      QStringList() << "singleIssue.cpp");
     addButton(&widget)->click();
 
-    assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/singleIssue.cpp");
+    assertPaths(&widget, QStringList() << m_examplesPath + "singleIssue.cpp");
 }
 
 void SelectPathsWidgetTest::testAddFiles() {
     QStringList paths;
     SelectPathsWidget widget(paths);
 
-    queueSelectPaths(&widget, QDir::currentPath() + "/examples",
+    queueSelectPaths(&widget, m_examplesPath,
                      QStringList() << "singleExtraIssue.cpp"
                                    << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"));
     addButton(&widget)->click();
 
-    assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/singleExtraIssue.cpp"
-                                       << QDir::currentPath() + QString::fromUtf8("/examples/singleIssueNonAsciiFileNameḶḷambión.cpp"));
+    assertPaths(&widget, QStringList() << m_examplesPath + "singleExtraIssue.cpp"
+                                       << m_examplesPath + QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"));
 }
 
 void SelectPathsWidgetTest::testAddDuplicatedAndNotSortedFiles() {
     QStringList paths;
-    paths << QDir::currentPath() + "/examples/singleExtraIssue.cpp";
+    paths << m_examplesPath + "singleExtraIssue.cpp";
     SelectPathsWidget widget(paths);
 
-    queueSelectPaths(&widget, QDir::currentPath() + "/examples",
+    queueSelectPaths(&widget, m_examplesPath,
                      QStringList() << "singleExtraIssue.cpp"
                                    << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")
                                    << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")
                                    << QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"));
     addButton(&widget)->click();
 
-    assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/singleExtraIssue.cpp"
-                                       << QDir::currentPath() + QString::fromUtf8("/examples/singleIssueNonAsciiFileNameḶḷambión.cpp"));
+    assertPaths(&widget, QStringList() << m_examplesPath + "singleExtraIssue.cpp"
+                                       << m_examplesPath + QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp"));
 }
 
 void SelectPathsWidgetTest::testRemoveButtonDisabledWhenFileAdded() {
     QStringList paths;
-    paths << QDir::currentPath() + "/examples/singleIssue.cpp";
+    paths << m_examplesPath + "singleIssue.cpp";
     SelectPathsWidget widget(paths);
 
     QVERIFY(!removeButton(&widget)->isEnabled());
@@ -177,7 +183,7 @@ void SelectPathsWidgetTest::testRemoveButtonDisabledWhenFileAdded() {
 
     QVERIFY(removeButton(&widget)->isEnabled());
 
-    queueSelectPaths(&widget, QDir::currentPath() + "/examples",
+    queueSelectPaths(&widget, m_examplesPath,
                      QStringList() << "singleExtraIssue.cpp");
     addButton(&widget)->click();
 
@@ -187,8 +193,8 @@ void SelectPathsWidgetTest::testRemoveButtonDisabledWhenFileAdded() {
 
 void SelectPathsWidgetTest::testRemove() {
     QStringList paths;
-    paths << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp";
-    paths << QDir::currentPath() + "/examples/singleIssue.cpp";
+    paths << m_examplesPath + "severalIssuesSeveralCheckers.cpp";
+    paths << m_examplesPath + "singleIssue.cpp";
     SelectPathsWidget widget(paths);
 
     QVERIFY(!removeButton(&widget)->isEnabled());
@@ -200,16 +206,16 @@ void SelectPathsWidgetTest::testRemove() {
 
     removeButton(&widget)->click();
 
-    assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp");
+    assertPaths(&widget, QStringList() << m_examplesPath + "severalIssuesSeveralCheckers.cpp");
 
     QVERIFY(!removeButton(&widget)->isEnabled());
 }
 
 void SelectPathsWidgetTest::testRemoveSeveralPaths() {
     QStringList paths;
-    paths << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp";
-    paths << QDir::currentPath() + "/examples/singleExtraIssue.cpp";
-    paths << QDir::currentPath() + "/examples/singleIssue.cpp";
+    paths << m_examplesPath + "severalIssuesSeveralCheckers.cpp";
+    paths << m_examplesPath + "singleExtraIssue.cpp";
+    paths << m_examplesPath + "singleIssue.cpp";
 
     SelectPathsWidget widget(paths);
 
@@ -229,16 +235,16 @@ void SelectPathsWidgetTest::testRemoveSeveralPaths() {
 
     removeButton(&widget)->click();
 
-    assertPaths(&widget, QStringList() << QDir::currentPath() + "/examples/singleExtraIssue.cpp");
+    assertPaths(&widget, QStringList() << m_examplesPath + "singleExtraIssue.cpp");
 
     QVERIFY(!removeButton(&widget)->isEnabled());
 }
 
 void SelectPathsWidgetTest::testSelectAndDeselect() {
     QStringList paths;
-    paths << QDir::currentPath() + "/examples/severalIssuesSeveralCheckers.cpp";
-    paths << QDir::currentPath() + "/examples/singleIssue.cpp";
-    paths << QDir::currentPath() + "/examples/singleExtraIssue.cpp";
+    paths << m_examplesPath + "severalIssuesSeveralCheckers.cpp";
+    paths << m_examplesPath + "singleIssue.cpp";
+    paths << m_examplesPath + "singleExtraIssue.cpp";
     SelectPathsWidget widget(paths);
 
     QModelIndex index = pathsView(&widget)->model()->index(0, 0);
@@ -265,16 +271,15 @@ void SelectPathsWidgetTest::testSelectAndDeselect() {
 ///////////////////////////////// Helpers //////////////////////////////////////
 
 bool SelectPathsWidgetTest::examplesInSubdirectory() const {
-    QString workingDirectory = QDir::currentPath() + '/';
-    if (QFile(workingDirectory + "examples/singleIssue.cpp").exists() &&
-        QFile(workingDirectory + "examples/singleExtraIssue.cpp").exists() &&
-        QFile(workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp")).exists() &&
-        QFile(workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp").exists() &&
-        QFile(workingDirectory + "examples/severalIssuesSingleChecker.cpp").exists() &&
-        QFile(workingDirectory + "examples/severalIssuesSeveralCheckers.cpp").exists() &&
-        QFile(workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
-        QFile(workingDirectory + "examples/subdirectory/singleIssue.desktop").exists() &&
-        QFile(workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml").exists()) {
+    if (QFile(m_examplesPath + "singleIssue.cpp").exists() &&
+        QFile(m_examplesPath + "singleExtraIssue.cpp").exists() &&
+        QFile(m_examplesPath + QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")).exists() &&
+        QFile(m_examplesPath + ".singleIssueHiddenUnixFileName.cpp").exists() &&
+        QFile(m_examplesPath + "severalIssuesSingleChecker.cpp").exists() &&
+        QFile(m_examplesPath + "severalIssuesSeveralCheckers.cpp").exists() &&
+        QFile(m_examplesPath + "severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
+        QFile(m_examplesPath + "subdirectory/singleIssue.desktop").exists() &&
+        QFile(m_examplesPath + "subdirectory/severalIssuesSeveralCheckers.qml").exists()) {
         return true;
     }
 

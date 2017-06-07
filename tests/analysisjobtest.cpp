@@ -106,7 +106,7 @@ private slots:
 
 private:
 
-    QString m_workingDirectory;
+    QString m_examplesPath;
 
     bool examplesInSubdirectory() const;
     bool krazy2InPath() const;
@@ -120,9 +120,7 @@ private:
 };
 
 void AnalysisJobTest::initTestCase() {
-    //I do not know why, but it seems that the working directory is modified
-    //when TestCore is initialized.
-    m_workingDirectory = QDir::currentPath() + '/';
+    m_examplesPath = QStringLiteral(EXAMPLETESTDATA_PATH);
 
     //Needed for SignalSpy
     qRegisterMetaType<KJob*>();
@@ -134,8 +132,7 @@ void AnalysisJobTest::initTestCase() {
 
 void AnalysisJobTest::init() {
     if (!examplesInSubdirectory()) {
-        QString message = "The examples were not found in the subdirectory 'examples' "
-                          "of the working directory (" + m_workingDirectory + ')';
+        QString message = "The examples were not found in the 'examples' directory (" + m_examplesPath + ')';
         QSKIP(message.toLatin1(), SkipAll);
     }
 
@@ -217,7 +214,7 @@ void AnalysisJobTest::testRunCheckers() {
     AnalysisParameters analysisParameters;
     analysisParameters.initializeCheckers(availableCheckers);
     analysisParameters.setCheckersToRun(checkersToRun);
-    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
+    analysisParameters.setFilesAndDirectories(QStringList() << m_examplesPath);
     analysisJob.addAnalysisParameters(&analysisParameters);
 
     AnalysisResults analysisResults;
@@ -351,7 +348,7 @@ void AnalysisJobTest::testRunExtraCheckers() {
     }
 
     analysisParameters.setCheckersToRun(checkersToRun);
-    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
+    analysisParameters.setFilesAndDirectories(QStringList() << m_examplesPath);
     analysisJob.addAnalysisParameters(&analysisParameters);
 
     AnalysisResults analysisResults;
@@ -539,7 +536,7 @@ void AnalysisJobTest::testRunExtraCheckersAndSubsetOfCheckers() {
     AnalysisParameters analysisParameters;
     analysisParameters.initializeCheckers(availableCheckers);
     analysisParameters.setCheckersToRun(checkersToRun);
-    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
+    analysisParameters.setFilesAndDirectories(QStringList() << m_examplesPath);
     analysisJob.addAnalysisParameters(&analysisParameters);
 
     AnalysisResults analysisResults;
@@ -636,8 +633,8 @@ void AnalysisJobTest::testRunCheckerWithDuplicatedNamesAndSpecificFileTypes() {
 
     //Both files have spelling and license issues, although different file types
     QStringList filesToAnalyze;
-    filesToAnalyze << m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp";
-    filesToAnalyze << m_workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml";
+    filesToAnalyze << m_examplesPath + "severalIssuesSeveralCheckers.cpp";
+    filesToAnalyze << m_examplesPath + "subdirectory/severalIssuesSeveralCheckers.qml";
 
     AnalysisParameters analysisParameters;
     analysisParameters.initializeCheckers(availableCheckers);
@@ -804,7 +801,7 @@ void AnalysisJobTest::testRunSeveralAnalysisParameters() {
     }
 
     QStringList fileNames;
-    fileNames << m_workingDirectory + "examples";
+    fileNames << m_examplesPath;
 
     AnalysisParameters analysisParameters1;
     analysisParameters1.initializeCheckers(availableCheckers);
@@ -826,7 +823,7 @@ void AnalysisJobTest::testRunSeveralAnalysisParameters() {
     }
 
     fileNames.clear();
-    fileNames << m_workingDirectory + "examples/singleIssue.cpp";
+    fileNames << m_examplesPath + "singleIssue.cpp";
 
     AnalysisParameters analysisParameters2;
     analysisParameters2.initializeCheckers(availableCheckers);
@@ -853,9 +850,9 @@ void AnalysisJobTest::testRunSeveralAnalysisParameters() {
     }
 
     fileNames.clear();
-    fileNames << m_workingDirectory + "examples/singleIssue.cpp";
-    fileNames << m_workingDirectory + "examples/severalIssuesSingleChecker.cpp";
-    fileNames << m_workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml";
+    fileNames << m_examplesPath + "singleIssue.cpp";
+    fileNames << m_examplesPath + "severalIssuesSingleChecker.cpp";
+    fileNames << m_examplesPath + "subdirectory/severalIssuesSeveralCheckers.qml";
 
     AnalysisParameters analysisParameters3;
     analysisParameters3.initializeCheckers(availableCheckers);
@@ -992,7 +989,7 @@ void AnalysisJobTest::testRunSeveralAnalysisParametersSomeOfThemWithoutFiles() {
     }
 
     QStringList fileNames;
-    fileNames << m_workingDirectory + "examples";
+    fileNames << m_examplesPath;
 
     AnalysisParameters analysisParameters2;
     analysisParameters2.initializeCheckers(availableCheckers);
@@ -1014,7 +1011,7 @@ void AnalysisJobTest::testRunSeveralAnalysisParametersSomeOfThemWithoutFiles() {
     }
 
     fileNames.clear();
-    fileNames << m_workingDirectory + "examples/singleIssue.cpp";
+    fileNames << m_examplesPath + "singleIssue.cpp";
 
     AnalysisParameters analysisParameters3;
     analysisParameters3.initializeCheckers(availableCheckers);
@@ -1073,9 +1070,9 @@ void AnalysisJobTest::testRunSeveralAnalysisParametersSomeOfThemWithoutFiles() {
     }
 
     fileNames.clear();
-    fileNames << m_workingDirectory + "examples/singleIssue.cpp";
-    fileNames << m_workingDirectory + "examples/severalIssuesSingleChecker.cpp";
-    fileNames << m_workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml";
+    fileNames << m_examplesPath + "singleIssue.cpp";
+    fileNames << m_examplesPath + "severalIssuesSingleChecker.cpp";
+    fileNames << m_examplesPath + "subdirectory/severalIssuesSeveralCheckers.qml";
 
     AnalysisParameters analysisParameters6;
     analysisParameters6.initializeCheckers(availableCheckers);
@@ -1206,7 +1203,7 @@ void AnalysisJobTest::testRunWithInvalidKrazy2ExecutablePath() {
 
     AnalysisParameters analysisParameters;
     analysisParameters.initializeCheckers(availableCheckers);
-    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
+    analysisParameters.setFilesAndDirectories(QStringList() << m_examplesPath);
     analysisJob.addAnalysisParameters(&analysisParameters);
 
     AnalysisResults analysisResults;
@@ -1237,7 +1234,7 @@ void AnalysisJobTest::testKill() {
 
     AnalysisParameters analysisParameters;
     analysisParameters.initializeCheckers(availableCheckers);
-    analysisParameters.setFilesAndDirectories(QStringList() << m_workingDirectory + "examples");
+    analysisParameters.setFilesAndDirectories(QStringList() << m_examplesPath);
     analysisJob.addAnalysisParameters(&analysisParameters);
 
     AnalysisResults analysisResults;
@@ -1260,15 +1257,15 @@ void AnalysisJobTest::testKill() {
 ///////////////////////////////// Helpers //////////////////////////////////////
 
 bool AnalysisJobTest::examplesInSubdirectory() const {
-    if (QFile(m_workingDirectory + "examples/singleIssue.cpp").exists() &&
-        QFile(m_workingDirectory + "examples/singleExtraIssue.cpp").exists() &&
-        QFile(m_workingDirectory + QString::fromUtf8("examples/singleIssueNonAsciiFileNameḶḷambión.cpp")).exists() &&
-        QFile(m_workingDirectory + "examples/.singleIssueHiddenUnixFileName.cpp").exists() &&
-        QFile(m_workingDirectory + "examples/severalIssuesSingleChecker.cpp").exists() &&
-        QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckers.cpp").exists() &&
-        QFile(m_workingDirectory + "examples/severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
-        QFile(m_workingDirectory + "examples/subdirectory/singleIssue.desktop").exists() &&
-        QFile(m_workingDirectory + "examples/subdirectory/severalIssuesSeveralCheckers.qml").exists()) {
+    if (QFile(m_examplesPath + "singleIssue.cpp").exists() &&
+        QFile(m_examplesPath + "singleExtraIssue.cpp").exists() &&
+        QFile(m_examplesPath + QString::fromUtf8("singleIssueNonAsciiFileNameḶḷambión.cpp")).exists() &&
+        QFile(m_examplesPath + ".singleIssueHiddenUnixFileName.cpp").exists() &&
+        QFile(m_examplesPath + "severalIssuesSingleChecker.cpp").exists() &&
+        QFile(m_examplesPath + "severalIssuesSeveralCheckers.cpp").exists() &&
+        QFile(m_examplesPath + "severalIssuesSeveralCheckersUnknownFileType.dqq").exists() &&
+        QFile(m_examplesPath + "subdirectory/singleIssue.desktop").exists() &&
+        QFile(m_examplesPath + "subdirectory/severalIssuesSeveralCheckers.qml").exists()) {
         return true;
     }
 
@@ -1308,7 +1305,7 @@ QList< const Checker* > AnalysisJobTest::getAvailableCheckers() const {
 const Issue* AnalysisJobTest::findIssue(const AnalysisResults* analysisResults,
                                         const QString& checkerName,
                                         const QString& exampleFileName, int line) const {
-    QString fileName = m_workingDirectory + "examples/" + exampleFileName;
+    QString fileName = m_examplesPath + exampleFileName;
     foreach (const Issue* issue, analysisResults->issues()) {
         if (issue->checker()->name() == checkerName &&
             issue->fileName() == fileName &&
