@@ -22,6 +22,8 @@
 #include "../checkerlistparser.h"
 #include "../checker.h"
 
+#include <time.h>
+
 class CheckerListParserTest: public QObject {
 Q_OBJECT
 private slots:
