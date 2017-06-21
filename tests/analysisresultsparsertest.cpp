@@ -24,6 +24,8 @@
 #include "../checker.h"
 #include "../issue.h"
 
+#include <time.h>
+
 class AnalysisResultsParserTest: public QObject {
 Q_OBJECT
 private slots:
