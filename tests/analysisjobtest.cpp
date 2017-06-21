@@ -36,7 +36,6 @@
 
 //Needed for qRegisterMetaType
 Q_DECLARE_METATYPE(KJob*)
-Q_DECLARE_METATYPE(KDevelop::IStatus*)
 
 /**
  * Modified version of private KSignalSpy found in

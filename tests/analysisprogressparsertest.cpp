@@ -74,9 +74,6 @@ private:
 
 };
 
-//KDevelop::IStatus* must be declared as a metatype to be used in qvariant_cast
-Q_DECLARE_METATYPE(KDevelop::IStatus*);
-
 void AnalysisProgressParserTest::init() {
     m_analysisProgressParser = new AnalysisProgressParser();
 
