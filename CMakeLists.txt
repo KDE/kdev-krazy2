@@ -11,8 +11,10 @@ include(ECMAddTests)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 
-find_package(Qt5 REQUIRED Core Widgets Test)
-find_package(KF5 REQUIRED COMPONENTS ItemModels TextEditor ThreadWeaver)
+set(QT_MIN_VERSION "5.4.0")
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Core Widgets Test)
+set(KF5_DEP_VERSION "5.15.0")
+find_package(KF5 ${KF5_DEP_VERSION} REQUIRED COMPONENTS ItemModels TextEditor ThreadWeaver)
 find_package(KDevPlatform 1.90.90 REQUIRED)
 
 add_subdirectory(tests)
