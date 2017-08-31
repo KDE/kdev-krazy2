@@ -10,13 +10,17 @@ include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMAddTests)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
+include(FeatureSummary)
 
 set(QT_MIN_VERSION "5.5.0")
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Core Widgets Test)
 set(KF5_DEP_VERSION "5.15.0")
 find_package(KF5 ${KF5_DEP_VERSION} REQUIRED COMPONENTS ItemModels TextEditor ThreadWeaver)
 set(KDEVPLATFORM_VERSION "5.0.0")
-find_package(KDevPlatform ${KDEVPLATFORM_VERSION} CONFIG REQUIRED)
+find_package(KDevPlatform ${KDEVPLATFORM_VERSION} CONFIG)
+set_package_properties(KDevPlatform PROPERTIES
+    TYPE REQUIRED
+)
 
 add_subdirectory(tests)
 
@@ -66,3 +70,5 @@ target_link_libraries(kdevkrazy2
 )
 
 install(FILES kdevkrazy2.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kdevkrazy2)
+
+feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
