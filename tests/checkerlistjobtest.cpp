@@ -209,9 +209,9 @@ void CheckerListJobTest::testRunWithInvalidPaths() {
 
     QCOMPARE(checkerListJob.error(), (int)KJob::UserDefinedError);
     QCOMPARE(checkerListJob.errorString(),
-             i18nc("@info", "<para><command>krazy2</command> failed to start "
-                            "using the path "
-                            "(<filename>%1</filename>).</para>", "invalid/krazy2/path"));
+             xi18nc("@info", "<para><command>krazy2</command> failed to start "
+                             "using the path "
+                             "(<filename>%1</filename>).</para>", "invalid/krazy2/path"));
     QCOMPARE(m_checkerList->count(), 0);
 }
 

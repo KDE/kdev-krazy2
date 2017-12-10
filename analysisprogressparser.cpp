@@ -30,7 +30,7 @@ AnalysisProgressParser::AnalysisProgressParser(QObject* parent /*= 0*/): QObject
 }
 
 QString AnalysisProgressParser::statusName() const {
-    return i18nc("@info:progress", "Running <command>krazy2</command>");
+    return xi18nc("@info:progress", "Running <command>krazy2</command>");
 }
 
 void AnalysisProgressParser::setNumberOfCheckers(int numberOfCheckers) {

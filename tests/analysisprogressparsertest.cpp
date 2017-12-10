@@ -104,7 +104,7 @@ void AnalysisProgressParserTest::cleanup() {
 
 void AnalysisProgressParserTest::testStatusName() {
     QCOMPARE(m_analysisProgressParser->statusName(),
-             i18nc("@info:progress", "Running <command>krazy2</command>"));
+             xi18nc("@info:progress", "Running <command>krazy2</command>"));
 }
 
 void AnalysisProgressParserTest::testStart() {

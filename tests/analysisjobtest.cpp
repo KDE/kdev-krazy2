@@ -154,7 +154,7 @@ void AnalysisJobTest::testConstructor() {
     QCOMPARE(analysisJob->parent(), &parent);
     QCOMPARE(analysisJob->capabilities(), KJob::Killable);
     QCOMPARE(analysisJob->objectName(),
-             i18nc("@action:inmenu", "<command>krazy2</command> analysis"));
+             xi18nc("@action:inmenu", "<command>krazy2</command> analysis"));
 }
 
 void AnalysisJobTest::testRunCheckers() {
@@ -1219,9 +1219,9 @@ void AnalysisJobTest::testRunWithInvalidKrazy2ExecutablePath() {
 
     QCOMPARE(analysisJob.error(), (int)KJob::UserDefinedError);
     QCOMPARE(analysisJob.errorString(),
-             i18nc("@info", "<para><command>krazy2</command> failed to start "
-                            "using the path"
-                            "(<filename>%1</filename>).</para>", "invalid/krazy2/path"));
+             xi18nc("@info", "<para><command>krazy2</command> failed to start "
+                             "using the path"
+                             "(<filename>%1</filename>).</para>", "invalid/krazy2/path"));
     QCOMPARE(analysisResults.issues().count(), 0);
 }
 
