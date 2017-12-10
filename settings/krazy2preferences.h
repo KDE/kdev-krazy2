@@ -46,7 +46,7 @@ public:
     QString name() const override;
     QString fullName() const override;
     QIcon icon() const override;
-
+    KDevelop::ConfigPage::ConfigPageType configPageType() const override;
 };
 
 #endif

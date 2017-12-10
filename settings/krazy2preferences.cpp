@@ -55,3 +55,8 @@ QIcon Krazy2Preferences::icon() const
 {
    return QIcon::fromTheme(QStringLiteral("kdevelop"));
 }
+
+ConfigPage::ConfigPageType Krazy2Preferences::configPageType() const
+{
+    return ConfigPage::AnalyzerConfigPage;
+}
