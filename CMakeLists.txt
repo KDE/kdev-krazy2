@@ -4,7 +4,7 @@ project(kdevkrazy2)
 
 find_package (ECM 5.15.0 REQUIRED NO_MODULE)
 
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMAddTests)
@@ -20,6 +20,12 @@ set(KDEVPLATFORM_VERSION "5.0.0")
 find_package(KDevPlatform ${KDEVPLATFORM_VERSION} CONFIG)
 set_package_properties(KDevPlatform PROPERTIES
     TYPE REQUIRED
+)
+find_package(Krazy2 QUIET)
+set_package_properties(Krazy2 PROPERTIES
+    DESCRIPTION "An extensible framework for performing static code checking on files of any format."
+    URL "https://github.com/Krazy-collection/krazy"
+    TYPE RUNTIME
 )
 
 add_definitions(-DTRANSLATION_DOMAIN=\"kdevkrazy2\")
