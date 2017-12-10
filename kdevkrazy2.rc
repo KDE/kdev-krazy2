@@ -1,5 +1,5 @@
 <!DOCTYPE gui SYSTEM "kpartgui.dtd">
-<gui name="kdevkrazy2" version="1">
+<gui name="kdevkrazy2" version="1" translationDomain="kdevkrazy2">
 <MenuBar>
  <Menu name="run">
    <text context="@title:menu">Run</text>

@@ -22,6 +22,8 @@ set_package_properties(KDevPlatform PROPERTIES
     TYPE REQUIRED
 )
 
+add_definitions(-DTRANSLATION_DOMAIN=\"kdevkrazy2\")
+
 add_subdirectory(tests)
 
 set(kdevkrazy2_library_SRCS
