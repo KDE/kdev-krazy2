@@ -25,7 +25,7 @@
         <item>
          <widget class="QLabel" name="krazy2Label">
           <property name="text">
-           <string>krazy2 Executable:</string>
+           <string>krazy2 executable:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
