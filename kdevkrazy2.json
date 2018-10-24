@@ -3,7 +3,26 @@
         "Authors": [
             {
                 "Name": "Daniel Calviño Sánchez",
-                "Name[x-test]": "xxDaniel Calviño Sánchezxx"
+                "Name[ca@valencia]": "Daniel Calviño Sánchez",
+                "Name[ca]": "Daniel Calviño Sánchez",
+                "Name[de]": "Daniel Calviño Sánchez",
+                "Name[en_GB]": "Daniel Calviño Sánchez",
+                "Name[es]": "Daniel Calviño Sánchez",
+                "Name[fi]": "Daniel Calviño Sánchez",
+                "Name[fr]": "Daniel Calviño Sánchez",
+                "Name[gl]": "Daniel Calviño Sánchez",
+                "Name[it]": "Daniel Calviño Sánchez",
+                "Name[nl]": "Daniel Calviño Sánchez",
+                "Name[pl]": "Daniel Calviño Sánchez",
+                "Name[pt]": "Daniel Calviño Sánchez",
+                "Name[pt_BR]": "Daniel Calviño Sánchez",
+                "Name[ru]": "Daniel Calviño Sánchez",
+                "Name[sk]": "Daniel Calviño Sánchez",
+                "Name[sv]": "Daniel Calviño Sánchez",
+                "Name[tr]": "Daniel Calviño Sánchez",
+                "Name[uk]": "Daniel Calviño Sánchez",
+                "Name[x-test]": "xxDaniel Calviño Sánchezxx",
+                "Name[zh_TW]": "Daniel Calviño Sánchez"
             }
         ],
         "Category": "Analyzers",
@@ -11,6 +30,7 @@
         "Description[ca@valencia]": "Aquest connector mostra els problemes informats pel Krazy2",
         "Description[ca]": "Aquest connector mostra els problemes informats pel Krazy2",
         "Description[de]": "Dieses Modul zeigt von Krazy2 ermittelte Fehler",
+        "Description[en_GB]": "This plugin shows issues reported by Krazy2",
         "Description[es]": "Este complemento muestra problemas descubiertos por Krazy2",
         "Description[fi]": "Tämä liitännäinen luettelee Krazy2:n ilmoittamia ongelmia",
         "Description[fr]": "Ce module externe affiche les problèmes signalés par Krazy2",
@@ -33,6 +53,7 @@
         "Name[ca@valencia]": "Comprova el codi amb Krazy2",
         "Name[ca]": "Comprova el codi amb Krazy2",
         "Name[de]": "Krazy2-Quelltextüberprüfung",
+        "Name[en_GB]": "Krazy2 Code Checking",
         "Name[es]": "Comprobación de código Krazy2",
         "Name[fi]": "Krazy2-koodintarkistus",
         "Name[fr]": "Vérification de code « Krazy2 »",
