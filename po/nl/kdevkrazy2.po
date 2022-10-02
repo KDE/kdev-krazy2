@@ -1,0 +1,596 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Freek de Kruijf <f.de.kruijf@gmail.com>, 2012, 2013, 2015, 2017.
+# Ronald Stroethoff <stroet43@zonnet.nl>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 03:19+0200\n"
+"PO-Revision-Date: 2017-12-11 12:31+0100\n"
+"Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
+"Language-Team: Dutch <kde-i18n-nl@kde.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 2.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Freek de Kruijf,Ronald Stroethoff"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "freekdekruijf@kde.nl,stroet43@zonnet.nl"
+
+#: analysisjob.cpp:46
+#, kde-kuit-format
+msgctxt "@action:inmenu"
+msgid "<command>krazy2</command> analysis"
+msgstr "<command>krazy2</command> analysis"
+
+#: analysisjob.cpp:289 checkerlistjob.cpp:98
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para>There is no path set in the Krazy2 configuration for the "
+"<command>krazy2</command> executable.</para>"
+msgstr ""
+"<para>Er is geen pad ingesteld in de instellingen van Krazy2 voor het uit "
+"voeren programma <command>krazy2</command>.</para>"
+
+#: analysisjob.cpp:292 checkerlistjob.cpp:101
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para><command>krazy2</command> failed to start using the path (<filename>"
+"%1</filename>).</para>"
+msgstr ""
+"<para><command>krazy2</command> opstarten is mislukt met het pad (<filename>"
+"%1</filename>).</para>"
+
+#: analysisjob.cpp:296 checkerlistjob.cpp:105
+#, kde-kuit-format
+msgctxt "@info"
+msgid "<para><command>krazy2</command> crashed.</para>"
+msgstr "<para><command>krazy2</command> is gecrasht.</para>"
+
+#: analysisjob.cpp:298 checkerlistjob.cpp:107
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para>An error occurred while executing <command>krazy2</command>.</para>"
+msgstr ""
+"<para>Er is een fout opgetreden bij het uitvoeren van <command>krazy2</"
+"command>.</para>"
+
+#: analysisprogressparser.cpp:33
+#, kde-kuit-format
+msgctxt "@info:progress"
+msgid "Running <command>krazy2</command>"
+msgstr "Bezig met het uitvoeren van <command>krazy2</command>"
+
+#: analysisprogressparser.cpp:126
+#, kde-format
+msgctxt "@info:progress File type (c++, desktop...) and checker name"
+msgid "Running %1/%2"
+msgstr "%1/%2 uitvoeren"
+
+#: checkerlistjob.cpp:37
+#, kde-kuit-format
+msgctxt "@action:inmenu"
+msgid "Find available checkers for <command>krazy2</command>"
+msgstr "Zoek beschikbare controles voor <command>krazy2</command>"
+
+#: checkermodel.cpp:178
+#, kde-format
+msgctxt "@info:tooltip The underlying command did not provide a text output"
+msgid "Sorry, no description given"
+msgstr "Helaas, geen beschrijving gegeven"
+
+#: checkermodel.cpp:189
+#, kde-format
+msgctxt "@item Extra Krazy2 checkers"
+msgid "[EXTRA]"
+msgstr "[EXTRA]"
+
+#. i18n: ectx: Menu (run)
+#: kdevkrazy2.rc:5
+#, kde-format
+msgctxt "@title:menu"
+msgid "Run"
+msgstr "Uitvoeren"
+
+#: krazy2plugin.cpp:75
+#, kde-format
+msgid "Krazy2 check (selected files)"
+msgstr "Krazy2 controle (geselecteerde bestanden)"
+
+#: krazy2plugin.cpp:76
+#, kde-format
+msgid "Check selected files with Krazy2 tools"
+msgstr "Geselecteerde bestanden controleren met Krazy2 hulpmiddelen"
+
+#: krazy2plugin.cpp:80
+#, kde-format
+msgid "Krazy2 check (all files)"
+msgstr "Krazy2 controle (alle bestanden)"
+
+#: krazy2plugin.cpp:81
+#, kde-format
+msgid "Check all files with Krazy2 tools"
+msgstr "Alle bestanden controleren met Krazy2 hulpmiddelen"
+
+#: krazy2plugin.cpp:88 settings/krazy2preferences.cpp:46
+#, kde-format
+msgid "Krazy2"
+msgstr "Krazy2"
+
+#: krazy2plugin.cpp:129
+#, kde-format
+msgid "Error gathering checker list"
+msgstr "Fout bij verzamelen van checker-lijst"
+
+#: krazy2plugin.cpp:130
+#, kde-format
+msgid "There was an error while gathering the checker list"
+msgstr "Er was een fout bij het verzamelen van de checker-lijst"
+
+#: krazy2plugin.cpp:141
+#, kde-format
+msgid "Error running Krazy2"
+msgstr "Fout bij het uitvoeren van Krazy2"
+
+#: krazy2plugin.cpp:142
+#, kde-format
+msgid "There was an error with the Krazy2 process"
+msgstr "Er was een fout met het Krazy2-proces"
+
+#: krazy2plugin.cpp:163
+#, kde-format
+msgid "The tool didn't provide a message."
+msgstr "Het hulpmiddel leverde geen bericht."
+
+#: krazy2plugin.cpp:189 krazy2plugin.cpp:196 krazy2plugin.cpp:204
+#: krazy2plugin.cpp:212 krazy2plugin.cpp:221 krazy2plugin.cpp:228
+#: krazy2plugin.cpp:238 krazy2plugin.cpp:246 krazy2plugin.cpp:258
+#: krazy2plugin.cpp:274
+#, kde-format
+msgid "Error starting Krazy2"
+msgstr "Fout bij het starten van Krazy2"
+
+#: krazy2plugin.cpp:190
+#, kde-format
+msgid "Analysis already in progress"
+msgstr "Analyse is al bezig"
+
+#: krazy2plugin.cpp:197
+#, kde-format
+msgid "Gathering the checkers list hasn't finished yet or has failed."
+msgstr "Verzamelen van de checker-lijst is nog niet gereed of is mislukt."
+
+#: krazy2plugin.cpp:205
+#, kde-format
+msgid "No file is active, cannot deduce project."
+msgstr "Er is geen actief bestand, niet in staat het project af te leiden."
+
+#: krazy2plugin.cpp:213
+#, kde-format
+msgid "Cannot find project"
+msgstr "Kan project niet vinden"
+
+#: krazy2plugin.cpp:222
+#, kde-format
+msgid "Krazy2 settings need to be set in the project settings"
+msgstr ""
+"Krazy2-instellingen moeten ingesteld zijn in de instellingen van het project"
+
+#: krazy2plugin.cpp:229 krazy2plugin.cpp:259
+#, kde-format
+msgid "No checkers selected"
+msgstr "Geen checkers geselecteerd"
+
+#: krazy2plugin.cpp:239 krazy2plugin.cpp:247
+#, kde-format
+msgid "No paths selected"
+msgstr "Geen paden geselecteerd"
+
+#: krazy2plugin.cpp:275
+#, kde-format
+msgid "Unable to restore selected checkers"
+msgstr "Geselecteerde checkers kunnen niet hersteld worden"
+
+#. i18n: ectx: label, entry (krazy2Path), group (Krazy2)
+#: settings/krazy2config.kcfg:9
+#, kde-format
+msgid "krazy2 Executable"
+msgstr "krazy2 programma"
+
+#. i18n: ectx: tooltip, entry (krazy2Path), group (Krazy2)
+#: settings/krazy2config.kcfg:10
+#, kde-format
+msgid "The full path to the krazy2 executable"
+msgstr "Het volledige pad naar het krazy2 programma"
+
+#. i18n: ectx: whatsthis, entry (krazy2Path), group (Krazy2)
+#: settings/krazy2config.kcfg:11
+#, kde-format
+msgid ""
+"The full path to the krazy2 executable that will be used to run Krazy2 tests."
+msgstr ""
+"Het volledige pad naar het krazy2 programma dat de krazy2 controles uitvoert."
+
+#: settings/krazy2preferences.cpp:51
+#, kde-format
+msgid "Configure Krazy2 settings"
+msgstr "Instellingen van Kray2 configureren"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, Krazy2Settings)
+#: settings/krazy2settings.ui:14
+#, kde-format
+msgid "Krazy2 Settings"
+msgstr "Instellingen van Krazy2"
+
+#. i18n: ectx: property (title), widget (QGroupBox, pathsGroupBox)
+#: settings/krazy2settings.ui:20
+#, kde-format
+msgid "Paths"
+msgstr "Paden"
+
+#. i18n: ectx: property (text), widget (QLabel, krazy2Label)
+#: settings/krazy2settings.ui:28
+#, kde-format
+msgid "krazy2 executable:"
+msgstr "krazy2 programma:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, SelectCheckersWidget)
+#: settings/selectcheckerswidget.ui:14
+#, kde-format
+msgctxt "@title:window"
+msgid "Select checkers"
+msgstr "Controles selecteren"
+
+#. i18n: ectx: property (text), widget (QLabel, otherAvailableCheckersLabel)
+#: settings/selectcheckerswidget.ui:22
+#, kde-format
+msgctxt "@label"
+msgid "Other available checkers:"
+msgstr "Andere beschikbare controles:"
+
+#. i18n: ectx: property (whatsThis), widget (QTreeView, otherAvailableCheckersView)
+#: settings/selectcheckerswidget.ui:32
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Other available checkers that will not be run in the analysis.</para>"
+msgstr ""
+"<para>Andere beschikbare in de analyse niet gebruikte controles.</para>"
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
+#: settings/selectcheckerswidget.ui:59
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Add checkers"
+msgstr "Voeg controles toe"
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
+#: settings/selectcheckerswidget.ui:62
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Adds the checkers selected in the <interface>Other available checkers</"
+"interface> list to the <interface>Checkers to run</interface> list.</para>"
+msgstr ""
+"<para>Voegt de gemarkeerde controles uit de lijst met <interface>Andere "
+"beschikbare controles</interface> toe aan de lijst met <interface>Uit te "
+"voeren controles</interface> toe.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, addButton)
+#: settings/selectcheckerswidget.ui:65
+#, kde-format
+msgctxt "@action:button Move items from the left list to the right list"
+msgid ">"
+msgstr ">"
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
+#: settings/selectcheckerswidget.ui:88
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove checkers"
+msgstr "Verwijder controles"
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
+#: settings/selectcheckerswidget.ui:93
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Removes the selected checkers from the <interface>Checkers to run</"
+"interface> list.</para>\n"
+"\n"
+"<para>The checkers will be added to the <interface>Other available checkers</"
+"interface> list.</para>"
+msgstr ""
+"<para>Verwijdert controles van de lijst met <interface>Uit te voeren "
+"controles</interface>.</para>\n"
+"\n"
+"<para>De controles worden toegevoegd aan de lijst met <interface>Andere "
+"beschikbare controles</interface>.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+#: settings/selectcheckerswidget.ui:96
+#, kde-format
+msgctxt "@action:button Move items from the right list to the left list"
+msgid "<"
+msgstr "<"
+
+#. i18n: ectx: property (text), widget (QLabel, checkersToRunLabel)
+#: settings/selectcheckerswidget.ui:120
+#, kde-format
+msgctxt "@label"
+msgid "Checkers to run:"
+msgstr "Uit te voeren controles:"
+
+#. i18n: ectx: property (whatsThis), widget (QTreeView, checkersToRunView)
+#: settings/selectcheckerswidget.ui:130
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid "<para>The checkers that will be run in the analysis.</para>"
+msgstr "<para>De controles die u bij de analyse wilt gebruiken.</para>"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, SelectPathsWidget)
+#: settings/selectpathswidget.ui:14
+#, kde-format
+msgctxt "@title:window"
+msgid "Select paths"
+msgstr "Selectie van pad"
+
+#. i18n: ectx: property (whatsThis), widget (QListView, pathsView)
+#: settings/selectpathswidget.ui:20
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid "<para>The files and directories to analyze.</para>"
+msgstr "<para>De te analyseren bestanden en mappen.</para>"
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
+#: settings/selectpathswidget.ui:32
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Add files and directories."
+msgstr "Bestanden en mappen toevoegen."
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
+#: settings/selectpathswidget.ui:37
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Adds files and directories to the list.</para>\n"
+"\n"
+"<para>Only local files and directories can be selected.</para>"
+msgstr ""
+"<para>Bestanden en mappen toevoegen.</para>\n"
+"\n"
+"<para>U kunt alleen lokale bestanden en mappen selecteren.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, addButton)
+#: settings/selectpathswidget.ui:40
+#, kde-format
+msgctxt "@action:button"
+msgid "Add..."
+msgstr "Toevoegen..."
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
+#: settings/selectpathswidget.ui:50
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove the selected files or directories."
+msgstr "Gemarkeerde bestanden of mappen verwijderen"
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
+#: settings/selectpathswidget.ui:53
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid "<para>Removes files or directories from the list.</para>"
+msgstr "<para>Verwijdert bestanden of mappen van de lijst.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+#: settings/selectpathswidget.ui:56
+#, kde-format
+msgctxt "@action:button"
+msgid "Remove"
+msgstr "Verwijderen"
+
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para><command>krazy2</command> failed to start using the path(<filename>"
+#~ "%1</filename>).</para>"
+#~ msgstr ""
+#~ "<para><command>krazy2</command> opstarten is mislukt met het pad "
+#~ "(<filename>%1</filename>).</para>"
+
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para><command>krazy2</command> failed to start using the path <filename>"
+#~ "%1</filename>.</para>"
+#~ msgstr ""
+#~ "<para><command>krazy2</command> opstarten is mislukt met het pad "
+#~ "<filename>%1</filename>.</para>"
+
+#~ msgctxt "@info:tooltip The underlying command did not provide a text output"
+#~ msgid "Sorry, no explanation given"
+#~ msgstr "Helaas, geen uitleg gegeven"
+
+#~ msgctxt "@item:intable File type (c++, desktop...) and checker name"
+#~ msgid "%1/%2"
+#~ msgstr "%1/%2"
+
+#~ msgctxt "@item:intable File type (c++, desktop...) and checker name"
+#~ msgid "%1/%2 [EXTRA]"
+#~ msgstr "%1/%2 [EXTRA]"
+
+#~ msgctxt "@item:intable The underlying command did not provide a text output"
+#~ msgid "(Sorry, no description nor message given)"
+#~ msgstr "(Helaas, geen beschrijving of melding gegeven)"
+
+#~ msgctxt ""
+#~ "@item:intable The underlying command provided a message but no description"
+#~ msgid "(Sorry, no description given): %1"
+#~ msgstr "(Helaas, geen beschrijving gegeven): %1"
+
+#~ msgctxt "@item:intable The description of a checker and its message"
+#~ msgid "%1: %2"
+#~ msgstr "%1: %2"
+
+#~ msgctxt "@title:column"
+#~ msgid "Checker"
+#~ msgstr "Controleur"
+
+#~ msgctxt "@title:column"
+#~ msgid "Problem"
+#~ msgstr "Probleem"
+
+#~ msgctxt "@title:column"
+#~ msgid "File name"
+#~ msgstr "Bestandsnaam"
+
+#~ msgctxt "@title:column Line number of a file"
+#~ msgid "Line"
+#~ msgstr "Regel"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "Analyze again"
+#~ msgstr "Opnieuw analyseren"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "Selected issue"
+#~ msgid_plural "Selected issues"
+#~ msgstr[0] "Geselecteerd probleem"
+#~ msgstr[1] "Geselecteerde problemen"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "Selected file"
+#~ msgid_plural "Selected files"
+#~ msgstr[0] "Geselecteerd bestand"
+#~ msgstr[1] "Geselecteerde bestanden"
+
+#~ msgctxt "@title:window"
+#~ msgid "Krazy2"
+#~ msgstr "Krazy2"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Select the files and directories to analyze."
+#~ msgstr "Selecteer de bestanden en mappen voor analyse."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid ""
+#~ "<para>Sets the files and directories to analyze.</para>\n"
+#~ "\n"
+#~ "<para>The files to be analyzed are all the selected files and all the "
+#~ "files in the selected directories (and, recursively, all the files in all "
+#~ "its subdirectories).</para>"
+#~ msgstr ""
+#~ "<para>Selecteert de bestanden en mappen die u wilt analyseren.</para>\n"
+#~ "\n"
+#~ "<para>De bestanden die gaan worden geanalyseerd zijn alle geselecteerde "
+#~ "bestanden en alle bestanden in de geselecteerde mappen (en, recursief, "
+#~ "alle bestanden in hun submappen).</para>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Select paths..."
+#~ msgstr "Pad instellen..."
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Select the checkers that will be executed."
+#~ msgstr "Te gebruiken controles selecteren"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid ""
+#~ "<para>Sets the checkers that will be executed.</para>\n"
+#~ "\n"
+#~ "<para>If the analysis is started before selecting the checkers the "
+#~ "default checkers will be used (that is, all the normal checkers, but no "
+#~ "extra checkers).</para>\n"
+#~ "\n"
+#~ "<para>The first time the dialog to select the checkers is shown the "
+#~ "checker lists will be disabled (unless an analysis has already been "
+#~ "performed). It will take some seconds until the available checkers are "
+#~ "got from Krazy2 and the lists enabled.</para>"
+#~ msgstr ""
+#~ "<para>Te gebruiken controles selecteren.</para>\n"
+#~ "\n"
+#~ "<para>Als u de analyse heeft gestart voordat u de controles heeft "
+#~ "geselecteerd dan worden de standaard controles gebruikt (dat wil zeggen, "
+#~ "alle standaard controles maar niet de extra controles).</para>\n"
+#~ "\n"
+#~ "<para>De eerste keer dat u het dialoog voor het selecteren van controles "
+#~ "opent, is de lijst met controles uitgeschakeld (tenzij een controle al is "
+#~ "uitgevoerd). Het kan enige seconden duren voordat de controles van Krazy2 "
+#~ "zijn opgehaald en de lijst weer is ingeschakeld.</para>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Select checkers..."
+#~ msgstr "Controles selecteren..."
+
+#~ msgctxt "@info:tooltip"
+#~ msgid ""
+#~ "Analyze all the selected files and directories with the selected checkers."
+#~ msgstr ""
+#~ "Analyseer met de gekozen controles alle gemarkeerde bestanden en mappen."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid ""
+#~ "<para>Analyzes all the selected paths with the checkers to run.</para>\n"
+#~ "\n"
+#~ "<para>The results from the previous analysis, if any, are replaced with "
+#~ "the new ones.</para>"
+#~ msgstr ""
+#~ "<para>Analyseer met de gekozen controles alle gemarkeerde paden.</para>\n"
+#~ "\n"
+#~ "<para>Nieuwe resultaten zullen mogelijk aanwezige resultaten van een "
+#~ "vorige analyse overschrijven.</para>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Analyze"
+#~ msgstr "Analyseren"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid ""
+#~ "<para>The analysis results.</para>\n"
+#~ "\n"
+#~ "<para>When one or more issues are selected, they, or the files were they "
+#~ "appear, can be analyzed again using the context menu of the issues. If "
+#~ "the issues are analyzed again, the checker of each issue is run again on "
+#~ "the file where that issue appears. If the files are analyzed again, every "
+#~ "checker selected by the user is run again on the files selected in the "
+#~ "analysis results. In both cases, the new analysis results are merged with "
+#~ "the previous ones, instead of replacing them (like a normal analysis "
+#~ "would do).</para>"
+#~ msgstr ""
+#~ "<para>De controle-resultaten.</para>\n"
+#~ "\n"
+#~ "<para>Als u een of meer problemen heeft geselecteerd, dan kunt u deze, of "
+#~ "de bestanden waarin ze verschijnen, analyseren met behulp van het "
+#~ "contextmenu bij de problemen. als u de problemen opnieuw analyseert, dan "
+#~ "wordt de controle van elk probleem opnieuw op het bestand met het "
+#~ "gesignaleerde probleem uitgevoerd. Als u de bestanden opnieuw analyseert, "
+#~ "dan zullen alle door u geselecteerde controles opnieuw op de door u in de "
+#~ "resultatenlijst gemarkeerde bestanden worden uitgevoerd. In beide "
+#~ "gevallen, zullen de nieuwe analyseresultaten aan de lijst met eerdere "
+#~ "resultaten worden toegevoegd, in plaats van ze te vervangen (zoals in een "
+#~ "normale analyse zou gebeuren).</para>"
+
+#~ msgid "Krazy2 Code Checking"
+#~ msgstr "Code controleren door Krazy2"
+
+#~ msgid "Shows issues reported by Krazy2"
+#~ msgstr "Toont door Krazy2 gemelde problemen"
+
+#~ msgid "Daniel Calviño Sánchez"
+#~ msgstr "Daniel Calviño Sánchez"
+
+#~ msgid "Author"
+#~ msgstr "Auteur"

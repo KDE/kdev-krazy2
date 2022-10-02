@@ -1,0 +1,596 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2012, 2015, 2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 03:19+0200\n"
+"PO-Revision-Date: 2017-12-11 20:56+0100\n"
+"Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
+"Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 2.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Stefan Asserhäll"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "stefan.asserhall@bredband.net"
+
+#: analysisjob.cpp:46
+#, kde-kuit-format
+msgctxt "@action:inmenu"
+msgid "<command>krazy2</command> analysis"
+msgstr "Analys med <command>krazy2</command>"
+
+#: analysisjob.cpp:289 checkerlistjob.cpp:98
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para>There is no path set in the Krazy2 configuration for the "
+"<command>krazy2</command> executable.</para>"
+msgstr ""
+"<para>Det finns ingen sökväg inställd i inställningarna av Krazy2 till den "
+"körbara filen <command>krazy2</command>.</para>"
+
+#: analysisjob.cpp:292 checkerlistjob.cpp:101
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para><command>krazy2</command> failed to start using the path (<filename>"
+"%1</filename>).</para>"
+msgstr ""
+"<para>Start av <command>krazy2</command> misslyckades med sökvägen "
+"(<filename>%1</filename>).</para>"
+
+#: analysisjob.cpp:296 checkerlistjob.cpp:105
+#, kde-kuit-format
+msgctxt "@info"
+msgid "<para><command>krazy2</command> crashed.</para>"
+msgstr "<para>Programmet <command>krazy2</command> kraschade.</para>"
+
+#: analysisjob.cpp:298 checkerlistjob.cpp:107
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para>An error occurred while executing <command>krazy2</command>.</para>"
+msgstr ""
+"<para>Ett fel uppstod under körning av <command>krazy2</command>.</para>"
+
+#: analysisprogressparser.cpp:33
+#, kde-kuit-format
+msgctxt "@info:progress"
+msgid "Running <command>krazy2</command>"
+msgstr "Kör <command>krazy2</command>"
+
+#: analysisprogressparser.cpp:126
+#, kde-format
+msgctxt "@info:progress File type (c++, desktop...) and checker name"
+msgid "Running %1/%2"
+msgstr "Kör %1/%2"
+
+#: checkerlistjob.cpp:37
+#, kde-kuit-format
+msgctxt "@action:inmenu"
+msgid "Find available checkers for <command>krazy2</command>"
+msgstr "Sök efter tillgängliga kontrollprogram för <command>krazy2</command>"
+
+#: checkermodel.cpp:178
+#, kde-format
+msgctxt "@info:tooltip The underlying command did not provide a text output"
+msgid "Sorry, no description given"
+msgstr "Tyvärr är ingen beskrivning angiven"
+
+#: checkermodel.cpp:189
+#, kde-format
+msgctxt "@item Extra Krazy2 checkers"
+msgid "[EXTRA]"
+msgstr "[Extra]"
+
+#. i18n: ectx: Menu (run)
+#: kdevkrazy2.rc:5
+#, kde-format
+msgctxt "@title:menu"
+msgid "Run"
+msgstr "Kör"
+
+#: krazy2plugin.cpp:75
+#, kde-format
+msgid "Krazy2 check (selected files)"
+msgstr "Kontroll med Krazy2 (markerade filer)"
+
+#: krazy2plugin.cpp:76
+#, kde-format
+msgid "Check selected files with Krazy2 tools"
+msgstr "Kontroller markerade filer med Krazy2-verktyg"
+
+#: krazy2plugin.cpp:80
+#, kde-format
+msgid "Krazy2 check (all files)"
+msgstr "Kontroll med Krazy2 (alla filer)"
+
+#: krazy2plugin.cpp:81
+#, kde-format
+msgid "Check all files with Krazy2 tools"
+msgstr "Kontrollera alla filer med Krazy2-verktyg"
+
+#: krazy2plugin.cpp:88 settings/krazy2preferences.cpp:46
+#, kde-format
+msgid "Krazy2"
+msgstr "Krazy2"
+
+#: krazy2plugin.cpp:129
+#, kde-format
+msgid "Error gathering checker list"
+msgstr "Fel vid insamling av lista över kontrollprogram"
+
+#: krazy2plugin.cpp:130
+#, kde-format
+msgid "There was an error while gathering the checker list"
+msgstr "Ett fel uppstod vid insamling av lista över kontrollprogram"
+
+#: krazy2plugin.cpp:141
+#, kde-format
+msgid "Error running Krazy2"
+msgstr "Fel vid körning av Krazy2"
+
+#: krazy2plugin.cpp:142
+#, kde-format
+msgid "There was an error with the Krazy2 process"
+msgstr "Ett fel uppstod med Krazy2-processen"
+
+#: krazy2plugin.cpp:163
+#, kde-format
+msgid "The tool didn't provide a message."
+msgstr "Verktyget tillhandahöll inte något meddelande."
+
+#: krazy2plugin.cpp:189 krazy2plugin.cpp:196 krazy2plugin.cpp:204
+#: krazy2plugin.cpp:212 krazy2plugin.cpp:221 krazy2plugin.cpp:228
+#: krazy2plugin.cpp:238 krazy2plugin.cpp:246 krazy2plugin.cpp:258
+#: krazy2plugin.cpp:274
+#, kde-format
+msgid "Error starting Krazy2"
+msgstr "Fel vid start av Krazy2"
+
+#: krazy2plugin.cpp:190
+#, kde-format
+msgid "Analysis already in progress"
+msgstr "Analys pågår redan"
+
+#: krazy2plugin.cpp:197
+#, kde-format
+msgid "Gathering the checkers list hasn't finished yet or has failed."
+msgstr ""
+"Insamling av lista över kontrollprogram är inte färdig ännu, eller har "
+"misslyckats."
+
+#: krazy2plugin.cpp:205
+#, kde-format
+msgid "No file is active, cannot deduce project."
+msgstr "Ingen fil är aktiv, kan inte härleda projekt."
+
+#: krazy2plugin.cpp:213
+#, kde-format
+msgid "Cannot find project"
+msgstr "Kan inte hitta projekt"
+
+#: krazy2plugin.cpp:222
+#, kde-format
+msgid "Krazy2 settings need to be set in the project settings"
+msgstr "Inställning av Krazy2 måste göras i projektinställningarna"
+
+#: krazy2plugin.cpp:229 krazy2plugin.cpp:259
+#, kde-format
+msgid "No checkers selected"
+msgstr "Inga kontrollprogram valda"
+
+#: krazy2plugin.cpp:239 krazy2plugin.cpp:247
+#, kde-format
+msgid "No paths selected"
+msgstr "Inga sökvägar valda"
+
+#: krazy2plugin.cpp:275
+#, kde-format
+msgid "Unable to restore selected checkers"
+msgstr "Kan inte återställa valda kontrollprogram"
+
+#. i18n: ectx: label, entry (krazy2Path), group (Krazy2)
+#: settings/krazy2config.kcfg:9
+#, kde-format
+msgid "krazy2 Executable"
+msgstr "Körbar fil för Krazy2"
+
+#. i18n: ectx: tooltip, entry (krazy2Path), group (Krazy2)
+#: settings/krazy2config.kcfg:10
+#, kde-format
+msgid "The full path to the krazy2 executable"
+msgstr "Fullständig sökväg till den körbara filen krazy2"
+
+#. i18n: ectx: whatsthis, entry (krazy2Path), group (Krazy2)
+#: settings/krazy2config.kcfg:11
+#, kde-format
+msgid ""
+"The full path to the krazy2 executable that will be used to run Krazy2 tests."
+msgstr ""
+"Fullständig sökväg till den körbara filen krazy2 som kommer att användas för "
+"att köra Krazy2-tester."
+
+#: settings/krazy2preferences.cpp:51
+#, kde-format
+msgid "Configure Krazy2 settings"
+msgstr "Anpassa Krazy2"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, Krazy2Settings)
+#: settings/krazy2settings.ui:14
+#, kde-format
+msgid "Krazy2 Settings"
+msgstr "Inställningar av Krazy2"
+
+#. i18n: ectx: property (title), widget (QGroupBox, pathsGroupBox)
+#: settings/krazy2settings.ui:20
+#, kde-format
+msgid "Paths"
+msgstr "Sökvägar"
+
+#. i18n: ectx: property (text), widget (QLabel, krazy2Label)
+#: settings/krazy2settings.ui:28
+#, kde-format
+msgid "krazy2 executable:"
+msgstr "Körbar fil för Krazy2:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, SelectCheckersWidget)
+#: settings/selectcheckerswidget.ui:14
+#, kde-format
+msgctxt "@title:window"
+msgid "Select checkers"
+msgstr "Välj kontrollprogram"
+
+#. i18n: ectx: property (text), widget (QLabel, otherAvailableCheckersLabel)
+#: settings/selectcheckerswidget.ui:22
+#, kde-format
+msgctxt "@label"
+msgid "Other available checkers:"
+msgstr "Andra tillgängliga kontrollprogram:"
+
+#. i18n: ectx: property (whatsThis), widget (QTreeView, otherAvailableCheckersView)
+#: settings/selectcheckerswidget.ui:32
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Other available checkers that will not be run in the analysis.</para>"
+msgstr ""
+"<para>Andra tillgängliga kontrollprogram som inte kommer att köras under "
+"analysen.</para>"
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
+#: settings/selectcheckerswidget.ui:59
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Add checkers"
+msgstr "Lägg till kontrollprogram"
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
+#: settings/selectcheckerswidget.ui:62
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Adds the checkers selected in the <interface>Other available checkers</"
+"interface> list to the <interface>Checkers to run</interface> list.</para>"
+msgstr ""
+"<para>Lägger till kontrollprogrammen som är markerade i listan "
+"<interface>Andra tillgängliga kontrollprogram</interface> i listan "
+"<interface>Kontrollprogram att köra</interface>.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, addButton)
+#: settings/selectcheckerswidget.ui:65
+#, kde-format
+msgctxt "@action:button Move items from the left list to the right list"
+msgid ">"
+msgstr ">"
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
+#: settings/selectcheckerswidget.ui:88
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove checkers"
+msgstr "Ta bort kontrollprogram"
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
+#: settings/selectcheckerswidget.ui:93
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Removes the selected checkers from the <interface>Checkers to run</"
+"interface> list.</para>\n"
+"\n"
+"<para>The checkers will be added to the <interface>Other available checkers</"
+"interface> list.</para>"
+msgstr ""
+"<para>Tar bort markerade kontrollprogram från listan "
+"<interface>Kontrollprogram att köra</interface>.</para>\n"
+"\n"
+"<para>Kontrollprogrammen läggs till i listan <interface>Andra tillgängliga "
+"kontrollprogram</interface>.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+#: settings/selectcheckerswidget.ui:96
+#, kde-format
+msgctxt "@action:button Move items from the right list to the left list"
+msgid "<"
+msgstr "<"
+
+#. i18n: ectx: property (text), widget (QLabel, checkersToRunLabel)
+#: settings/selectcheckerswidget.ui:120
+#, kde-format
+msgctxt "@label"
+msgid "Checkers to run:"
+msgstr "Kontrollprogram att köra:"
+
+#. i18n: ectx: property (whatsThis), widget (QTreeView, checkersToRunView)
+#: settings/selectcheckerswidget.ui:130
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid "<para>The checkers that will be run in the analysis.</para>"
+msgstr "<para>Kontrollprogrammen som kommer att köras under analysen.</para>"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, SelectPathsWidget)
+#: settings/selectpathswidget.ui:14
+#, kde-format
+msgctxt "@title:window"
+msgid "Select paths"
+msgstr "Välj sökvägar"
+
+#. i18n: ectx: property (whatsThis), widget (QListView, pathsView)
+#: settings/selectpathswidget.ui:20
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid "<para>The files and directories to analyze.</para>"
+msgstr "<para>Filerna och katalogerna att analysera.</para>"
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
+#: settings/selectpathswidget.ui:32
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Add files and directories."
+msgstr "Lägg till filer och kataloger."
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
+#: settings/selectpathswidget.ui:37
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Adds files and directories to the list.</para>\n"
+"\n"
+"<para>Only local files and directories can be selected.</para>"
+msgstr ""
+"<para>Lägger till filer och kataloger i listan.</para>\n"
+"\n"
+"<para>Bara lokala filer och kataloger kan väljas.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, addButton)
+#: settings/selectpathswidget.ui:40
+#, kde-format
+msgctxt "@action:button"
+msgid "Add..."
+msgstr "Lägg till..."
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
+#: settings/selectpathswidget.ui:50
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove the selected files or directories."
+msgstr "Ta bort markerade filer eller kataloger."
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
+#: settings/selectpathswidget.ui:53
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid "<para>Removes files or directories from the list.</para>"
+msgstr "<para>Tar bort filer eller kataloger från listan.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+#: settings/selectpathswidget.ui:56
+#, kde-format
+msgctxt "@action:button"
+msgid "Remove"
+msgstr "Ta bort"
+
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para><command>krazy2</command> failed to start using the path(<filename>"
+#~ "%1</filename>).</para>"
+#~ msgstr ""
+#~ "<para>Programmet <command>krazy2</command> gick inte att starta med "
+#~ "sökvägen (<filename>%1</filename>).</para>"
+
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para><command>krazy2</command> failed to start using the path <filename>"
+#~ "%1</filename>.</para>"
+#~ msgstr ""
+#~ "<para>Programmet <command>krazy2</command> gick inte att starta med "
+#~ "sökvägen <filename>%1</filename>.</para>"
+
+#~ msgctxt "@info:tooltip The underlying command did not provide a text output"
+#~ msgid "Sorry, no explanation given"
+#~ msgstr "Tyvärr är ingen förklaring angiven"
+
+#~ msgctxt "@item:intable File type (c++, desktop...) and checker name"
+#~ msgid "%1/%2"
+#~ msgstr "%1/%2"
+
+#~ msgctxt "@item:intable File type (c++, desktop...) and checker name"
+#~ msgid "%1/%2 [EXTRA]"
+#~ msgstr "%1/%2 [Extra]"
+
+#~ msgctxt "@item:intable The underlying command did not provide a text output"
+#~ msgid "(Sorry, no description nor message given)"
+#~ msgstr "(Tyvärr är varken en beskrivning eller ett meddelande angivet)"
+
+#~ msgctxt ""
+#~ "@item:intable The underlying command provided a message but no description"
+#~ msgid "(Sorry, no description given): %1"
+#~ msgstr "(Tyvärr är ingen beskrivning angiven): %1"
+
+#~ msgctxt "@item:intable The description of a checker and its message"
+#~ msgid "%1: %2"
+#~ msgstr "%1: %2"
+
+#~ msgctxt "@title:column"
+#~ msgid "Checker"
+#~ msgstr "Kontrollprogram"
+
+#~ msgctxt "@title:column"
+#~ msgid "Problem"
+#~ msgstr "Problem"
+
+#~ msgctxt "@title:column"
+#~ msgid "File name"
+#~ msgstr "Filnamn"
+
+#~ msgctxt "@title:column Line number of a file"
+#~ msgid "Line"
+#~ msgstr "Rad"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "Analyze again"
+#~ msgstr "Analysera igen"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "Selected issue"
+#~ msgid_plural "Selected issues"
+#~ msgstr[0] "Markerat problem"
+#~ msgstr[1] "Markerade problem"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "Selected file"
+#~ msgid_plural "Selected files"
+#~ msgstr[0] "Vald fil"
+#~ msgstr[1] "Valda filer"
+
+#~ msgctxt "@title:window"
+#~ msgid "Krazy2"
+#~ msgstr "Krazy2"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Select the files and directories to analyze."
+#~ msgstr "Välj filer och kataloger att analysera."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid ""
+#~ "<para>Sets the files and directories to analyze.</para>\n"
+#~ "\n"
+#~ "<para>The files to be analyzed are all the selected files and all the "
+#~ "files in the selected directories (and, recursively, all the files in all "
+#~ "its subdirectories).</para>"
+#~ msgstr ""
+#~ "<para>Anger filerna och katalogerna att analysera.</para>\n"
+#~ "\n"
+#~ "<para>Filerna som ska analyseras är de markerade filerna och alla filerna "
+#~ "i de markerade katalogerna (och rekursivt, alla filerna i alla deras "
+#~ "underkataloger).</para>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Select paths..."
+#~ msgstr "Välj sökvägar..."
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Select the checkers that will be executed."
+#~ msgstr "Väljer kontrollprogrammen som kommer att köras."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid ""
+#~ "<para>Sets the checkers that will be executed.</para>\n"
+#~ "\n"
+#~ "<para>If the analysis is started before selecting the checkers the "
+#~ "default checkers will be used (that is, all the normal checkers, but no "
+#~ "extra checkers).</para>\n"
+#~ "\n"
+#~ "<para>The first time the dialog to select the checkers is shown the "
+#~ "checker lists will be disabled (unless an analysis has already been "
+#~ "performed). It will take some seconds until the available checkers are "
+#~ "got from Krazy2 and the lists enabled.</para>"
+#~ msgstr ""
+#~ "<para>Väljer kontrollprogrammen som kommer att köras.</para>\n"
+#~ "\n"
+#~ "<para>Om analysen startas innan kontrollprogrammen väljes, kommer de "
+#~ "förvalda kontrollprogrammen användas (det vill säga alla normala "
+#~ "kontrollprogram, men inga extra kontrollprogram).</para>\n"
+#~ "\n"
+#~ "<para>Första gången dialogrutan för att ange kontrollprogram visas kommer "
+#~ "listan med kontrollprogram att vara inaktiverad (om inte en analys redan "
+#~ "har utförts). Det tar några sekunder innan de tillgängliga "
+#~ "kontrollprogrammen hämtats från Krazy2 och listan aktiveras.</para>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Select checkers..."
+#~ msgstr "Välj kontrollprogram..."
+
+#~ msgctxt "@info:tooltip"
+#~ msgid ""
+#~ "Analyze all the selected files and directories with the selected checkers."
+#~ msgstr ""
+#~ "Analysera alla valda filer och kataloger med de valda kontrollprogrammen."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid ""
+#~ "<para>Analyzes all the selected paths with the checkers to run.</para>\n"
+#~ "\n"
+#~ "<para>The results from the previous analysis, if any, are replaced with "
+#~ "the new ones.</para>"
+#~ msgstr ""
+#~ "<para>Analyserar alla valda sökvägar med kontrollprogrammen att köra.</"
+#~ "para>\n"
+#~ "\n"
+#~ "<para>Resultaten från föregående analys, om det finns någon, ersätts med "
+#~ "de nya.</para>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Analyze"
+#~ msgstr "Analysera"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid ""
+#~ "<para>The analysis results.</para>\n"
+#~ "\n"
+#~ "<para>When one or more issues are selected, they, or the files were they "
+#~ "appear, can be analyzed again using the context menu of the issues. If "
+#~ "the issues are analyzed again, the checker of each issue is run again on "
+#~ "the file where that issue appears. If the files are analyzed again, every "
+#~ "checker selected by the user is run again on the files selected in the "
+#~ "analysis results. In both cases, the new analysis results are merged with "
+#~ "the previous ones, instead of replacing them (like a normal analysis "
+#~ "would do).</para>"
+#~ msgstr ""
+#~ "<para>Analysresultatet.</para>\n"
+#~ "\n"
+#~ "<para>När ett eller flera problem är markerade, kan de, eller filerna där "
+#~ "de finns, analyseras igen med problemets sammanhangsberoende meny. Om "
+#~ "problemen analyseras igen, körs kontrollprogrammet för varje problem igen "
+#~ "med filen där det problemet finns. Om filerna analyseras igen, körs varje "
+#~ "kontrollprogram som användaren väljer igen med filerna som är markerade i "
+#~ "analysresultatet. I båda fall sammanfogas det nya analysresultatet med "
+#~ "det tidigare, istället för att ersätta det (som en normal analys skulle "
+#~ "göra).</para>"
+
+#~ msgid "Krazy2 Code Checking"
+#~ msgstr "Kodkontroller med Krazy2"
+
+#~ msgid "Shows issues reported by Krazy2"
+#~ msgstr "Visar problem rapporterade av Krazy2"
+
+#~ msgid "Daniel Calviño Sánchez"
+#~ msgstr "Daniel Calviño Sánchez"
+
+#~ msgid "Author"
+#~ msgstr "Upphovsman"

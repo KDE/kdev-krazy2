@@ -1,0 +1,402 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Emir SARI <emir_sari@icloud.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: kdevkrazy2\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 03:19+0200\n"
+"PO-Revision-Date: 2022-03-31 13:13+0300\n"
+"Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
+"Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 21.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Kaan Özdinçer"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "kaanozdincer@gmail.com"
+
+#: analysisjob.cpp:46
+#, kde-kuit-format
+msgctxt "@action:inmenu"
+msgid "<command>krazy2</command> analysis"
+msgstr "<command>krazy2</command> çözümlemesi"
+
+#: analysisjob.cpp:289 checkerlistjob.cpp:98
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para>There is no path set in the Krazy2 configuration for the "
+"<command>krazy2</command> executable.</para>"
+msgstr ""
+"<para><command>krazy2</command> için Krazy2 yapılandırmasında tanımlı bir "
+"yol yok.</para>"
+
+#: analysisjob.cpp:292 checkerlistjob.cpp:101
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para><command>krazy2</command> failed to start using the path (<filename>"
+"%1</filename>).</para>"
+msgstr ""
+"<para><command>krazy2</command>, (<filename>%1</filename>) yolunu kullanarak "
+"başlatılırken hata oluştu.</para>"
+
+#: analysisjob.cpp:296 checkerlistjob.cpp:105
+#, kde-kuit-format
+msgctxt "@info"
+msgid "<para><command>krazy2</command> crashed.</para>"
+msgstr "<para><command>krazy2</command> çöktü.</para>"
+
+#: analysisjob.cpp:298 checkerlistjob.cpp:107
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para>An error occurred while executing <command>krazy2</command>.</para>"
+msgstr ""
+"<para><command>krazy2</command> çalıştırılırken bir hata oluştu.</para>"
+
+#: analysisprogressparser.cpp:33
+#, kde-kuit-format
+msgctxt "@info:progress"
+msgid "Running <command>krazy2</command>"
+msgstr "<command>krazy2</command> çalışıyor"
+
+#: analysisprogressparser.cpp:126
+#, kde-format
+msgctxt "@info:progress File type (c++, desktop...) and checker name"
+msgid "Running %1/%2"
+msgstr "%1/%2 çalışıyor"
+
+#: checkerlistjob.cpp:37
+#, kde-kuit-format
+msgctxt "@action:inmenu"
+msgid "Find available checkers for <command>krazy2</command>"
+msgstr "<command>krazy2</command> için kullanılabilir denetimcileri bul"
+
+#: checkermodel.cpp:178
+#, kde-format
+msgctxt "@info:tooltip The underlying command did not provide a text output"
+msgid "Sorry, no description given"
+msgstr "Özür dileriz, açıklama yok"
+
+#: checkermodel.cpp:189
+#, kde-format
+msgctxt "@item Extra Krazy2 checkers"
+msgid "[EXTRA]"
+msgstr "[EK]"
+
+#. i18n: ectx: Menu (run)
+#: kdevkrazy2.rc:5
+#, kde-format
+msgctxt "@title:menu"
+msgid "Run"
+msgstr "Çalıştır"
+
+#: krazy2plugin.cpp:75
+#, kde-format
+msgid "Krazy2 check (selected files)"
+msgstr "Krazy2 denetimi (seçili dosyalar)"
+
+#: krazy2plugin.cpp:76
+#, kde-format
+msgid "Check selected files with Krazy2 tools"
+msgstr "Krazy2 aracıyla seçilmiş dosyaları denetle"
+
+#: krazy2plugin.cpp:80
+#, kde-format
+msgid "Krazy2 check (all files)"
+msgstr "Krazy2 denetimi (tüm dosyalar)"
+
+#: krazy2plugin.cpp:81
+#, kde-format
+msgid "Check all files with Krazy2 tools"
+msgstr "Krazy2 aracıyla tüm dosyaları denetle"
+
+#: krazy2plugin.cpp:88 settings/krazy2preferences.cpp:46
+#, kde-format
+msgid "Krazy2"
+msgstr "Krazy2"
+
+#: krazy2plugin.cpp:129
+#, kde-format
+msgid "Error gathering checker list"
+msgstr "Denetim listesi toplama hatası"
+
+#: krazy2plugin.cpp:130
+#, kde-format
+msgid "There was an error while gathering the checker list"
+msgstr "Denetim listesi toplanırken bir hata oluştu"
+
+#: krazy2plugin.cpp:141
+#, kde-format
+msgid "Error running Krazy2"
+msgstr "Krazy2 çalıştırma hatası"
+
+#: krazy2plugin.cpp:142
+#, kde-format
+msgid "There was an error with the Krazy2 process"
+msgstr "Krazy2 süreci çalışırken bir hata oluştu"
+
+#: krazy2plugin.cpp:163
+#, kde-format
+msgid "The tool didn't provide a message."
+msgstr "Araç herhangi bir ileti sağlamıyor."
+
+#: krazy2plugin.cpp:189 krazy2plugin.cpp:196 krazy2plugin.cpp:204
+#: krazy2plugin.cpp:212 krazy2plugin.cpp:221 krazy2plugin.cpp:228
+#: krazy2plugin.cpp:238 krazy2plugin.cpp:246 krazy2plugin.cpp:258
+#: krazy2plugin.cpp:274
+#, kde-format
+msgid "Error starting Krazy2"
+msgstr "Krazy2 başlatma hatası"
+
+#: krazy2plugin.cpp:190
+#, kde-format
+msgid "Analysis already in progress"
+msgstr "Çözümleme sürüyor"
+
+#: krazy2plugin.cpp:197
+#, kde-format
+msgid "Gathering the checkers list hasn't finished yet or has failed."
+msgstr "Denetim listesi toplama henüz bitmedi veya hata oluştu."
+
+#: krazy2plugin.cpp:205
+#, kde-format
+msgid "No file is active, cannot deduce project."
+msgstr "Etkin bir dosya yok, proje ortaya çıkamıyor."
+
+#: krazy2plugin.cpp:213
+#, kde-format
+msgid "Cannot find project"
+msgstr "Proje bulunamıyor"
+
+#: krazy2plugin.cpp:222
+#, kde-format
+msgid "Krazy2 settings need to be set in the project settings"
+msgstr "Proje ayarları içinden Krazy2 ayarları yapılmalı"
+
+#: krazy2plugin.cpp:229 krazy2plugin.cpp:259
+#, kde-format
+msgid "No checkers selected"
+msgstr "Seçili denetimci yok"
+
+#: krazy2plugin.cpp:239 krazy2plugin.cpp:247
+#, kde-format
+msgid "No paths selected"
+msgstr "Seçili yol yok"
+
+#: krazy2plugin.cpp:275
+#, kde-format
+msgid "Unable to restore selected checkers"
+msgstr "Seçili denetimciler geri yüklenemiyor"
+
+#. i18n: ectx: label, entry (krazy2Path), group (Krazy2)
+#: settings/krazy2config.kcfg:9
+#, kde-format
+msgid "krazy2 Executable"
+msgstr "krazy2 Çalışıtırabilir Dosyası"
+
+#. i18n: ectx: tooltip, entry (krazy2Path), group (Krazy2)
+#: settings/krazy2config.kcfg:10
+#, kde-format
+msgid "The full path to the krazy2 executable"
+msgstr "krazy2 çalıştırılabilir dosyası için tam yol"
+
+#. i18n: ectx: whatsthis, entry (krazy2Path), group (Krazy2)
+#: settings/krazy2config.kcfg:11
+#, kde-format
+msgid ""
+"The full path to the krazy2 executable that will be used to run Krazy2 tests."
+msgstr ""
+"Krazy2 testlerinde kullanılacak olan, krazy2 çalıştırılabilir dosyası için "
+"tam yol."
+
+#: settings/krazy2preferences.cpp:51
+#, kde-format
+msgid "Configure Krazy2 settings"
+msgstr "Krazy2 ayarlarını yapılandır"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, Krazy2Settings)
+#: settings/krazy2settings.ui:14
+#, kde-format
+msgid "Krazy2 Settings"
+msgstr "Krazy2 Ayarları"
+
+#. i18n: ectx: property (title), widget (QGroupBox, pathsGroupBox)
+#: settings/krazy2settings.ui:20
+#, kde-format
+msgid "Paths"
+msgstr "Yollar"
+
+#. i18n: ectx: property (text), widget (QLabel, krazy2Label)
+#: settings/krazy2settings.ui:28
+#, kde-format
+msgid "krazy2 executable:"
+msgstr "krazy2 çalıştırılabiliri:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, SelectCheckersWidget)
+#: settings/selectcheckerswidget.ui:14
+#, kde-format
+msgctxt "@title:window"
+msgid "Select checkers"
+msgstr "Denetimcileri seç"
+
+#. i18n: ectx: property (text), widget (QLabel, otherAvailableCheckersLabel)
+#: settings/selectcheckerswidget.ui:22
+#, kde-format
+msgctxt "@label"
+msgid "Other available checkers:"
+msgstr "Diğer kullanılabilir denetimciler:"
+
+#. i18n: ectx: property (whatsThis), widget (QTreeView, otherAvailableCheckersView)
+#: settings/selectcheckerswidget.ui:32
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Other available checkers that will not be run in the analysis.</para>"
+msgstr "<para>Çözümlemede kullanılmayacak diğer denetimciler.</para>"
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
+#: settings/selectcheckerswidget.ui:59
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Add checkers"
+msgstr "Denetimci ekle"
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
+#: settings/selectcheckerswidget.ui:62
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Adds the checkers selected in the <interface>Other available checkers</"
+"interface> list to the <interface>Checkers to run</interface> list.</para>"
+msgstr ""
+"<para><interface>Diğer kullanılabilir denetimciler</interface> listesi "
+"içindeki seçili denetimcileri,<interface>Çalıştırılacak denetimciler</"
+"interface> listesine ekler.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, addButton)
+#: settings/selectcheckerswidget.ui:65
+#, kde-format
+msgctxt "@action:button Move items from the left list to the right list"
+msgid ">"
+msgstr ">"
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
+#: settings/selectcheckerswidget.ui:88
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove checkers"
+msgstr "Denetimcileri sil"
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
+#: settings/selectcheckerswidget.ui:93
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Removes the selected checkers from the <interface>Checkers to run</"
+"interface> list.</para>\n"
+"\n"
+"<para>The checkers will be added to the <interface>Other available checkers</"
+"interface> list.</para>"
+msgstr ""
+"<para><interface>Çalıştırılacak denetimciler</interface> listesinden seçili "
+"denetimcileri siler.</para>\n"
+"\n"
+"<para>Denetimciler, <interface>Diğer kullanılabilir denetimciler</interface> "
+"listesine eklenir.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+#: settings/selectcheckerswidget.ui:96
+#, kde-format
+msgctxt "@action:button Move items from the right list to the left list"
+msgid "<"
+msgstr "<"
+
+#. i18n: ectx: property (text), widget (QLabel, checkersToRunLabel)
+#: settings/selectcheckerswidget.ui:120
+#, kde-format
+msgctxt "@label"
+msgid "Checkers to run:"
+msgstr "Çalıştırılacak denetimciler:"
+
+#. i18n: ectx: property (whatsThis), widget (QTreeView, checkersToRunView)
+#: settings/selectcheckerswidget.ui:130
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid "<para>The checkers that will be run in the analysis.</para>"
+msgstr "<para>Çözümlemede çalıştırılacak denetimciler.</Para>"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, SelectPathsWidget)
+#: settings/selectpathswidget.ui:14
+#, kde-format
+msgctxt "@title:window"
+msgid "Select paths"
+msgstr "Yolları seç"
+
+#. i18n: ectx: property (whatsThis), widget (QListView, pathsView)
+#: settings/selectpathswidget.ui:20
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid "<para>The files and directories to analyze.</para>"
+msgstr "<para>Çözümlenecek dosya ve dizinler.</para>"
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
+#: settings/selectpathswidget.ui:32
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Add files and directories."
+msgstr "Dosya ve dizinleri ekle."
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
+#: settings/selectpathswidget.ui:37
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Adds files and directories to the list.</para>\n"
+"\n"
+"<para>Only local files and directories can be selected.</para>"
+msgstr ""
+"<para>Listeye dosya ve dizin ekler.</para>\n"
+"\n"
+"<para>Yalnızca yerel dosyalar ve dizinler seçilebilir.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, addButton)
+#: settings/selectpathswidget.ui:40
+#, kde-format
+msgctxt "@action:button"
+msgid "Add..."
+msgstr "Ekle..."
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
+#: settings/selectpathswidget.ui:50
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove the selected files or directories."
+msgstr "Seçili dosya ve dizinleri sil."
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
+#: settings/selectpathswidget.ui:53
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid "<para>Removes files or directories from the list.</para>"
+msgstr "<para>Dosya ve dizinleri listeden siler.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+#: settings/selectpathswidget.ui:56
+#, kde-format
+msgctxt "@action:button"
+msgid "Remove"
+msgstr "Sil"

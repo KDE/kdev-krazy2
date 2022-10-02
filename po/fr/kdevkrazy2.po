@@ -1,0 +1,625 @@
+# translation of kdevkrazy2.po to Français
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Joëlle Cornavin <jcorn@free.fr>, 2012, 2013.
+# xavier <xavier.besnard@neuf.fr>, 2013, 2020, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kdevkrazy2\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 03:19+0200\n"
+"PO-Revision-Date: 2021-08-31 16:56+0200\n"
+"Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
+"Language-Team: French <kde-francophone@kde.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 21.08.0\n"
+"X-Environment: kde\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Joëlle Cornavin, Xavier Besnard"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "jcorn@free.fr, xavier.besnard@neuf.fr"
+
+#: analysisjob.cpp:46
+#, kde-kuit-format
+msgctxt "@action:inmenu"
+msgid "<command>krazy2</command> analysis"
+msgstr "Analyse <command>krazy2</command>"
+
+#: analysisjob.cpp:289 checkerlistjob.cpp:98
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para>There is no path set in the Krazy2 configuration for the "
+"<command>krazy2</command> executable.</para>"
+msgstr ""
+"<para>Il n'existe aucun emplacement défini dans la configuration de Krazy2 "
+"pour l'exécutable <command>krazy2</command>.</para>"
+
+#: analysisjob.cpp:292 checkerlistjob.cpp:101
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para><command>krazy2</command> failed to start using the path (<filename>"
+"%1</filename>).</para>"
+msgstr ""
+"<para>Impossible pour <command>krazy2</command> de démarrer en utilisant "
+"l'emplacement défini dans la configuration de Krazy2 (<filename>%1</"
+"filename>).</para>"
+
+#: analysisjob.cpp:296 checkerlistjob.cpp:105
+#, kde-kuit-format
+msgctxt "@info"
+msgid "<para><command>krazy2</command> crashed.</para>"
+msgstr ""
+"<para><command>krazy2</command> s'est arrêté de façon inattendue.</para>"
+
+#: analysisjob.cpp:298 checkerlistjob.cpp:107
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para>An error occurred while executing <command>krazy2</command>.</para>"
+msgstr ""
+"<para>Une erreur est survenue lors de l'exécution de <command>krazy2</"
+"command>.</para>"
+
+#: analysisprogressparser.cpp:33
+#, kde-kuit-format
+msgctxt "@info:progress"
+msgid "Running <command>krazy2</command>"
+msgstr "Exécution de <command>krazy2</command>"
+
+#: analysisprogressparser.cpp:126
+#, kde-format
+msgctxt "@info:progress File type (c++, desktop...) and checker name"
+msgid "Running %1/%2"
+msgstr "Exécution de %1 / %2"
+
+#: checkerlistjob.cpp:37
+#, kde-kuit-format
+msgctxt "@action:inmenu"
+msgid "Find available checkers for <command>krazy2</command>"
+msgstr "Chercher les vérificateurs disponibles pour <command>krazy2</command>"
+
+#: checkermodel.cpp:178
+#, kde-format
+msgctxt "@info:tooltip The underlying command did not provide a text output"
+msgid "Sorry, no description given"
+msgstr "Désolé, aucune description fournie"
+
+#: checkermodel.cpp:189
+#, kde-format
+msgctxt "@item Extra Krazy2 checkers"
+msgid "[EXTRA]"
+msgstr "[SUPPLÉMENTAIRES]"
+
+#. i18n: ectx: Menu (run)
+#: kdevkrazy2.rc:5
+#, kde-format
+msgctxt "@title:menu"
+msgid "Run"
+msgstr "Exécuter"
+
+#: krazy2plugin.cpp:75
+#, kde-format
+msgid "Krazy2 check (selected files)"
+msgstr "Vérificateur Krazy2 (fichiers sélectionnés)"
+
+#: krazy2plugin.cpp:76
+#, kde-format
+msgid "Check selected files with Krazy2 tools"
+msgstr "Vérifier les fichiers sélectionnés avec les outils Krazy2 "
+
+#: krazy2plugin.cpp:80
+#, kde-format
+msgid "Krazy2 check (all files)"
+msgstr "Vérificateur Krazy2 (tous les fichiers)"
+
+#: krazy2plugin.cpp:81
+#, kde-format
+msgid "Check all files with Krazy2 tools"
+msgstr "Vérifier tous les fichiers sélectionnés avec les outils Krazy2 "
+
+#: krazy2plugin.cpp:88 settings/krazy2preferences.cpp:46
+#, kde-format
+msgid "Krazy2"
+msgstr "Krazy2"
+
+#: krazy2plugin.cpp:129
+#, kde-format
+msgid "Error gathering checker list"
+msgstr "Erreur durant la création de la liste des vérificateurs"
+
+#: krazy2plugin.cpp:130
+#, kde-format
+msgid "There was an error while gathering the checker list"
+msgstr ""
+"Une erreur est survenue durant la création de la liste des vérificateurs"
+
+#: krazy2plugin.cpp:141
+#, kde-format
+msgid "Error running Krazy2"
+msgstr "Erreur durant l'exécution de Krazy2"
+
+#: krazy2plugin.cpp:142
+#, kde-format
+msgid "There was an error with the Krazy2 process"
+msgstr "Une erreur est survenue durant l'exécution de Krazy2"
+
+#: krazy2plugin.cpp:163
+#, kde-format
+msgid "The tool didn't provide a message."
+msgstr "L'outil n'a fourni aucun message."
+
+#: krazy2plugin.cpp:189 krazy2plugin.cpp:196 krazy2plugin.cpp:204
+#: krazy2plugin.cpp:212 krazy2plugin.cpp:221 krazy2plugin.cpp:228
+#: krazy2plugin.cpp:238 krazy2plugin.cpp:246 krazy2plugin.cpp:258
+#: krazy2plugin.cpp:274
+#, kde-format
+msgid "Error starting Krazy2"
+msgstr "Erreur durant le lancement de Krazy2"
+
+#: krazy2plugin.cpp:190
+#, kde-format
+msgid "Analysis already in progress"
+msgstr "L'analyse est déjà en lancée"
+
+#: krazy2plugin.cpp:197
+#, kde-format
+msgid "Gathering the checkers list hasn't finished yet or has failed."
+msgstr ""
+"La création de la liste des vérificateurs n'est pas encore terminée ou a "
+"échoué."
+
+#: krazy2plugin.cpp:205
+#, kde-format
+msgid "No file is active, cannot deduce project."
+msgstr "Aucun fichier n'est actif et impossible d'identifier le projet."
+
+#: krazy2plugin.cpp:213
+#, kde-format
+msgid "Cannot find project"
+msgstr "Impossible de trouver le projet"
+
+#: krazy2plugin.cpp:222
+#, kde-format
+msgid "Krazy2 settings need to be set in the project settings"
+msgstr ""
+"La configuration de Krazy2 doit être définie dans la configuration du projet"
+
+#: krazy2plugin.cpp:229 krazy2plugin.cpp:259
+#, kde-format
+msgid "No checkers selected"
+msgstr "Aucun vérificateur sélectionné"
+
+#: krazy2plugin.cpp:239 krazy2plugin.cpp:247
+#, kde-format
+msgid "No paths selected"
+msgstr "Aucun emplacement sélectionné"
+
+#: krazy2plugin.cpp:275
+#, kde-format
+msgid "Unable to restore selected checkers"
+msgstr "Impossible de retrouver les vérificateurs sélectionnés"
+
+#. i18n: ectx: label, entry (krazy2Path), group (Krazy2)
+#: settings/krazy2config.kcfg:9
+#, kde-format
+msgid "krazy2 Executable"
+msgstr "Exécutable « krazy2 »"
+
+#. i18n: ectx: tooltip, entry (krazy2Path), group (Krazy2)
+#: settings/krazy2config.kcfg:10
+#, kde-format
+msgid "The full path to the krazy2 executable"
+msgstr "L'emplacement complet de l'exécutable « krazy2 »"
+
+#. i18n: ectx: whatsthis, entry (krazy2Path), group (Krazy2)
+#: settings/krazy2config.kcfg:11
+#, kde-format
+msgid ""
+"The full path to the krazy2 executable that will be used to run Krazy2 tests."
+msgstr ""
+"L'emplacement complet de l'exécutable « krazy2 » qui sera utilisé pour "
+"exécuter les tests de Krazy2."
+
+#: settings/krazy2preferences.cpp:51
+#, kde-format
+msgid "Configure Krazy2 settings"
+msgstr "Définir la configuration de Krazy2"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, Krazy2Settings)
+#: settings/krazy2settings.ui:14
+#, kde-format
+msgid "Krazy2 Settings"
+msgstr "Configuration de Krazy2"
+
+#. i18n: ectx: property (title), widget (QGroupBox, pathsGroupBox)
+#: settings/krazy2settings.ui:20
+#, kde-format
+msgid "Paths"
+msgstr "Emplacements"
+
+#. i18n: ectx: property (text), widget (QLabel, krazy2Label)
+#: settings/krazy2settings.ui:28
+#, kde-format
+msgid "krazy2 executable:"
+msgstr "Exécutable « Krazy2 » :"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, SelectCheckersWidget)
+#: settings/selectcheckerswidget.ui:14
+#, kde-format
+msgctxt "@title:window"
+msgid "Select checkers"
+msgstr "Sélectionner des vérificateurs"
+
+#. i18n: ectx: property (text), widget (QLabel, otherAvailableCheckersLabel)
+#: settings/selectcheckerswidget.ui:22
+#, kde-format
+msgctxt "@label"
+msgid "Other available checkers:"
+msgstr "Autres vérificateurs disponibles :"
+
+#. i18n: ectx: property (whatsThis), widget (QTreeView, otherAvailableCheckersView)
+#: settings/selectcheckerswidget.ui:32
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Other available checkers that will not be run in the analysis.</para>"
+msgstr ""
+"<para>Autres vérificateurs disponibles mais non exécutés lors de l'analyse.</"
+"para>"
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
+#: settings/selectcheckerswidget.ui:59
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Add checkers"
+msgstr "Ajouter des vérificateurs"
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
+#: settings/selectcheckerswidget.ui:62
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Adds the checkers selected in the <interface>Other available checkers</"
+"interface> list to the <interface>Checkers to run</interface> list.</para>"
+msgstr ""
+"<para>Ajoute les vérificateurs sélectionnés dans la liste <interface>Autres "
+"vérificateurs disponibles</interface> vers la liste <interface>Vérificateurs "
+"à exécuter</interface>.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, addButton)
+#: settings/selectcheckerswidget.ui:65
+#, kde-format
+msgctxt "@action:button Move items from the left list to the right list"
+msgid ">"
+msgstr ">"
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
+#: settings/selectcheckerswidget.ui:88
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove checkers"
+msgstr "Supprimer des vérificateurs"
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
+#: settings/selectcheckerswidget.ui:93
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Removes the selected checkers from the <interface>Checkers to run</"
+"interface> list.</para>\n"
+"\n"
+"<para>The checkers will be added to the <interface>Other available checkers</"
+"interface> list.</para>"
+msgstr ""
+"<para>Supprime les vérificateurs sélectionnés de la liste "
+"<interface>Vérificateurs à exécuter</interface>.</para>\n"
+"\n"
+"<para>Les vérificateurs seront ajoutés à la liste <interface>Autres "
+"vérificateurs disponibles</interface>.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+#: settings/selectcheckerswidget.ui:96
+#, kde-format
+msgctxt "@action:button Move items from the right list to the left list"
+msgid "<"
+msgstr "<"
+
+#. i18n: ectx: property (text), widget (QLabel, checkersToRunLabel)
+#: settings/selectcheckerswidget.ui:120
+#, kde-format
+msgctxt "@label"
+msgid "Checkers to run:"
+msgstr "Vérificateurs à exécuter :"
+
+#. i18n: ectx: property (whatsThis), widget (QTreeView, checkersToRunView)
+#: settings/selectcheckerswidget.ui:130
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid "<para>The checkers that will be run in the analysis.</para>"
+msgstr "<para>Les vérificateurs à exécuter lors de l'analyse.</para>"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, SelectPathsWidget)
+#: settings/selectpathswidget.ui:14
+#, kde-format
+msgctxt "@title:window"
+msgid "Select paths"
+msgstr "Sélectionner des emplacements"
+
+#. i18n: ectx: property (whatsThis), widget (QListView, pathsView)
+#: settings/selectpathswidget.ui:20
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid "<para>The files and directories to analyze.</para>"
+msgstr "<para>Les fichiers et les dossiers à analyser.</para>"
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
+#: settings/selectpathswidget.ui:32
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Add files and directories."
+msgstr "Ajoute des fichiers et des dossiers."
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
+#: settings/selectpathswidget.ui:37
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Adds files and directories to the list.</para>\n"
+"\n"
+"<para>Only local files and directories can be selected.</para>"
+msgstr ""
+"<para>Ajoute des fichiers et des dossiers à la liste.</para>\n"
+"\n"
+"<para>Seuls les fichiers et les dossiers locaux peuvent être sélectionnés.</"
+"para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, addButton)
+#: settings/selectpathswidget.ui:40
+#, kde-format
+msgctxt "@action:button"
+msgid "Add..."
+msgstr "Ajouter..."
+
+#. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
+#: settings/selectpathswidget.ui:50
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove the selected files or directories."
+msgstr "Supprime les fichiers ou les dossiers sélectionnés."
+
+#. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
+#: settings/selectpathswidget.ui:53
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid "<para>Removes files or directories from the list.</para>"
+msgstr "<para>Supprime les fichiers ou les dossiers de la liste.</para>"
+
+#. i18n: ectx: property (text), widget (QPushButton, removeButton)
+#: settings/selectpathswidget.ui:56
+#, kde-format
+msgctxt "@action:button"
+msgid "Remove"
+msgstr "Supprimer"
+
+#, fuzzy
+#~| msgctxt "@info"
+#~| msgid ""
+#~| "<para><command>krazy2</command> failed to start using the path set in "
+#~| "the Krazy2 configuration (<filename>%1</filename>).</para>"
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para><command>krazy2</command> failed to start using the path(<filename>"
+#~ "%1</filename>).</para>"
+#~ msgstr ""
+#~ "<para><command>krazy2</command> n'a pas réussi à démarrer en utilisant "
+#~ "l'emplacement défini dans la configuration de Krazy2 (<filename>%1</"
+#~ "filename>).</para>"
+
+#, fuzzy
+#~| msgctxt "@info"
+#~| msgid ""
+#~| "<para><command>krazy2</command> failed to start using the path set in "
+#~| "the Krazy2 configuration (<filename>%1</filename>).</para>"
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para><command>krazy2</command> failed to start using the path <filename>"
+#~ "%1</filename>.</para>"
+#~ msgstr ""
+#~ "<para><command>krazy2</command> n'a pas réussi à démarrer en utilisant "
+#~ "l'emplacement défini dans la configuration de Krazy2 (<filename>%1</"
+#~ "filename>).</para>"
+
+#~ msgctxt "@info:tooltip The underlying command did not provide a text output"
+#~ msgid "Sorry, no explanation given"
+#~ msgstr "Désolé, aucune explication fournie"
+
+#~ msgctxt "@item:intable File type (c++, desktop...) and checker name"
+#~ msgid "%1/%2"
+#~ msgstr "%1 / %2"
+
+#~ msgctxt "@item:intable File type (c++, desktop...) and checker name"
+#~ msgid "%1/%2 [EXTRA]"
+#~ msgstr "%1 / %2 [SUPPLÉMENTAIRES]"
+
+#~ msgctxt "@item:intable The underlying command did not provide a text output"
+#~ msgid "(Sorry, no description nor message given)"
+#~ msgstr "(Désolé, aucune description et aucun message fournis)"
+
+#~ msgctxt ""
+#~ "@item:intable The underlying command provided a message but no description"
+#~ msgid "(Sorry, no description given): %1"
+#~ msgstr "(Désolé, aucune description fournie) : %1"
+
+#~ msgctxt "@item:intable The description of a checker and its message"
+#~ msgid "%1: %2"
+#~ msgstr "%1 : %2"
+
+#~ msgctxt "@title:column"
+#~ msgid "Checker"
+#~ msgstr "Vérificateur"
+
+#~ msgctxt "@title:column"
+#~ msgid "Problem"
+#~ msgstr "Problème"
+
+#~ msgctxt "@title:column"
+#~ msgid "File name"
+#~ msgstr "Nom du fichier"
+
+#~ msgctxt "@title:column Line number of a file"
+#~ msgid "Line"
+#~ msgstr "Ligne"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "Analyze again"
+#~ msgstr "Analyser à nouveau"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "Selected issue"
+#~ msgid_plural "Selected issues"
+#~ msgstr[0] "Problème sélectionné"
+#~ msgstr[1] "Problèmes sélectionnés"
+
+#~ msgctxt "@item:inmenu"
+#~ msgid "Selected file"
+#~ msgid_plural "Selected files"
+#~ msgstr[0] "Fichier sélectionné"
+#~ msgstr[1] "Fichiers sélectionnés"
+
+#~ msgctxt "@title:window"
+#~ msgid "Krazy2"
+#~ msgstr "Krazy2"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Select the files and directories to analyze."
+#~ msgstr "Sélectionne les fichiers et les dossiers à analyser."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid ""
+#~ "<para>Sets the files and directories to analyze.</para>\n"
+#~ "\n"
+#~ "<para>The files to be analyzed are all the selected files and all the "
+#~ "files in the selected directories (and, recursively, all the files in all "
+#~ "its subdirectories).</para>"
+#~ msgstr ""
+#~ "<para>Définit les fichiers et les dossiers à analyser.</para>\n"
+#~ "\n"
+#~ "<para>Les fichiers à analyser sont tous les fichiers sélectionnés et tous "
+#~ "les fichiers se trouvant dans les dossiers sélectionnés (et, "
+#~ "récursivement, tous les fichiers figurant dans tous leurs sous-dossiers)."
+#~ "</para>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Select paths..."
+#~ msgstr "Sélectionner des emplacements..."
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Select the checkers that will be executed."
+#~ msgstr "Sélectionne les vérificateurs à exécuter."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid ""
+#~ "<para>Sets the checkers that will be executed.</para>\n"
+#~ "\n"
+#~ "<para>If the analysis is started before selecting the checkers the "
+#~ "default checkers will be used (that is, all the normal checkers, but no "
+#~ "extra checkers).</para>\n"
+#~ "\n"
+#~ "<para>The first time the dialog to select the checkers is shown the "
+#~ "checker lists will be disabled (unless an analysis has already been "
+#~ "performed). It will take some seconds until the available checkers are "
+#~ "got from Krazy2 and the lists enabled.</para>"
+#~ msgstr ""
+#~ "<para>Définit les vérificateurs à exécuter.</para>\n"
+#~ "\n"
+#~ "<para>Si l'analyse est démarrée avant de sélectionner les vérificateurs, "
+#~ "les vérificateurs par défaut seront exécutés (c'est-à-dire tous les "
+#~ "vérificateurs normaux mais pas les vérificateurs supplémentaires).</"
+#~ "para>\n"
+#~ "\n"
+#~ "<para>La première fois que la boîte de dialogue de sélection des "
+#~ "vérificateurs est affichée, les listes de vérificateurs sont désactivées "
+#~ "(à moins qu'une analyse ait déjà été effectuée). Quelques secondes seront "
+#~ "nécessaires pour que les vérificateurs disponibles soient obtenus de "
+#~ "Krazy2 et que les listes soient activées.</para>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Select checkers..."
+#~ msgstr "Sélectionner les vérificateurs..."
+
+#~ msgctxt "@info:tooltip"
+#~ msgid ""
+#~ "Analyze all the selected files and directories with the selected checkers."
+#~ msgstr ""
+#~ "Analyse tous les fichiers et les dossiers sélectionnés avec les "
+#~ "vérificateurs sélectionnés."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid ""
+#~ "<para>Analyzes all the selected paths with the checkers to run.</para>\n"
+#~ "\n"
+#~ "<para>The results from the previous analysis, if any, are replaced with "
+#~ "the new ones.</para>"
+#~ msgstr ""
+#~ "<para>Analyse tous les emplacements sélectionnés avec les vérificateurs à "
+#~ "exécuter.</para>\n"
+#~ "\n"
+#~ "<para>Les résultats provenant de la précédente analyse, s'il y en a, sont "
+#~ "remplacés par les nouveaux.</para>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Analyze"
+#~ msgstr "Analyser"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid ""
+#~ "<para>The analysis results.</para>\n"
+#~ "\n"
+#~ "<para>When one or more issues are selected, they, or the files were they "
+#~ "appear, can be analyzed again using the context menu of the issues. If "
+#~ "the issues are analyzed again, the checker of each issue is run again on "
+#~ "the file where that issue appears. If the files are analyzed again, every "
+#~ "checker selected by the user is run again on the files selected in the "
+#~ "analysis results. In both cases, the new analysis results are merged with "
+#~ "the previous ones, instead of replacing them (like a normal analysis "
+#~ "would do).</para>"
+#~ msgstr ""
+#~ "<para>Les résultats de l'analyse.</para>\n"
+#~ "\n"
+#~ "<para>Quand un ou plusieurs problèmes sont sélectionnés, ceux-ci ou les "
+#~ "fichiers dans lesquels ils apparaissent, peuvent être analysés à nouveau "
+#~ "à l'aide du menu contextuel associés aux problèmes. Si les problèmes sont "
+#~ "analysés à nouveau, le vérificateur de chaque problème est exécuté à "
+#~ "nouveau sur le fichier où ce problème apparaît. Si les fichiers sont "
+#~ "analysés à nouveau, chaque vérificateur sélectionné par l'utilisateur est "
+#~ "exécuté à nouveau sur les fichiers sélectionnés dans les résultats de "
+#~ "l'analyse. Dans les deux cas, les résultats de la nouvelle analyse sont "
+#~ "fusionnés avec les précédents au lieu de les remplacer (comme le ferait "
+#~ "une analyse normale).</para>"
+
+#~ msgid "Krazy2 Code Checking"
+#~ msgstr "Vérification de code « Krazy2 »"
+
+#~ msgid "Shows issues reported by Krazy2"
+#~ msgstr "Affiche les problèmes signalés par Krazy2"
+
+#~ msgid "Daniel Calviño Sánchez"
+#~ msgstr "Daniel Calviño Sánchez"
+
+#~ msgid "Author"
+#~ msgstr "Auteur"
