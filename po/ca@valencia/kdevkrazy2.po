@@ -137,12 +137,13 @@ msgstr "Krazy2"
 #: krazy2plugin.cpp:129
 #, kde-format
 msgid "Error gathering checker list"
-msgstr "S'ha produït un error en recopilar la llista que cal comprovar"
+msgstr "S'ha produït un error en recopilar la llista que s'ha de comprovar"
 
 #: krazy2plugin.cpp:130
 #, kde-format
 msgid "There was an error while gathering the checker list"
-msgstr "S'ha produït un error quan es recopilava la llista que cal comprovar"
+msgstr ""
+"S'ha produït un error quan es recopilava la llista que s'ha de comprovar"
 
 #: krazy2plugin.cpp:141
 #, kde-format
@@ -176,7 +177,7 @@ msgstr "L'anàlisi ja es troba en curs"
 #, kde-format
 msgid "Gathering the checkers list hasn't finished yet or has failed."
 msgstr ""
-"La recopilació de la llista que cal comprovar encara no ha finalitzat o ha "
+"La recopilació de la llista que es comprovarà encara no ha finalitzat o ha "
 "fallat."
 
 #: krazy2plugin.cpp:205
@@ -360,7 +361,7 @@ msgstr "Selecció dels camins"
 #, kde-format
 msgctxt "@info:whatsthis"
 msgid "<para>The files and directories to analyze.</para>"
-msgstr "<para>Els fitxers i directoris que s'hagen d'analitzar.</para>"
+msgstr "<para>Els fitxers i directoris que s'analitzaran.</para>"
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
 #: settings/selectpathswidget.ui:32
