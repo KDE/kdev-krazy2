@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kdev-krazy2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2019-05-20 03:19+0200\n"
-"PO-Revision-Date: 2022-10-06 19:59+0200\n"
+"PO-Revision-Date: 2022-12-01 23:24+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -32,7 +32,7 @@ msgstr "Temuri.doghonadze@gmail.com"
 #, kde-kuit-format
 msgctxt "@action:inmenu"
 msgid "<command>krazy2</command> analysis"
-msgstr ""
+msgstr "<command>krazy2</command> ანალიზი"
 
 #: analysisjob.cpp:289 checkerlistjob.cpp:98
 #, kde-kuit-format
@@ -49,12 +49,14 @@ msgid ""
 "<para><command>krazy2</command> failed to start using the path (<filename>"
 "%1</filename>).</para>"
 msgstr ""
+"<para><command>krazy2</command> ვერ გაეშვა შემდეგი ბილიკით (<filename>%1</"
+"filename>).</para>"
 
 #: analysisjob.cpp:296 checkerlistjob.cpp:105
 #, kde-kuit-format
 msgctxt "@info"
 msgid "<para><command>krazy2</command> crashed.</para>"
-msgstr ""
+msgstr "<para><command>krazy2</command> ავარიულად დასრულდა.</para>"
 
 #: analysisjob.cpp:298 checkerlistjob.cpp:107
 #, kde-kuit-format
@@ -62,18 +64,19 @@ msgctxt "@info"
 msgid ""
 "<para>An error occurred while executing <command>krazy2</command>.</para>"
 msgstr ""
+"<para>შეცდომა პროგრამის შესრულებისას: <command>krazy2</command>.</para>"
 
 #: analysisprogressparser.cpp:33
 #, kde-kuit-format
 msgctxt "@info:progress"
 msgid "Running <command>krazy2</command>"
-msgstr ""
+msgstr "გაშვება <command>krazy2</command>"
 
 #: analysisprogressparser.cpp:126
 #, kde-format
 msgctxt "@info:progress File type (c++, desktop...) and checker name"
 msgid "Running %1/%2"
-msgstr ""
+msgstr "გაშვება %1/%2"
 
 #: checkerlistjob.cpp:37
 #, kde-kuit-format
@@ -85,13 +88,13 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip The underlying command did not provide a text output"
 msgid "Sorry, no description given"
-msgstr ""
+msgstr "უკაცრავად, აღწერა მითითებული არაა"
 
 #: checkermodel.cpp:189
 #, kde-format
 msgctxt "@item Extra Krazy2 checkers"
 msgid "[EXTRA]"
-msgstr ""
+msgstr "[დამატებით]"
 
 #. i18n: ectx: Menu (run)
 #: kdevkrazy2.rc:5
@@ -103,7 +106,7 @@ msgstr "გაშვება"
 #: krazy2plugin.cpp:75
 #, kde-format
 msgid "Krazy2 check (selected files)"
-msgstr ""
+msgstr "Krazy2 -ის შემოწმება (მონიშნული ფაილები)"
 
 #: krazy2plugin.cpp:76
 #, kde-format
@@ -156,12 +159,12 @@ msgstr ""
 #: krazy2plugin.cpp:274
 #, kde-format
 msgid "Error starting Krazy2"
-msgstr ""
+msgstr "Krazy2-ის გაშვების შეცდომა"
 
 #: krazy2plugin.cpp:190
 #, kde-format
 msgid "Analysis already in progress"
-msgstr ""
+msgstr "ანალიზი უკვე მიმდინარეობს"
 
 #: krazy2plugin.cpp:197
 #, kde-format
@@ -176,7 +179,7 @@ msgstr ""
 #: krazy2plugin.cpp:213
 #, kde-format
 msgid "Cannot find project"
-msgstr ""
+msgstr "პროექტი ვერ ვიპოვე"
 
 #: krazy2plugin.cpp:222
 #, kde-format
@@ -191,7 +194,7 @@ msgstr ""
 #: krazy2plugin.cpp:239 krazy2plugin.cpp:247
 #, kde-format
 msgid "No paths selected"
-msgstr ""
+msgstr "ბილიკები არჩეული არაა"
 
 #: krazy2plugin.cpp:275
 #, kde-format
@@ -202,13 +205,13 @@ msgstr ""
 #: settings/krazy2config.kcfg:9
 #, kde-format
 msgid "krazy2 Executable"
-msgstr ""
+msgstr "krazy2 გამშვებ ფაილი"
 
 #. i18n: ectx: tooltip, entry (krazy2Path), group (Krazy2)
 #: settings/krazy2config.kcfg:10
 #, kde-format
 msgid "The full path to the krazy2 executable"
-msgstr ""
+msgstr "სრული ბილიკი krazy2-ის გამშვებ ფაილამდე"
 
 #. i18n: ectx: whatsthis, entry (krazy2Path), group (Krazy2)
 #: settings/krazy2config.kcfg:11
@@ -330,7 +333,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Select paths"
-msgstr ""
+msgstr "აირჩიეთ ბილიკები"
 
 #. i18n: ectx: property (whatsThis), widget (QListView, pathsView)
 #: settings/selectpathswidget.ui:20
@@ -344,7 +347,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Add files and directories."
-msgstr ""
+msgstr "დაამატეთ ფაილები და საქაღალდეები."
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
 #: settings/selectpathswidget.ui:37
@@ -368,7 +371,7 @@ msgstr "დამატება..."
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove the selected files or directories."
-msgstr ""
+msgstr "მონიშნული ფაილებისა და საქაღალდეების წაშლა."
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
 #: settings/selectpathswidget.ui:53
