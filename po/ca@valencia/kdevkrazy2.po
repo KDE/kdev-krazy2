@@ -241,7 +241,7 @@ msgstr "Configura la configuració de Krazy2"
 #: settings/krazy2settings.ui:14
 #, kde-format
 msgid "Krazy2 Settings"
-msgstr "Configuració de Krazy2"
+msgstr "Configureu Krazy2"
 
 #. i18n: ectx: property (title), widget (QGroupBox, pathsGroupBox)
 #: settings/krazy2settings.ui:20
@@ -354,7 +354,7 @@ msgstr "<para>Les comprovacions que s'executaran durant l'anàlisi.</para>"
 #, kde-format
 msgctxt "@title:window"
 msgid "Select paths"
-msgstr "Selecció dels camins"
+msgstr "Seleccioneu els camins"
 
 #. i18n: ectx: property (whatsThis), widget (QListView, pathsView)
 #: settings/selectpathswidget.ui:20
