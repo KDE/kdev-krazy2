@@ -337,7 +337,7 @@ msgstr "Çalıştırılacak denetimciler:"
 #, kde-format
 msgctxt "@info:whatsthis"
 msgid "<para>The checkers that will be run in the analysis.</para>"
-msgstr "<para>Çözümlemede çalıştırılacak denetimciler.</Para>"
+msgstr "<para>Çözümlemede çalıştırılacak denetimciler.</para>"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, SelectPathsWidget)
 #: settings/selectpathswidget.ui:14
@@ -399,4 +399,4 @@ msgstr "<para>Dosya ve dizinleri listeden siler.</para>"
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove"
-msgstr "Sil"
+msgstr "Kaldır"
