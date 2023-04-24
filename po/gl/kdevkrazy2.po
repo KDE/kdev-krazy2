@@ -1,22 +1,23 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-#
 # Marce Villarino <mvillarino@kde-espana.es>, 2013.
 # Adrián Chaves Fernández <adriyetichaves@gmail.com>, 2015.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2019.
+# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2019, 2023.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2019-05-20 03:19+0200\n"
-"PO-Revision-Date: 2019-03-03 13:29+0100\n"
+"PO-Revision-Date: 2023-04-23 05:41+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
-"Language-Team: Galician <kde-i18n-doc@kde.org>\n"
+"Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -296,6 +297,7 @@ msgctxt "@action:button Move items from the left list to the right list"
 msgid ">"
 msgstr ">"
 
+# well-spelled: comprobadores
 #. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
 #: settings/selectcheckerswidget.ui:88
 #, kde-format
@@ -303,6 +305,7 @@ msgctxt "@info:tooltip"
 msgid "Remove checkers"
 msgstr "Retirar os comprobadores"
 
+# well-spelled: Comprobadores, comprobadores
 #. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
 #: settings/selectcheckerswidget.ui:93
 #, kde-format
@@ -327,6 +330,7 @@ msgctxt "@action:button Move items from the right list to the left list"
 msgid "<"
 msgstr "<"
 
+# well-spelled: Comprobadores
 #. i18n: ectx: property (text), widget (QLabel, checkersToRunLabel)
 #: settings/selectcheckerswidget.ui:120
 #, kde-format
@@ -334,6 +338,7 @@ msgctxt "@label"
 msgid "Checkers to run:"
 msgstr "Comprobadores para executar:"
 
+# well-spelled: comprobadores
 #. i18n: ectx: property (whatsThis), widget (QTreeView, checkersToRunView)
 #: settings/selectcheckerswidget.ui:130
 #, kde-format
