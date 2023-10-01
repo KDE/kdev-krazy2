@@ -181,7 +181,7 @@ msgstr "Non hai ningún ficheiro activo, non pode deducirse o proxecto."
 #: krazy2plugin.cpp:213
 #, kde-format
 msgid "Cannot find project"
-msgstr "Non se pode atopar o proxecto"
+msgstr "Non é posíbel atopar o proxecto"
 
 #: krazy2plugin.cpp:222
 #, kde-format
@@ -201,7 +201,7 @@ msgstr "Non seleccionou rutas."
 #: krazy2plugin.cpp:275
 #, kde-format
 msgid "Unable to restore selected checkers"
-msgstr "Non se poden restaurar os comprobadores seleccionados"
+msgstr "Non é posíbel restaurar os comprobadores seleccionados"
 
 #. i18n: ectx: label, entry (krazy2Path), group (Krazy2)
 #: settings/krazy2config.kcfg:9
