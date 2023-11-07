@@ -28,6 +28,7 @@
                 "Name[sv]": "Daniel Calviño Sánchez",
                 "Name[tr]": "Daniel Calviño Sánchez",
                 "Name[uk]": "Daniel Calviño Sánchez",
+                "Name[x-test]": "xxDaniel Calviño Sánchezxx",
                 "Name[zh_TW]": "Daniel Calviño Sánchez"
             }
         ],
@@ -57,6 +58,7 @@
         "Description[sv]": "Insticksprogrammet visar fel i källkod rapporterade av Krazy2",
         "Description[tr]": "Bu eklenti Krazy2 tarafından bildirilen sorunları gösterir",
         "Description[uk]": "Цей додаток призначено для показу вад, які буде виявлено Krazy2",
+        "Description[x-test]": "xxThis plugin shows issues reported by Krazy2xx",
         "Description[zh_TW]": "此外掛顯示了由 Krazy2 回報的問題",
         "Icon": "kdevelop",
         "Id": "kdevkrazy2",
@@ -86,6 +88,7 @@
         "Name[sv]": "Kodkontroller med Krazy2",
         "Name[tr]": "Krazy2 Kod Denetimi",
         "Name[uk]": "Перевірка коду за допомогою Krazy2",
+        "Name[x-test]": "xxKrazy2 Code Checkingxx",
         "Name[zh_CN]": "Krazy2 代码检查",
         "Name[zh_TW]": "Krazy2 程式碼檢查",
         "ServiceTypes": [
