@@ -1,7 +1,7 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Freek de Kruijf <f.de.kruijf@gmail.com>, 2012, 2013, 2015, 2017.
+# Freek de Kruijf <freekdekruijf@kde.nl>, 2012, 2013, 2015, 2017.
 # Ronald Stroethoff <stroet43@zonnet.nl>, 2015.
 msgid ""
 msgstr ""
