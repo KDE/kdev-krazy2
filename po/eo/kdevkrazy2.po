@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kdev-krazy2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-05 12:27+0000\n"
-"PO-Revision-Date: 2024-02-26 21:30+0100\n"
+"PO-Revision-Date: 2024-03-24 10:34+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo.org>\n"
 "Language: eo\n"
@@ -32,7 +32,7 @@ msgstr ""
 #, kde-kuit-format
 msgctxt "@action:inmenu"
 msgid "<command>krazy2</command> analysis"
-msgstr ""
+msgstr "<command>krazy2</command> analizo"
 
 #: analysisjob.cpp:289 checkerlistjob.cpp:98
 #, kde-kuit-format
@@ -54,7 +54,7 @@ msgstr ""
 #, kde-kuit-format
 msgctxt "@info"
 msgid "<para><command>krazy2</command> crashed.</para>"
-msgstr ""
+msgstr "<para><command>krazy2</command> paneis.</para>"
 
 #: analysisjob.cpp:298 checkerlistjob.cpp:107
 #, kde-kuit-format
@@ -67,31 +67,31 @@ msgstr ""
 #, kde-kuit-format
 msgctxt "@info:progress"
 msgid "Running <command>krazy2</command>"
-msgstr ""
+msgstr "Rulante <command>krazy2</command>"
 
 #: analysisprogressparser.cpp:126
 #, kde-format
 msgctxt "@info:progress File type (c++, desktop...) and checker name"
 msgid "Running %1/%2"
-msgstr ""
+msgstr "Kurante %1/%2"
 
 #: checkerlistjob.cpp:37
 #, kde-kuit-format
 msgctxt "@action:inmenu"
 msgid "Find available checkers for <command>krazy2</command>"
-msgstr ""
+msgstr "Trovi disponeblajn kontrolilojn por <command>krazy2</command>"
 
 #: checkermodel.cpp:178
 #, kde-format
 msgctxt "@info:tooltip The underlying command did not provide a text output"
 msgid "Sorry, no description given"
-msgstr ""
+msgstr "Pardonu, neniu priskribo estas donita"
 
 #: checkermodel.cpp:189
 #, kde-format
 msgctxt "@item Extra Krazy2 checkers"
 msgid "[EXTRA]"
-msgstr ""
+msgstr "[KROMA]"
 
 #. i18n: ectx: Menu (run)
 #: kdevkrazy2.rc:5
@@ -103,52 +103,52 @@ msgstr "Ruli"
 #: krazy2plugin.cpp:75
 #, kde-format
 msgid "Krazy2 check (selected files)"
-msgstr ""
+msgstr "Krazy2-kontrolo (elektitaj dosieroj)"
 
 #: krazy2plugin.cpp:76
 #, kde-format
 msgid "Check selected files with Krazy2 tools"
-msgstr ""
+msgstr "Kontroli elektitajn dosierojn per Krazy2-iloj"
 
 #: krazy2plugin.cpp:80
 #, kde-format
 msgid "Krazy2 check (all files)"
-msgstr ""
+msgstr "Krazy2-kontrolo (ĉiuj dosieroj)"
 
 #: krazy2plugin.cpp:81
 #, kde-format
 msgid "Check all files with Krazy2 tools"
-msgstr ""
+msgstr "Kontroli ĉiujn dosierojn per Krazy2-iloj"
 
 #: krazy2plugin.cpp:88 settings/krazy2preferences.cpp:46
 #, kde-format
 msgid "Krazy2"
-msgstr ""
+msgstr "Krazy2"
 
 #: krazy2plugin.cpp:129
 #, kde-format
 msgid "Error gathering checker list"
-msgstr ""
+msgstr "Eraro dum kolektado de kontrolilisto"
 
 #: krazy2plugin.cpp:130
 #, kde-format
 msgid "There was an error while gathering the checker list"
-msgstr ""
+msgstr "Okazis eraro dum kolektado de la kontrolilo"
 
 #: krazy2plugin.cpp:141
 #, kde-format
 msgid "Error running Krazy2"
-msgstr ""
+msgstr "Eraro pri funkciado de Krazy2"
 
 #: krazy2plugin.cpp:142
 #, kde-format
 msgid "There was an error with the Krazy2 process"
-msgstr ""
+msgstr "Estis eraro kun la Krazy2-procezo"
 
 #: krazy2plugin.cpp:163
 #, kde-format
 msgid "The tool didn't provide a message."
-msgstr ""
+msgstr "La ilo ne disponigis mesaĝon."
 
 #: krazy2plugin.cpp:189 krazy2plugin.cpp:196 krazy2plugin.cpp:204
 #: krazy2plugin.cpp:212 krazy2plugin.cpp:221 krazy2plugin.cpp:228
@@ -156,59 +156,59 @@ msgstr ""
 #: krazy2plugin.cpp:274
 #, kde-format
 msgid "Error starting Krazy2"
-msgstr ""
+msgstr "Eraro dum lanĉado de Krazy2"
 
 #: krazy2plugin.cpp:190
 #, kde-format
 msgid "Analysis already in progress"
-msgstr ""
+msgstr "Analizo jam en progreso"
 
 #: krazy2plugin.cpp:197
 #, kde-format
 msgid "Gathering the checkers list hasn't finished yet or has failed."
-msgstr ""
+msgstr "Kolekto de la damlisto ankoraŭ ne finiĝis aŭ malsukcesis."
 
 #: krazy2plugin.cpp:205
 #, kde-format
 msgid "No file is active, cannot deduce project."
-msgstr ""
+msgstr "Neniu dosiero estas aktiva, ne povas dedukti projekton."
 
 #: krazy2plugin.cpp:213
 #, kde-format
 msgid "Cannot find project"
-msgstr ""
+msgstr "Ne povas trovi projekton"
 
 #: krazy2plugin.cpp:222
 #, kde-format
 msgid "Krazy2 settings need to be set in the project settings"
-msgstr ""
+msgstr "Krazy2-agordoj devas esti fiksitaj en la projektaj agordoj"
 
 #: krazy2plugin.cpp:229 krazy2plugin.cpp:259
 #, kde-format
 msgid "No checkers selected"
-msgstr ""
+msgstr "Neniu damludo elektita"
 
 #: krazy2plugin.cpp:239 krazy2plugin.cpp:247
 #, kde-format
 msgid "No paths selected"
-msgstr ""
+msgstr "Neniuj vojoj elektitaj"
 
 #: krazy2plugin.cpp:275
 #, kde-format
 msgid "Unable to restore selected checkers"
-msgstr ""
+msgstr "Ne eblas restarigi elektitajn damludojn"
 
 #. i18n: ectx: label, entry (krazy2Path), group (Krazy2)
 #: settings/krazy2config.kcfg:9
 #, kde-format
 msgid "krazy2 Executable"
-msgstr ""
+msgstr "krazy2 Efektivigebla"
 
 #. i18n: ectx: tooltip, entry (krazy2Path), group (Krazy2)
 #: settings/krazy2config.kcfg:10
 #, kde-format
 msgid "The full path to the krazy2 executable"
-msgstr ""
+msgstr "La plena vojo al la plenumebla krazy2"
 
 #. i18n: ectx: whatsthis, entry (krazy2Path), group (Krazy2)
 #: settings/krazy2config.kcfg:11
@@ -220,13 +220,13 @@ msgstr ""
 #: settings/krazy2preferences.cpp:51
 #, kde-format
 msgid "Configure Krazy2 settings"
-msgstr ""
+msgstr "Agordi Krazy2-agordojn"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, Krazy2Settings)
 #: settings/krazy2settings.ui:14
 #, kde-format
 msgid "Krazy2 Settings"
-msgstr ""
+msgstr "Krazy2 Agordoj"
 
 #. i18n: ectx: property (title), widget (QGroupBox, pathsGroupBox)
 #: settings/krazy2settings.ui:20
@@ -238,21 +238,21 @@ msgstr "Vojetoj"
 #: settings/krazy2settings.ui:28
 #, kde-format
 msgid "krazy2 executable:"
-msgstr ""
+msgstr "krazy2 rulebla:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, SelectCheckersWidget)
 #: settings/selectcheckerswidget.ui:14
 #, kde-format
 msgctxt "@title:window"
 msgid "Select checkers"
-msgstr ""
+msgstr "Elekti damludojn"
 
 #. i18n: ectx: property (text), widget (QLabel, otherAvailableCheckersLabel)
 #: settings/selectcheckerswidget.ui:22
 #, kde-format
 msgctxt "@label"
 msgid "Other available checkers:"
-msgstr ""
+msgstr "Aliaj disponeblaj damludoj:"
 
 #. i18n: ectx: property (whatsThis), widget (QTreeView, otherAvailableCheckersView)
 #: settings/selectcheckerswidget.ui:32
@@ -267,7 +267,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Add checkers"
-msgstr ""
+msgstr "Aldoni damludojn"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
 #: settings/selectcheckerswidget.ui:62
@@ -290,7 +290,7 @@ msgstr ">"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove checkers"
-msgstr ""
+msgstr "Forigi damludojn"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
 #: settings/selectcheckerswidget.ui:93
@@ -316,35 +316,35 @@ msgstr "<"
 #, kde-format
 msgctxt "@label"
 msgid "Checkers to run:"
-msgstr ""
+msgstr "Damludoj por ruli:"
 
 #. i18n: ectx: property (whatsThis), widget (QTreeView, checkersToRunView)
 #: settings/selectcheckerswidget.ui:130
 #, kde-format
 msgctxt "@info:whatsthis"
 msgid "<para>The checkers that will be run in the analysis.</para>"
-msgstr ""
+msgstr "<para>La kontroliloj kiuj estos rulitaj en la analizo.</para>"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, SelectPathsWidget)
 #: settings/selectpathswidget.ui:14
 #, kde-format
 msgctxt "@title:window"
 msgid "Select paths"
-msgstr ""
+msgstr "Elekti vojojn"
 
 #. i18n: ectx: property (whatsThis), widget (QListView, pathsView)
 #: settings/selectpathswidget.ui:20
 #, kde-format
 msgctxt "@info:whatsthis"
 msgid "<para>The files and directories to analyze.</para>"
-msgstr ""
+msgstr "<para>La dosieroj kaj dosierujoj analizendaj.</para>"
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
 #: settings/selectpathswidget.ui:32
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Add files and directories."
-msgstr ""
+msgstr "Aldoni dosierojn kaj dosierujojn."
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
 #: settings/selectpathswidget.ui:37
@@ -368,14 +368,14 @@ msgstr "Aldoni..."
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove the selected files or directories."
-msgstr ""
+msgstr "Forigi la elektitajn dosierojn aŭ dosierujojn."
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
 #: settings/selectpathswidget.ui:53
 #, kde-format
 msgctxt "@info:whatsthis"
 msgid "<para>Removes files or directories from the list.</para>"
-msgstr ""
+msgstr "<para>Forigas dosierojn aŭ dosierujojn el la listo.</para>"
 
 #. i18n: ectx: property (text), widget (QPushButton, removeButton)
 #: settings/selectpathswidget.ui:56
