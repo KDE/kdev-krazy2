@@ -2,7 +2,7 @@
 # Frederik Schwarzer <schwarzer@kde.org>, 2016.
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: kdevkrazy2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-05 12:27+0000\n"
 "PO-Revision-Date: 2018-03-12 17:15+0100\n"
