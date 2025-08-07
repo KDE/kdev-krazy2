@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kdev-krazy2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-05 12:27+0000\n"
-"PO-Revision-Date: 2025-08-05 12:29+0300\n"
+"PO-Revision-Date: 2025-08-06 09:20+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -82,76 +82,76 @@ msgstr "רצים %1/%2"
 #, kde-kuit-format
 msgctxt "@action:inmenu"
 msgid "Find available checkers for <command>krazy2</command>"
-msgstr ""
+msgstr "איתור בודקים זמינים עבור <command>krazy2</command>"
 
 #: checkermodel.cpp:178
 #, kde-format
 msgctxt "@info:tooltip The underlying command did not provide a text output"
 msgid "Sorry, no description given"
-msgstr ""
+msgstr "לא סופק תיאור, עמך הסליחה"
 
 #: checkermodel.cpp:189
 #, kde-format
 msgctxt "@item Extra Krazy2 checkers"
 msgid "[EXTRA]"
-msgstr ""
+msgstr "[נוסף]"
 
 #. i18n: ectx: Menu (run)
 #: kdevkrazy2.rc:5
 #, kde-format
 msgctxt "@title:menu"
 msgid "Run"
-msgstr ""
+msgstr "הרצה"
 
 #: krazy2plugin.cpp:75
 #, kde-format
 msgid "Krazy2 check (selected files)"
-msgstr ""
+msgstr "בדיקת Krazy2 (קבצים נבחרים)"
 
 #: krazy2plugin.cpp:76
 #, kde-format
 msgid "Check selected files with Krazy2 tools"
-msgstr ""
+msgstr "בדיקת הקבצים הנבחרים עם כלי Krazy2"
 
 #: krazy2plugin.cpp:80
 #, kde-format
 msgid "Krazy2 check (all files)"
-msgstr ""
+msgstr "בדיקת Krazy2 (כל הקבצים)"
 
 #: krazy2plugin.cpp:81
 #, kde-format
 msgid "Check all files with Krazy2 tools"
-msgstr ""
+msgstr "בדיקת כל הקבצים עם כלי Krazy2"
 
 #: krazy2plugin.cpp:88 settings/krazy2preferences.cpp:46
 #, kde-format
 msgid "Krazy2"
-msgstr ""
+msgstr "Krazy2"
 
 #: krazy2plugin.cpp:129
 #, kde-format
 msgid "Error gathering checker list"
-msgstr ""
+msgstr "שגיאה באיסוף רשימת הבודקים"
 
 #: krazy2plugin.cpp:130
 #, kde-format
 msgid "There was an error while gathering the checker list"
-msgstr ""
+msgstr "אירעה שגיאה באיסוף רשימת הבודקים"
 
 #: krazy2plugin.cpp:141
 #, kde-format
 msgid "Error running Krazy2"
-msgstr ""
+msgstr "שגיאה בהרצת Krazy2"
 
 #: krazy2plugin.cpp:142
 #, kde-format
 msgid "There was an error with the Krazy2 process"
-msgstr ""
+msgstr "אירעה שגיאה בתהליך Krazy2"
 
 #: krazy2plugin.cpp:163
 #, kde-format
 msgid "The tool didn't provide a message."
-msgstr ""
+msgstr "הכלי לא סיפק הודעה."
 
 #: krazy2plugin.cpp:189 krazy2plugin.cpp:196 krazy2plugin.cpp:204
 #: krazy2plugin.cpp:212 krazy2plugin.cpp:221 krazy2plugin.cpp:228
@@ -159,103 +159,103 @@ msgstr ""
 #: krazy2plugin.cpp:274
 #, kde-format
 msgid "Error starting Krazy2"
-msgstr ""
+msgstr "שגיאה בהפעלת Krazy2"
 
 #: krazy2plugin.cpp:190
 #, kde-format
 msgid "Analysis already in progress"
-msgstr ""
+msgstr "כבר מתבצע אבחון"
 
 #: krazy2plugin.cpp:197
 #, kde-format
 msgid "Gathering the checkers list hasn't finished yet or has failed."
-msgstr ""
+msgstr "איסוף הבודקים לא הסתיים או שהוא נכשל."
 
 #: krazy2plugin.cpp:205
 #, kde-format
 msgid "No file is active, cannot deduce project."
-msgstr ""
+msgstr "אין קבצים פעילים, לא ניתן להסיק מה המיזם."
 
 #: krazy2plugin.cpp:213
 #, kde-format
 msgid "Cannot find project"
-msgstr ""
+msgstr "לא ניתן למצוא את המיזם"
 
 #: krazy2plugin.cpp:222
 #, kde-format
 msgid "Krazy2 settings need to be set in the project settings"
-msgstr ""
+msgstr "יש להגדיר את תצורת Krazy2 בהגדרות המיזם"
 
 #: krazy2plugin.cpp:229 krazy2plugin.cpp:259
 #, kde-format
 msgid "No checkers selected"
-msgstr ""
+msgstr "לא נבחרו בודקים"
 
 #: krazy2plugin.cpp:239 krazy2plugin.cpp:247
 #, kde-format
 msgid "No paths selected"
-msgstr ""
+msgstr "לא נבחרו נתיבים"
 
 #: krazy2plugin.cpp:275
 #, kde-format
 msgid "Unable to restore selected checkers"
-msgstr ""
+msgstr "לא ניתן לשחזר את הבודקים הנבחרים"
 
 #. i18n: ectx: label, entry (krazy2Path), group (Krazy2)
 #: settings/krazy2config.kcfg:9
 #, kde-format
 msgid "krazy2 Executable"
-msgstr ""
+msgstr "קובץ ההפעלה של krazy2"
 
 #. i18n: ectx: tooltip, entry (krazy2Path), group (Krazy2)
 #: settings/krazy2config.kcfg:10
 #, kde-format
 msgid "The full path to the krazy2 executable"
-msgstr ""
+msgstr "הנתיב המלא לקובץ ההפעלה של krazy2"
 
 #. i18n: ectx: whatsthis, entry (krazy2Path), group (Krazy2)
 #: settings/krazy2config.kcfg:11
 #, kde-format
 msgid ""
 "The full path to the krazy2 executable that will be used to run Krazy2 tests."
-msgstr ""
+msgstr "הנתיב המלא לקובץ ההפעלה של krazy2 שישמש להרצת בדיקות Krazy2."
 
 #: settings/krazy2preferences.cpp:51
 #, kde-format
 msgid "Configure Krazy2 settings"
-msgstr ""
+msgstr "הגדרת תצורת Krazy2"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, Krazy2Settings)
 #: settings/krazy2settings.ui:14
 #, kde-format
 msgid "Krazy2 Settings"
-msgstr ""
+msgstr "הגדרות Krazy2"
 
 #. i18n: ectx: property (title), widget (QGroupBox, pathsGroupBox)
 #: settings/krazy2settings.ui:20
 #, kde-format
 msgid "Paths"
-msgstr ""
+msgstr "נתיבים"
 
 #. i18n: ectx: property (text), widget (QLabel, krazy2Label)
 #: settings/krazy2settings.ui:28
 #, kde-format
 msgid "krazy2 executable:"
-msgstr ""
+msgstr "קובץ ההפעלה של krazy2:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, SelectCheckersWidget)
 #: settings/selectcheckerswidget.ui:14
 #, kde-format
 msgctxt "@title:window"
 msgid "Select checkers"
-msgstr ""
+msgstr "בחירת בודקים"
 
 #. i18n: ectx: property (text), widget (QLabel, otherAvailableCheckersLabel)
 #: settings/selectcheckerswidget.ui:22
 #, kde-format
 msgctxt "@label"
 msgid "Other available checkers:"
-msgstr ""
+msgstr "בודקים זמינים אחרים:"
 
 #. i18n: ectx: property (whatsThis), widget (QTreeView, otherAvailableCheckersView)
 #: settings/selectcheckerswidget.ui:32
@@ -263,14 +263,14 @@ msgstr ""
 msgctxt "@info:whatsthis"
 msgid ""
 "<para>Other available checkers that will not be run in the analysis.</para>"
-msgstr ""
+msgstr "<para>בודקים זמינים אחרים שלא ירוצו באבחון.</para>"
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
 #: settings/selectcheckerswidget.ui:59
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Add checkers"
-msgstr ""
+msgstr "הוספת בודקים"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
 #: settings/selectcheckerswidget.ui:62
@@ -280,20 +280,22 @@ msgid ""
 "<para>Adds the checkers selected in the <interface>Other available checkers</"
 "interface> list to the <interface>Checkers to run</interface> list.</para>"
 msgstr ""
+"<para>הוספת הבודקים שנבחרו ברשימת <interface>בודקים זמינים אחרים</interface> "
+"לרשימת <interface>בודקים להרצה</interface>.</para>"
 
 #. i18n: ectx: property (text), widget (QPushButton, addButton)
 #: settings/selectcheckerswidget.ui:65
 #, kde-format
 msgctxt "@action:button Move items from the left list to the right list"
 msgid ">"
-msgstr ""
+msgstr ">"
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
 #: settings/selectcheckerswidget.ui:88
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove checkers"
-msgstr ""
+msgstr "הסרת בודקים"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
 #: settings/selectcheckerswidget.ui:93
@@ -306,48 +308,53 @@ msgid ""
 "<para>The checkers will be added to the <interface>Other available checkers</"
 "interface> list.</para>"
 msgstr ""
+"<para>הסרת הבודקים הנבחרים מרשימת <interface>בודקים להרצה</interface>.</"
+"para>\n"
+"\n"
+"<para>הבודקים יתווספו לרשימת <interface>בודקים זמינים אחרים</interface>.</"
+"para>"
 
 #. i18n: ectx: property (text), widget (QPushButton, removeButton)
 #: settings/selectcheckerswidget.ui:96
 #, kde-format
 msgctxt "@action:button Move items from the right list to the left list"
 msgid "<"
-msgstr ""
+msgstr "<"
 
 #. i18n: ectx: property (text), widget (QLabel, checkersToRunLabel)
 #: settings/selectcheckerswidget.ui:120
 #, kde-format
 msgctxt "@label"
 msgid "Checkers to run:"
-msgstr ""
+msgstr "בודקים להרצה"
 
 #. i18n: ectx: property (whatsThis), widget (QTreeView, checkersToRunView)
 #: settings/selectcheckerswidget.ui:130
 #, kde-format
 msgctxt "@info:whatsthis"
 msgid "<para>The checkers that will be run in the analysis.</para>"
-msgstr ""
+msgstr "<para>הבודקים שירוצו באבחון.</para>"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, SelectPathsWidget)
 #: settings/selectpathswidget.ui:14
 #, kde-format
 msgctxt "@title:window"
 msgid "Select paths"
-msgstr ""
+msgstr "בחירת נתיבים"
 
 #. i18n: ectx: property (whatsThis), widget (QListView, pathsView)
 #: settings/selectpathswidget.ui:20
 #, kde-format
 msgctxt "@info:whatsthis"
 msgid "<para>The files and directories to analyze.</para>"
-msgstr ""
+msgstr "<para>הקבצים והתיקיון לאבחון.</para>"
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
 #: settings/selectpathswidget.ui:32
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Add files and directories."
-msgstr ""
+msgstr "הוספת קבצים ותיקיות."
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
 #: settings/selectpathswidget.ui:37
@@ -358,31 +365,34 @@ msgid ""
 "\n"
 "<para>Only local files and directories can be selected.</para>"
 msgstr ""
+"<para>הוספת קבצים ותיקיות לרשימה.</para>\n"
+"\n"
+"<para>אפשר לבחור רק קבצים ותיקיות מקומיים.</para>"
 
 #. i18n: ectx: property (text), widget (QPushButton, addButton)
 #: settings/selectpathswidget.ui:40
 #, kde-format
 msgctxt "@action:button"
 msgid "Add..."
-msgstr ""
+msgstr "הוספה…"
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, removeButton)
 #: settings/selectpathswidget.ui:50
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove the selected files or directories."
-msgstr ""
+msgstr "הסרת הקבצים או התיקיות הנבחרים."
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
 #: settings/selectpathswidget.ui:53
 #, kde-format
 msgctxt "@info:whatsthis"
 msgid "<para>Removes files or directories from the list.</para>"
-msgstr ""
+msgstr "<para>הסרת קבצים או תיקיות מהרשימה.</para>"
 
 #. i18n: ectx: property (text), widget (QPushButton, removeButton)
 #: settings/selectpathswidget.ui:56
 #, kde-format
 msgctxt "@action:button"
 msgid "Remove"
-msgstr ""
+msgstr "הסרה"
