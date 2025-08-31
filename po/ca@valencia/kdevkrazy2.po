@@ -260,7 +260,7 @@ msgstr "Executable «krazy2»:"
 #, kde-format
 msgctxt "@title:window"
 msgid "Select checkers"
-msgstr "Seleccioneu les comprovacions"
+msgstr "Trieu les comprovacions"
 
 #. i18n: ectx: property (text), widget (QLabel, otherAvailableCheckersLabel)
 #: settings/selectcheckerswidget.ui:22
@@ -354,7 +354,7 @@ msgstr "<para>Les comprovacions que s'executaran durant l'anàlisi.</para>"
 #, kde-format
 msgctxt "@title:window"
 msgid "Select paths"
-msgstr "Seleccioneu els camins"
+msgstr "Trieu els camins"
 
 #. i18n: ectx: property (whatsThis), widget (QListView, pathsView)
 #: settings/selectpathswidget.ui:20
