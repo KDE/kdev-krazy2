@@ -3,6 +3,7 @@
         "Authors": [
             {
                 "Name": "Daniel Calviño Sánchez",
+                "Name[ar]": "دانيال كالفيو سانشيز",
                 "Name[ca@valencia]": "Daniel Calviño Sánchez",
                 "Name[ca]": "Daniel Calviño Sánchez",
                 "Name[de]": "Daniel Calviño Sánchez",
@@ -35,6 +36,7 @@
         ],
         "Category": "Analyzers",
         "Description": "This plugin shows issues reported by Krazy2",
+        "Description[ar]": "يعرض هذا الملحق المشكلات التي أبلغ عنها Krazy2",
         "Description[ca@valencia]": "Este connector mostra els problemes informats per Krazy2",
         "Description[ca]": "Aquest connector mostra els problemes informats pel Krazy2",
         "Description[de]": "Dieses Modul zeigt von Krazy2 ermittelte Fehler",
@@ -66,6 +68,7 @@
         "Id": "kdevkrazy2",
         "License": "GPL",
         "Name": "Krazy2 Code Checking",
+        "Name[ar]": "فحص Krazy2 للشفرة",
         "Name[ca@valencia]": "Comprova el codi amb Krazy2",
         "Name[ca]": "Comprova el codi amb el Krazy2",
         "Name[de]": "Krazy2-Quelltextüberprüfung",
