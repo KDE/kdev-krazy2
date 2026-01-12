@@ -54,8 +54,8 @@ msgid ""
 "<para><command>krazy2</command> failed to start using the path (<filename>"
 "%1</filename>).</para>"
 msgstr ""
-"<para><command>krazy2</command> ha fallat en iniciar utilitzant el camí "
-"(<filename>%1</filename>).</para>"
+"<para><command>krazy2</command> ha fallat mentre s'iniciava utilitzant el "
+"camí (<filename>%1</filename>).</para>"
 
 #: analysisjob.cpp:296 checkerlistjob.cpp:105
 #, kde-kuit-format
@@ -137,7 +137,7 @@ msgstr "Krazy2"
 #: krazy2plugin.cpp:129
 #, kde-format
 msgid "Error gathering checker list"
-msgstr "S'ha produït un error en recopilar la llista que s'ha de comprovar"
+msgstr "S'ha produït un error mentre es recopilava la llista a comprovar"
 
 #: krazy2plugin.cpp:130
 #, kde-format
@@ -148,7 +148,7 @@ msgstr ""
 #: krazy2plugin.cpp:141
 #, kde-format
 msgid "Error running Krazy2"
-msgstr "S'ha produït un error en executar «Krazy2»"
+msgstr "S'ha produït un error mentre s'executava «Krazy2»"
 
 #: krazy2plugin.cpp:142
 #, kde-format
@@ -166,7 +166,7 @@ msgstr "L'eina no ha proporcionat cap missatge."
 #: krazy2plugin.cpp:274
 #, kde-format
 msgid "Error starting Krazy2"
-msgstr "S'ha produït un error en iniciar «Krazy2»"
+msgstr "S'ha produït un error mentre s'iniciava «Krazy2»"
 
 #: krazy2plugin.cpp:190
 #, kde-format
