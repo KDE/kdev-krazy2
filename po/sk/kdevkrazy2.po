@@ -12,8 +12,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 2.0\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Lokalize 2.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -239,9 +239,7 @@ msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, SelectCheckersWidget)
 #: settings/selectcheckerswidget.ui:14
-#, fuzzy, kde-format
-#| msgctxt "@title:window"
-#| msgid "Select paths"
+#, kde-format
 msgctxt "@title:window"
 msgid "Select checkers"
 msgstr "Vybrať cesty"
@@ -263,9 +261,7 @@ msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
 #: settings/selectcheckerswidget.ui:59
-#, fuzzy, kde-format
-#| msgctxt "@title:column"
-#| msgid "Checker"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Add checkers"
 msgstr "Šachovnica"
@@ -314,9 +310,7 @@ msgstr "<"
 
 #. i18n: ectx: property (text), widget (QLabel, checkersToRunLabel)
 #: settings/selectcheckerswidget.ui:120
-#, fuzzy, kde-format
-#| msgctxt "@title:column"
-#| msgid "Checker"
+#, kde-format
 msgctxt "@label"
 msgid "Checkers to run:"
 msgstr "Šachovnica"
@@ -435,8 +429,6 @@ msgstr "Odstrániť"
 #~ msgstr "Vybrať cesty..."
 
 #, fuzzy
-#~| msgctxt "@action:button"
-#~| msgid "Select paths..."
 #~ msgctxt "@action:button"
 #~ msgid "Select checkers..."
 #~ msgstr "Vybrať cesty..."
