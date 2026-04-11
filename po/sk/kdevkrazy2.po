@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kdevkrazy2.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 09:00+0000\n"
-"PO-Revision-Date: 2015-10-15 18:55+0100\n"
+"PO-Revision-Date: 2026-04-10 12:00+0200\n"
 "Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
 "Language: sk\n"
@@ -29,7 +29,7 @@ msgstr "wizzardsk@gmail.com"
 #, kde-kuit-format
 msgctxt "@action:inmenu"
 msgid "<command>krazy2</command> analysis"
-msgstr ""
+msgstr "Analýza <command>krazy2</command>"
 
 #: analysisjob.cpp:289 checkerlistjob.cpp:98
 #, kde-kuit-format
@@ -38,6 +38,8 @@ msgid ""
 "<para>There is no path set in the Krazy2 configuration for the "
 "<command>krazy2</command> executable.</para>"
 msgstr ""
+"<para>V konfigurácii Krazy2 nie je nastavená cesta k spustiteľnému súboru "
+"<command>krazy2</command>.</para>"
 
 #: analysisjob.cpp:292 checkerlistjob.cpp:101
 #, kde-kuit-format
@@ -46,12 +48,14 @@ msgid ""
 "<para><command>krazy2</command> failed to start using the path (<filename>"
 "%1</filename>).</para>"
 msgstr ""
+"<para><command>krazy2</command> sa nepodarilo spustiť pomocou cesty "
+"(<filename>%1</filename>).</para>"
 
 #: analysisjob.cpp:296 checkerlistjob.cpp:105
 #, kde-kuit-format
 msgctxt "@info"
 msgid "<para><command>krazy2</command> crashed.</para>"
-msgstr ""
+msgstr "<para><command>krazy2</command> spadol.</para>"
 
 #: analysisjob.cpp:298 checkerlistjob.cpp:107
 #, kde-kuit-format
@@ -59,12 +63,13 @@ msgctxt "@info"
 msgid ""
 "<para>An error occurred while executing <command>krazy2</command>.</para>"
 msgstr ""
+"<para>Vyskytla sa chyba pri vykonávaní <command>krazy2</command>.</para>"
 
 #: analysisprogressparser.cpp:33
 #, kde-kuit-format
 msgctxt "@info:progress"
 msgid "Running <command>krazy2</command>"
-msgstr ""
+msgstr "Spúšťa sa <command>krazy2</command>"
 
 #: analysisprogressparser.cpp:126
 #, kde-format
@@ -76,13 +81,13 @@ msgstr "Beží %1/%2"
 #, kde-kuit-format
 msgctxt "@action:inmenu"
 msgid "Find available checkers for <command>krazy2</command>"
-msgstr ""
+msgstr "Nájsť dostupné kontroly pre <command>krazy2</command>"
 
 #: checkermodel.cpp:178
 #, kde-format
 msgctxt "@info:tooltip The underlying command did not provide a text output"
 msgid "Sorry, no description given"
-msgstr ""
+msgstr "Ľutujeme, nebol poskytnutý žiadny popis"
 
 #: checkermodel.cpp:189
 #, kde-format
@@ -100,22 +105,22 @@ msgstr "Spustiť"
 #: krazy2plugin.cpp:75
 #, kde-format
 msgid "Krazy2 check (selected files)"
-msgstr ""
+msgstr "Kontrola Krazy2 (vybrané súbory)"
 
 #: krazy2plugin.cpp:76
 #, kde-format
 msgid "Check selected files with Krazy2 tools"
-msgstr ""
+msgstr "Skontrolovať vybrané súbory nástrojmi Krazy2"
 
 #: krazy2plugin.cpp:80
 #, kde-format
 msgid "Krazy2 check (all files)"
-msgstr ""
+msgstr "Kontrola Krazy2 (všetky súbory)"
 
 #: krazy2plugin.cpp:81
 #, kde-format
 msgid "Check all files with Krazy2 tools"
-msgstr ""
+msgstr "Skontrolovať všetky súbory nástrojmi Krazy2"
 
 #: krazy2plugin.cpp:88 settings/krazy2preferences.cpp:46
 #, kde-format
@@ -125,27 +130,27 @@ msgstr "Krazy2"
 #: krazy2plugin.cpp:129
 #, kde-format
 msgid "Error gathering checker list"
-msgstr ""
+msgstr "Chyba pri získavaní zoznamu kontrol"
 
 #: krazy2plugin.cpp:130
 #, kde-format
 msgid "There was an error while gathering the checker list"
-msgstr ""
+msgstr "Vyskytla sa chyba pri získavaní zoznamu kontrol"
 
 #: krazy2plugin.cpp:141
 #, kde-format
 msgid "Error running Krazy2"
-msgstr ""
+msgstr "Chyba pri spúšťaní Krazy2"
 
 #: krazy2plugin.cpp:142
 #, kde-format
 msgid "There was an error with the Krazy2 process"
-msgstr ""
+msgstr "Vyskytla sa chyba s procesom Krazy2"
 
 #: krazy2plugin.cpp:163
 #, kde-format
 msgid "The tool didn't provide a message."
-msgstr ""
+msgstr "Nástroj neposkytol žiadnu správu."
 
 #: krazy2plugin.cpp:189 krazy2plugin.cpp:196 krazy2plugin.cpp:204
 #: krazy2plugin.cpp:212 krazy2plugin.cpp:221 krazy2plugin.cpp:228
@@ -153,59 +158,59 @@ msgstr ""
 #: krazy2plugin.cpp:274
 #, kde-format
 msgid "Error starting Krazy2"
-msgstr ""
+msgstr "Chyba pri spúšťaní Krazy2"
 
 #: krazy2plugin.cpp:190
 #, kde-format
 msgid "Analysis already in progress"
-msgstr ""
+msgstr "Analýza už prebieha"
 
 #: krazy2plugin.cpp:197
 #, kde-format
 msgid "Gathering the checkers list hasn't finished yet or has failed."
-msgstr ""
+msgstr "Získavanie zoznamu kontrol ešte neskončilo alebo zlyhalo."
 
 #: krazy2plugin.cpp:205
 #, kde-format
 msgid "No file is active, cannot deduce project."
-msgstr ""
+msgstr "Žiadny súbor nie je aktívny, nemožno určiť projekt."
 
 #: krazy2plugin.cpp:213
 #, kde-format
 msgid "Cannot find project"
-msgstr ""
+msgstr "Nemožno nájsť projekt"
 
 #: krazy2plugin.cpp:222
 #, kde-format
 msgid "Krazy2 settings need to be set in the project settings"
-msgstr ""
+msgstr "Nastavenia Krazy2 je potrebné nastaviť v nastaveniach projektu"
 
 #: krazy2plugin.cpp:229 krazy2plugin.cpp:259
 #, kde-format
 msgid "No checkers selected"
-msgstr ""
+msgstr "Nie sú vybrané žiadne kontroly"
 
 #: krazy2plugin.cpp:239 krazy2plugin.cpp:247
 #, kde-format
 msgid "No paths selected"
-msgstr ""
+msgstr "Nie sú vybrané žiadne cesty"
 
 #: krazy2plugin.cpp:275
 #, kde-format
 msgid "Unable to restore selected checkers"
-msgstr ""
+msgstr "Nepodarilo sa obnoviť vybrané kontroly"
 
 #. i18n: ectx: label, entry (krazy2Path), group (Krazy2)
 #: settings/krazy2config.kcfg:9
 #, kde-format
 msgid "krazy2 Executable"
-msgstr ""
+msgstr "Spustiteľný súbor krazy2"
 
 #. i18n: ectx: tooltip, entry (krazy2Path), group (Krazy2)
 #: settings/krazy2config.kcfg:10
 #, kde-format
 msgid "The full path to the krazy2 executable"
-msgstr ""
+msgstr "Úplná cesta k spustiteľnému súboru krazy2"
 
 #. i18n: ectx: whatsthis, entry (krazy2Path), group (Krazy2)
 #: settings/krazy2config.kcfg:11
@@ -213,6 +218,8 @@ msgstr ""
 msgid ""
 "The full path to the krazy2 executable that will be used to run Krazy2 tests."
 msgstr ""
+"Úplná cesta k spustiteľnému súboru krazy2, ktorý sa použije na spustenie "
+"testov Krazy2."
 
 #: settings/krazy2preferences.cpp:51
 #, kde-format
@@ -235,7 +242,7 @@ msgstr "Cesty"
 #: settings/krazy2settings.ui:28
 #, kde-format
 msgid "krazy2 executable:"
-msgstr ""
+msgstr "Spustiteľný súbor krazy2:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, SelectCheckersWidget)
 #: settings/selectcheckerswidget.ui:14
@@ -249,7 +256,7 @@ msgstr "Vybrať cesty"
 #, kde-format
 msgctxt "@label"
 msgid "Other available checkers:"
-msgstr ""
+msgstr "Ostatné dostupné kontroly:"
 
 #. i18n: ectx: property (whatsThis), widget (QTreeView, otherAvailableCheckersView)
 #: settings/selectcheckerswidget.ui:32
@@ -258,6 +265,7 @@ msgctxt "@info:whatsthis"
 msgid ""
 "<para>Other available checkers that will not be run in the analysis.</para>"
 msgstr ""
+"<para>Ostatné dostupné kontroly, ktoré nebudú spustené pri analýze.</para>"
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
 #: settings/selectcheckerswidget.ui:59
@@ -274,6 +282,8 @@ msgid ""
 "<para>Adds the checkers selected in the <interface>Other available checkers</"
 "interface> list to the <interface>Checkers to run</interface> list.</para>"
 msgstr ""
+"<para>Pridá kontroly vybrané v zozname <interface>Ostatné dostupné kontroly</"
+"interface> do zoznamu <interface>Kontroly na spustenie</interface>.</para>"
 
 #. i18n: ectx: property (text), widget (QPushButton, addButton)
 #: settings/selectcheckerswidget.ui:65
@@ -287,7 +297,7 @@ msgstr ">"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove checkers"
-msgstr ""
+msgstr "Odstrániť kontroly"
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
 #: settings/selectcheckerswidget.ui:93
@@ -300,6 +310,11 @@ msgid ""
 "<para>The checkers will be added to the <interface>Other available checkers</"
 "interface> list.</para>"
 msgstr ""
+"<para>Odstráni vybrané kontroly zo zoznamu <interface>Kontroly na spustenie</"
+"interface>.</para>\n"
+"\n"
+"<para>Kontroly budú pridané do zoznamu <interface>Ostatné dostupné kontroly</"
+"interface>.</para>"
 
 #. i18n: ectx: property (text), widget (QPushButton, removeButton)
 #: settings/selectcheckerswidget.ui:96
@@ -320,7 +335,7 @@ msgstr "Šachovnica"
 #, kde-format
 msgctxt "@info:whatsthis"
 msgid "<para>The checkers that will be run in the analysis.</para>"
-msgstr ""
+msgstr "<para>Kontroly, ktoré budú spustené pri analýze.</para>"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, SelectPathsWidget)
 #: settings/selectpathswidget.ui:14
@@ -334,14 +349,14 @@ msgstr "Vybrať cesty"
 #, kde-format
 msgctxt "@info:whatsthis"
 msgid "<para>The files and directories to analyze.</para>"
-msgstr ""
+msgstr "<para>Súbory a priečinky na analýzu.</para>"
 
 #. i18n: ectx: property (toolTip), widget (QPushButton, addButton)
 #: settings/selectpathswidget.ui:32
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Add files and directories."
-msgstr ""
+msgstr "Pridať súbory a priečinky."
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, addButton)
 #: settings/selectpathswidget.ui:37
@@ -352,6 +367,9 @@ msgid ""
 "\n"
 "<para>Only local files and directories can be selected.</para>"
 msgstr ""
+"<para>Pridá súbory a priečinky do zoznamu.</para>\n"
+"\n"
+"<para>Vybrať je možné iba lokálne súbory a priečinky.</para>"
 
 #. i18n: ectx: property (text), widget (QPushButton, addButton)
 #: settings/selectpathswidget.ui:40
@@ -365,14 +383,14 @@ msgstr "Pridať..."
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove the selected files or directories."
-msgstr ""
+msgstr "Odstrániť vybrané súbory alebo priečinky."
 
 #. i18n: ectx: property (whatsThis), widget (QPushButton, removeButton)
 #: settings/selectpathswidget.ui:53
 #, kde-format
 msgctxt "@info:whatsthis"
 msgid "<para>Removes files or directories from the list.</para>"
-msgstr ""
+msgstr "<para>Odstráni súbory alebo priečinky zo zoznamu.</para>"
 
 #. i18n: ectx: property (text), widget (QPushButton, removeButton)
 #: settings/selectpathswidget.ui:56
